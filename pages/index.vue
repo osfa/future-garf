@@ -30,31 +30,29 @@ export default {
   data() {
     return {
       mainImageUrl: '/imgs/2048-false-floyd.png',
-      requestUrl: '',
+      currentWidth: '',
       image: `${require('@/static/imgs/cmyk-false-floyd-test.png?w=1280&nf_resize=fit')}`,    
     };
   },
   computed: {
     backgroundStyles() {
-      let baseUrl = '/imgs/cmyk-false-floyd.png'
-      baseUrl = this.mainImageUrl
+      let baseUrl = this.mainImageUrl
       let imgUrl = this.$img(baseUrl, { width: 960 })
       if (process.client) {
-        const width = window.innerWidth;
-        console.log(width)
-        if (width > 2000){
+        if (this.currentWidth > 2000){
           imgUrl = this.$img(baseUrl, { width: 2600 })
         }
-        else if (width > 1534){
+        else if (this.currentWidth > 1534){
           imgUrl = this.$img(baseUrl, { width: 1920 })
         }
-        else if(width > 1280){
+        else if(this.currentWidth > 1280){
           imgUrl = this.$img(baseUrl, { width: 1534 })
         }
-        else if(width > 1024){
+        else if(this.currentWidth > 1024){
           imgUrl = this.$img(baseUrl, { width: 1280 })
         }
         else {
+          baseUrl = '/imgs/cmyk-false-floyd-test-v.png'
           imgUrl = this.$img(baseUrl, { width: 1280 })
         }
       }
@@ -64,6 +62,7 @@ export default {
     }
   },
   beforeMount() {
+    this.currentWidth = window.innerWidth
     window.addEventListener("resize", this.handleResize);
   },
   beforeDestroy() {
@@ -71,11 +70,10 @@ export default {
   },
   methods: {
     handleResize(e) {
-      console.log('resize and force update?')
-      this.$forceUpdate();
-      // const baseUrl = '/imgs/2048-false-floyd.png'
-      // let imgUrl = this.$img(baseUrl, { width: 960 })
-      // this.containerWidth = window.innerWidth
+      // console.log('resize and force update?')
+      // console.log('should mutate a prop here? its coming back to me..')
+      this.currentWidth = window.innerWidth
+      // this.$forceUpdate();
     }
   },
 }
