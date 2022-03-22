@@ -1,5 +1,6 @@
 <template>
-    <div class="page" :style="{ backgroundImage: `url(${image})`}">
+    <!-- <div class="page" :style="{ backgroundImage: `url(${image})`}"> -->
+      <div class="page" :style="{ backgroundImage: `url(${image})`}">
 <!--       <nuxt-img
         id="vert"
         class="lg:hidden w-full h-full"
@@ -27,6 +28,15 @@ export default {
     return {
       image: `${require('@/static/imgs/cmyk-false-floyd-test.png?w=1280&nf_resize=fit')}`,    
     };
+  },
+  computed: {
+    backgroundStyles() {
+      const imgUrl = this.$img('/imgs/cmyk-false-floyd-test-v.png', { width: 960 })
+      return imgUrl
+      // return {
+      //   backgroundImage: `url('${imgUrl}')`
+      // }
+    }
   }
 }
 </script>
