@@ -1,7 +1,7 @@
 <template>
     <!-- <div class="page" :style="{ backgroundImage: `url(${image})`}"> -->
-      <div class="page" :style="{ backgroundImage: `url(${backgroundStyles})`}">
-<!--       <nuxt-img
+      <div class="page" :style="backgroundStyles">
+<!-- <nuxt-img
         id="vert"
         class="lg:hidden w-full h-full"
         src="/imgs/cmyk-false-floyd-test-v.png"
@@ -31,16 +31,48 @@ export default {
   },
   computed: {
     backgroundStyles() {
-      const imgUrl = this.$img('/imgs/cmyk-false-floyd-test-v.png', { width: 960 })
-      return imgUrl
-      // return {
-      //   backgroundImage: `url('${imgUrl}')`
-      // }
+      let imgUrl = this.$img('/imgs/cmyk-false-floyd-test.png', { width: 960 })
+      if (process.client) {
+        const width = window.innerWidth;
+        console.log(width)
+        if (width > 2000){
+          imgUrl = this.$img('/imgs/cmyk-false-floyd-test.png', { width: 2600 })
+        }
+        else if (width > 1534){
+          imgUrl = this.$img('/imgs/cmyk-false-floyd-test.png', { width: 1920 })
+        }
+        else if(width > 1280){
+          imgUrl = this.$img('/imgs/cmyk-false-floyd-test.png', { width: 1534 })
+        }
+        else if(width > 1024){
+          imgUrl = this.$img('/imgs/cmyk-false-floyd-test-v.png', { width: 1280 })
+        }
+        else {
+          imgUrl = this.$img('/imgs/cmyk-false-floyd-test-v.png', { width: 1280 })
+        }
+      }
+      return {
+        backgroundImage: `url('${imgUrl}')`
+      }
     }
   }
 }
 </script>
+<!-- computed: {
+    css () {
+      if (process.client) {
+        let width = window.innerWidth
 
+        // ... mobile { ... styles }
+        // ... desktop { ... styles }
+
+        // ... if width is less than 700, return mobile
+        // ... if width greater than 700, return desktop
+      } else {
+        return { /*empty style object*/ }
+      }
+    }
+  } -->
 <style scoped>
 .page {
   width:  100vw;
