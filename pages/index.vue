@@ -1,9 +1,8 @@
 <template>
-  <!-- <div :style="{ backgroundImage: `url(${image})`}"> -->
-    <div>
-      <nuxt-img
+    <div class="page" :style="{ backgroundImage: `url(${image})`}">
+<!--       <nuxt-img
         id="vert"
-        class="lg:hidden h-screen w-screen"
+        class="lg:hidden w-full h-full"
         src="/imgs/cmyk-false-floyd-test-v.png"
         alt="vert"
         fit="contain"
@@ -12,13 +11,12 @@
       <nuxt-img
         id="hori"
         fit="contain"
-        class="hidden lg:block h-screen"
+        class="hidden lg:block w-full h-full"
         src="/imgs/cmyk-false-floyd-test.png"
         alt="hori"
         sizes="xl:100vw lg:100vw md:100vw sm:100vw xs:100vw"
-      />
+      /> -->
     </div>
-
 </template>
 
 <script>
@@ -27,8 +25,22 @@ export default {
   name: 'IndexPage',
   data() {
     return {
-      image: `url(${require('@/static/imgs/cmyk-false-floyd-test.png')})`,    
+      image: `${require('@/static/imgs/cmyk-false-floyd-test.png?w=1280&nf_resize=fit')}`,    
     };
   }
 }
 </script>
+
+<style scoped>
+.page {
+  width:  100vw;
+  height:  100vh;
+  background-size: cover;
+  /*width: 98vw;
+  height: 98vh;
+  padding-top: 1vh;
+  padding-bottom: 1vh;
+  padding-left:  1vw;
+  padding-right: 1vw;*/
+}
+</style>
