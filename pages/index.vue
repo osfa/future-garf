@@ -1,6 +1,6 @@
 <template>
     <!-- <div class="page" :style="{ backgroundImage: `url(${image})`}"> -->
-      <div class="page" :style="{ backgroundImage: `url(${image})`}">
+      <div class="page" :style="{ backgroundImage: `url(${backgroundStyles})`}">
 <!--       <nuxt-img
         id="vert"
         class="lg:hidden w-full h-full"
