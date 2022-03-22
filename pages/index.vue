@@ -83,11 +83,12 @@ export default {
   width:  100vw;
   height:  100vh;
   background-size: cover;
-  /*width: 98vw;
-  height: 98vh;
-  padding-top: 1vh;
-  padding-bottom: 1vh;
-  padding-left:  1vw;
-  padding-right: 1vw;*/
+
+  width: 96vw;
+  height: 96vh;
+  margin-top: 2vh;
+  margin-bottom: 2vh;
+  margin-left:  2vw;
+  margin-right: 2vw;
 }
 </style>
