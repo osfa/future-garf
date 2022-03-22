@@ -1,7 +1,7 @@
 <template>
   <!-- <div :style="{ backgroundImage: `url(${image})`}"> -->
     <div>
-            <Tutorial />
+<!--             <Tutorial /> -->
 
   <nuxt-img
     src="/imgs/1987-12-11-0-10e-1646988554-1024x2048-10e-1646990976-splinter-0-gigapixel-lines-scale-2_00x.png"

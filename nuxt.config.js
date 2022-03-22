@@ -62,6 +62,6 @@ export default {
   build: {},
 
   image: {
-    // Options
+    provider: 'netlify',
   }
 }
