@@ -126,7 +126,7 @@ export default {
   height:  100vh;
   background-size: 98%;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: top;
   background-size: cover;
   /*background-size: clamp(1000px, 80%, 1500px) auto;*/
 /*  max-width: 2048px;
