@@ -44,6 +44,7 @@ export default {
       currentWidth: 1280,
       firstCardActive: true,
       secondCardActive: false,
+      isAnimating: false,
     };
   },
   beforeMount() {
@@ -64,12 +65,14 @@ export default {
       }
     },
     toggle(e) {
-      // if(this.active){
-      //   this.mainImageUrl = this.randomBackgroundUrl()
-      // }
-      // else {
-      //   this.backImageUrl = this.randomBackgroundUrl()
-      // }
+      if(this.isAnimating) return
+
+      if(this.firstCardActive){
+        setTimeout(() => { this.mainImageUrl = this.randomBackgroundUrl() }, 5000);
+      }
+      else {
+        setTimeout(() => { this.backImageUrl = this.randomBackgroundUrl() }, 5000);
+      }
       this.firstCardActive = !this.firstCardActive
       this.secondCardActive = !this.secondCardActive
     },
