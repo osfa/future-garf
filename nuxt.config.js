@@ -11,9 +11,14 @@ export default {
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
-    link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+    link: [
+      { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+      {rel: 'stylesheet', type: 'text/css', href: '/css/vue2-animate.min.css'}
+    ],
+    bodyAttrs: {
+      class: 'overflow-hidden'
+    }
   },
-
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 

@@ -1,18 +1,59 @@
 <template>
-    <div>
-        <transition name="fade">
-          <ImageCard v-show='firstCardActive' :main-image-url='mainImageUrl' :current-width='currentWidth' @click.native="toggle()"/>
+    <div class="overflow-hidden">
+        <transition mode="out-in" :name="currentAnimation">
+          <ImageCard v-show='firstCardActive' style="animation-duration: 2s" :main-image-url='mainImageUrl' :current-width='currentWidth' @click.native="toggle()"/>
         </transition>
-        <transition name="fade">
-          <ImageCard v-show='secondCardActive' :main-image-url='backImageUrl' :current-width='currentWidth' @click.native="toggle()"/>
+        <transition mode="out-in" appear :name="currentAnimation">
+          <ImageCard  v-show='secondCardActive' style="animation-duration: 2s" :main-image-url='backImageUrl' :current-width='currentWidth' @click.native="toggle()"/>
         </transition>
     </div>
 </template>
 
-
 <!-- have some sort of list that u pop? -->
+<!-- always want one in back that it slides OVER -->
+
+<!-- better to pop in more and prune? -->
 <script>
 import ImageCard from '../components/ImageCard'
+/* eslint-disable */
+ Array.prototype.sample = function () {
+  return this[Math.floor(Math.random() * this.length)];
+};
+/* eslint-disable */
+
+const randomAnimation = (array) => {
+  return [
+    "bounce",
+    "bounceDown",
+    "bounceLeft",
+    "bounceRight",
+    "bounceUp",
+    "fade",
+    "fadeDown",
+    "fadeDownBig",
+    "fadeLeft",
+    "fadeLeftBig",
+    "fadeRight",
+    "fadeRightBig",
+    "fadeUp",
+    "fadeUpBig",
+    "rotate",
+    "rotateDownLeft",
+    "rotateDownRight",
+    "rotateUpLeft",
+    "rotateUpRight",
+    "slideDown",
+    "slideUp",
+    "slideLeft",
+    "slideRight",
+    // "zoom",
+    // "zoomDown",
+    // "zoomUp",
+    // "zoomLeft",
+    // "zoomRight",
+  ].sample();
+};
+
 const allImgs = [
   '/imgs/dithered-8bit/1992-09-22-2-10e.png',
   '/imgs/dithered-8bit/1992-09-22-2-25e.png',
@@ -32,7 +73,6 @@ const allImgs = [
   '/imgs/dithered-8bit/1992-10-10-0-5e.png',
   '/imgs/dithered-8bit/1992-10-10-0-60e.png',
 ]
-// import bkgImg from '/imgs/1987-12-11-0-10e-1646988554-1024x2048-10e-1646990976-splinter-0-gigapixel-lines-scale-2_00x.png';
 export default {
   name: 'IndexPage',
   components: { ImageCard },
@@ -45,6 +85,7 @@ export default {
       firstCardActive: true,
       secondCardActive: false,
       isAnimating: false,
+      currentAnimation: randomAnimation(),
     };
   },
   beforeMount() {
@@ -55,6 +96,9 @@ export default {
     window.removeEventListener('resize', this.handleResize);
   },
   methods: {
+    newAnim(){
+      this.currentAnimation = randomAnimation()
+    },
     randomBackgroundUrl() {
       return this.imgs[Math.floor(Math.random()*this.imgs.length)]
     },
@@ -66,15 +110,22 @@ export default {
     },
     toggle(e) {
       if(this.isAnimating) return
-
+      this.isAnimating = true
       if(this.firstCardActive){
-        setTimeout(() => { this.mainImageUrl = this.randomBackgroundUrl() }, 5000);
+        setTimeout(() => { 
+          this.mainImageUrl = this.randomBackgroundUrl()
+          this.isAnimating = false
+        }, 2000);
       }
       else {
-        setTimeout(() => { this.backImageUrl = this.randomBackgroundUrl() }, 5000);
+        setTimeout(() => { 
+          this.backImageUrl = this.randomBackgroundUrl()
+          this.isAnimating = false
+        }, 2000);
       }
       this.firstCardActive = !this.firstCardActive
       this.secondCardActive = !this.secondCardActive
+      this.newAnim()
     },
     handleResize(e) {
       this.currentWidth = window.innerWidth
@@ -89,7 +140,7 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  background-color: #fff;
+  background-color: black;
   width: 100vw;
   height: 100vh;
   background-size: 98%;
@@ -98,7 +149,7 @@ export default {
   background-size: cover;
 }
 .fade-enter-active, .fade-leave-active {
-  transition: opacity 5s;
+  transition: opacity 2.5s;
 }
 .fade-enter, .fade-leave-to {
   opacity: 0;
@@ -114,7 +165,7 @@ export default {
 
 .slide-fade-enter-from,
 .slide-fade-leave-to {
-  transform: translateX(20px);
+  transform: translateX(100vw);
   opacity: 0;
 }
 
