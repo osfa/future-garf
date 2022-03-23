@@ -1,11 +1,10 @@
 <template>
     <div class="overflow-hidden">
-        <transition mode="out-in" :name="currentAnimation">
-          <ImageCard v-show='firstCardActive' :style="animationDuration" :main-image-url='mainImageUrl' :current-width='currentWidth' @click.native="toggle()"/>
-        </transition>
-        <transition mode="out-in" appear :name="currentAnimation">
-          <ImageCard  v-show='secondCardActive' :style="animationDuration" :main-image-url='backImageUrl' :current-width='currentWidth' @click.native="toggle()"/>
-        </transition>
+    <div v-for="card in cards" :key="card.imgUrl">
+      <transition mode="out-in" appear :name="currentAnimation">
+      <ImageCard v-show="card.show" :key="card.imgUrl" :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
+      </transition>
+    </div>
     </div>
 </template>
 
@@ -46,11 +45,11 @@ const randomAnimation = (array) => {
     "slideUp",
     "slideLeft",
     "slideRight",
-    // "zoom",
-    // "zoomDown",
-    // "zoomUp",
-    // "zoomLeft",
-    // "zoomRight",
+    "zoom",
+    "zoomDown",
+    "zoomUp",
+    "zoomLeft",
+    "zoomRight",
   ].sample();
 };
 
@@ -78,6 +77,8 @@ export default {
   components: { ImageCard },
   data() {
     return {
+      counter: 0,
+      cards: [ { imgUrl: allImgs[0], show: true }],
       imgs: allImgs,
       mainImageUrl: allImgs[0],
       backImageUrl: allImgs[1],
@@ -113,6 +114,11 @@ export default {
       while(oldUrl === this.mainImageUrl){
         this.mainImageUrl = this.randomBackgroundUrl()
       }
+    },
+    next(e) {
+      this.counter += 1
+      this.cards.push({ imgUrl: allImgs[this.counter], show: true })
+      this.newAnim()
     },
     toggle(e) {
       if(this.isAnimating) return
