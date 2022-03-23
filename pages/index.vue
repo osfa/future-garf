@@ -1,10 +1,10 @@
 <template>
     <div class="overflow-hidden">
         <transition mode="out-in" :name="currentAnimation">
-          <ImageCard v-show='firstCardActive' style="animation-duration: 2s" :main-image-url='mainImageUrl' :current-width='currentWidth' @click.native="toggle()"/>
+          <ImageCard v-show='firstCardActive' :style="animationDuration" :main-image-url='mainImageUrl' :current-width='currentWidth' @click.native="toggle()"/>
         </transition>
         <transition mode="out-in" appear :name="currentAnimation">
-          <ImageCard  v-show='secondCardActive' style="animation-duration: 2s" :main-image-url='backImageUrl' :current-width='currentWidth' @click.native="toggle()"/>
+          <ImageCard  v-show='secondCardActive' :style="animationDuration" :main-image-url='backImageUrl' :current-width='currentWidth' @click.native="toggle()"/>
         </transition>
     </div>
 </template>
@@ -86,6 +86,7 @@ export default {
       secondCardActive: false,
       isAnimating: false,
       currentAnimation: randomAnimation(),
+      animationTime: 10000
     };
   },
   beforeMount() {
@@ -94,6 +95,11 @@ export default {
   },
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize);
+  },
+  computed: {
+    animationDuration(){
+      return { animationDuration: (this.animationTime/1000).toString() + 's' }
+    }
   },
   methods: {
     newAnim(){
@@ -115,13 +121,13 @@ export default {
         setTimeout(() => { 
           this.mainImageUrl = this.randomBackgroundUrl()
           this.isAnimating = false
-        }, 2000);
+        }, this.animationTime);
       }
       else {
         setTimeout(() => { 
           this.backImageUrl = this.randomBackgroundUrl()
           this.isAnimating = false
-        }, 2000);
+        }, this.animationTime);
       }
       this.firstCardActive = !this.firstCardActive
       this.secondCardActive = !this.secondCardActive

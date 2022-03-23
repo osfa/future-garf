@@ -16,7 +16,7 @@ export default {
       {rel: 'stylesheet', type: 'text/css', href: '/css/vue2-animate.min.css'}
     ],
     bodyAttrs: {
-      class: 'overflow-hidden'
+      class: 'overflow-hidden bg-black'
     }
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
