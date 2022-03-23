@@ -8,10 +8,6 @@
     </div>
 </template>
 
-<!-- have some sort of list that u pop? -->
-<!-- always want one in back that it slides OVER -->
-
-<!-- better to pop in more and prune? -->
 <script>
 import ImageCard from '../components/ImageCard'
 /* eslint-disable */
@@ -84,7 +80,8 @@ export default {
       currentWidth: 1280,
       isAnimating: false,
       currentAnimation: randomAnimation(),
-      animationTime: 10000
+      animationTime: 5000,
+      mustWait: true,
     };
   },
   beforeMount() {
@@ -113,9 +110,14 @@ export default {
       }
     },
     next(e) {
+      if(this.isAnimating && this.mustWait) return
+      this.isAnimating = true
       this.counter += 1
       this.cards.push({ imgUrl: allImgs[this.counter], show: true })
       this.newAnim()
+      setTimeout(() => { 
+        this.isAnimating = false
+      }, this.animationTime);
     },
     // toggle(e) {
     //   if(this.isAnimating) return
