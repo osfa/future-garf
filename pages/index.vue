@@ -80,15 +80,21 @@ export default {
 </script>
 <style scoped>
 .page {
+  background-color: #fff;
   width:  100vw;
   height:  100vh;
+  background-size: 98%;
+  background-repeat: no-repeat;
+  background-position: center;
   background-size: cover;
-
-  width: 96vw;
+  /*background-size: clamp(1000px, 80%, 1500px) auto;*/
+/*  max-width: 2048px;
+  background-position: center;*/
+/*  width: 96vw;
   height: 96vh;
   margin-top: 2vh;
   margin-bottom: 2vh;
   margin-left:  2vw;
-  margin-right: 2vw;
+  margin-right: 2vw;*/
 }
 </style>
