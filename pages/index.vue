@@ -45,11 +45,11 @@ const randomAnimation = (array) => {
     "slideUp",
     "slideLeft",
     "slideRight",
-    "zoom",
-    "zoomDown",
-    "zoomUp",
-    "zoomLeft",
-    "zoomRight",
+    // "zoom",
+    // "zoomDown",
+    // "zoomUp",
+    // "zoomLeft",
+    // "zoomRight",
   ].sample();
 };
 
@@ -81,10 +81,7 @@ export default {
       cards: [ { imgUrl: allImgs[0], show: true }],
       imgs: allImgs,
       mainImageUrl: allImgs[0],
-      backImageUrl: allImgs[1],
       currentWidth: 1280,
-      firstCardActive: true,
-      secondCardActive: false,
       isAnimating: false,
       currentAnimation: randomAnimation(),
       animationTime: 10000
@@ -120,25 +117,25 @@ export default {
       this.cards.push({ imgUrl: allImgs[this.counter], show: true })
       this.newAnim()
     },
-    toggle(e) {
-      if(this.isAnimating) return
-      this.isAnimating = true
-      if(this.firstCardActive){
-        setTimeout(() => { 
-          this.mainImageUrl = this.randomBackgroundUrl()
-          this.isAnimating = false
-        }, this.animationTime);
-      }
-      else {
-        setTimeout(() => { 
-          this.backImageUrl = this.randomBackgroundUrl()
-          this.isAnimating = false
-        }, this.animationTime);
-      }
-      this.firstCardActive = !this.firstCardActive
-      this.secondCardActive = !this.secondCardActive
-      this.newAnim()
-    },
+    // toggle(e) {
+    //   if(this.isAnimating) return
+    //   this.isAnimating = true
+    //   if(this.firstCardActive){
+    //     setTimeout(() => { 
+    //       this.mainImageUrl = this.randomBackgroundUrl()
+    //       this.isAnimating = false
+    //     }, this.animationTime);
+    //   }
+    //   else {
+    //     setTimeout(() => { 
+    //       this.backImageUrl = this.randomBackgroundUrl()
+    //       this.isAnimating = false
+    //     }, this.animationTime);
+    //   }
+    //   this.firstCardActive = !this.firstCardActive
+    //   this.secondCardActive = !this.secondCardActive
+    //   this.newAnim()
+    // },
     handleResize(e) {
       this.currentWidth = window.innerWidth
     },
