@@ -9,6 +9,7 @@
 </template>
 
 <script>
+import * as Tone from 'tone'
 import ImageCard from '../components/ImageCard'
 
 const INITIAL_FREQ = 2;
@@ -71,7 +72,6 @@ const allImgs = [
   '/imgs/dithered-8bit/1992-10-10-0-5e.png',
   '/imgs/dithered-8bit/1992-10-10-0-60e.png',
 ]
-var Tone;
 
 export default {
   name: 'IndexPage',
@@ -134,7 +134,6 @@ export default {
   },
   mounted() {
     console.log('mounted');
-    Tone = require("Tone");
     // this.initAudio();
     // var synth = new Tone.Synth().toMaster();
     // synth.triggerAttackRelease("C4", "8n");
