@@ -169,7 +169,7 @@ export default {
       if(!this.audioCtx){
         this.toggleAudio()
       }
-      
+
       if(this.isAnimating && this.mustWait) return
       this.isAnimating = true
       this.counter += 1
@@ -203,6 +203,7 @@ export default {
       }
     },
     doCrossFade() {
+      console.log('crossfade?');
       const stepSize = 0.1;
       if (this.crossFade.fade.value === 1.0 || this.crossFade.fade.value <= 0) {
         this.crossDirection = !this.crossDirection;
@@ -272,6 +273,7 @@ export default {
         this.calculateFrequencies(actualFrequency);
     },
     initAudio() {
+      console.log('initAudio');
       const context = new Tone.Context();
       Tone.setContext(context);
       this.audioCtx = context.rawContext;
