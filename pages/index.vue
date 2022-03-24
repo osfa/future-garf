@@ -1,6 +1,6 @@
 <template>
     <div class="overflow-hidden">
-    <vue-topprogress ref="topProgress" :speed="25" color="#fff" :height="1"/>
+    <vue-topprogress ref="topProgress" :speed="100" color="#fff" :height="1"/>
     <div v-for="(card, index) in cards" :key="index">
       <ImageCard :key="index" :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
     </div>
@@ -85,7 +85,7 @@ export default {
       currentWidth: 1280,
       isAnimating: false,
       currentAnimation: randomAnimation(),
-      animationTime: 250,
+      animationTime: 1000,
       mustWait: true,
       volume: -30,
       rainVolume: -5,
@@ -159,6 +159,13 @@ export default {
     randomBackgroundUrl() {
       return this.imgs[Math.floor(Math.random()*this.imgs.length)]
     },
+    newRandomBackgroundForPreload() {
+      let oldUrl = this.randomBackgroundUrl()
+      while(oldUrl === this.mainImageUrl){
+        oldUrl = this.randomBackgroundUrl()
+      }
+      return oldUrl;
+    },
     newRandomBackground() {
       const oldUrl = this.mainImageUrl
       while(oldUrl === this.mainImageUrl){
@@ -188,7 +195,7 @@ export default {
 
       this.preloadedImage = new Image(); 
       this.preloadedImage.src = allImgs[this.counter+1]
-      this.preloadedImage.src = this.randomBackgroundUrl()
+      this.preloadedImage.src = this.newRandomBackgroundForPreload()
       this.preloadedImage.onload = this.pushCard()
 
       // this.cards = this.cards.slice(0, 3);

@@ -48,7 +48,7 @@ export default {
     return {
       isLoading: true,
       imagesToPreload: [
-        this.mainImageUrl
+        this.currentWidth < 1024 ? this.mainImageUrl.replace('.png', '-v.png') : this.mainImageUrl
       ]
     };
   },
@@ -65,7 +65,6 @@ export default {
       }
     },
     getAnimation(){
-      console.log('hmm?');
       return randomAnimation();
     }
   },
