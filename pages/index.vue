@@ -102,35 +102,35 @@ export default {
       asmrChannel1: undefined,
       asmrChannel2: undefined,
       availableAsmr1: [
-        require("@/static/audio/tapping1.mp3"),
-        require("@/static/audio/tapping2.mp3"),
-        require("@/static/audio/tapping3.mp3"),
-        require("@/static/audio/server1.mp3"),
-        require("@/static/audio/server2.mp3"),
-        require("@/static/audio/rain1.mp3"),
-        require("@/static/audio/rain2.mp3"),
-        require("@/static/audio/rain3.mp3"),
-        require("@/static/audio/tiktock.mp3"),
+        "/audio/tapping1.mp3",
+        "/audio/tapping2.mp3",
+        "/audio/tapping3.mp3",
+        "/audio/server1.mp3",
+        "/audio/server2.mp3",
+        "/audio/rain1.mp3",
+        "/audio/rain2.mp3",
+        "/audio/rain3.mp3",
+        "/audio/tiktock.mp3",
       ],
       availableAsmr2: [
-        require("@/static/audio/cave.mp3"),
-        require("@/static/audio/war-propeller.mp3"),
-        require("@/static/audio/tropical.mp3"),
-        require("@/static/audio/wind1.mp3"),
-        require("@/static/audio/wind2.mp3"),
-        require("@/static/audio/airplane1.mp3"),
-        require("@/static/audio/airplane2.mp3"),
-        require("@/static/audio/ocean.mp3"),
-        require("@/static/audio/fireplace.mp3"),
+        "/audio/cave.mp3",
+        "/audio/war-propeller.mp3",
+        "/audio/tropical.mp3",
+        "/audio/wind1.mp3",
+        "/audio/wind2.mp3",
+        "/audio/airplane1.mp3",
+        "/audio/airplane2.mp3",
+        "/audio/ocean.mp3",
+        "/audio/fireplace.mp3",
       ],
       availableTos: [
-        require("@/static/audio/tos/homer-facebook.mp3"),
-        require("@/static/audio/tos/krusty-insta.mp3"),
-        require("@/static/audio/tos/scooby-facebook.mp3"),
-        require("@/static/audio/tos/shaggy-instagram.mp3"),
-        require("@/static/audio/tos/sponge-tos-complete.mp3"),
-      ],
-      };
+        "/audio/tos/homer-facebook.mp3",
+        "/audio/tos/krusty-insta.mp3",
+        "/audio/tos/scooby-facebook.mp3",
+        "/audio/tos/shaggy-instagram.mp3",
+        "/audio/tos/sponge-tos-complete.mp3",
+      ]
+    };
   },
   mounted() {
     console.log('mounted');
@@ -202,7 +202,6 @@ export default {
       }
     },
     doCrossFade() {
-      console.log('crossfade?');
       const stepSize = 0.1;
       if (this.crossFade.fade.value === 1.0 || this.crossFade.fade.value <= 0) {
         this.crossDirection = !this.crossDirection;
@@ -284,29 +283,29 @@ export default {
 
       this.rainMaker = new Tone.Noise("brown").toDestination();
 
-      // this.crossFade = new Tone.CrossFade().toDestination();
-      // this.crossFade.fade.value = 0.5; // 0-a
+      this.crossFade = new Tone.CrossFade().toDestination();
+      this.crossFade.fade.value = 0.5; // 0-a
 
-      // this.asmrChannel1 = new Tone.Player(this.availableAsmr1.sample()).connect(
-      //   this.crossFade.a
-      // );
-      // this.asmrChannel1.autostart = true;
-      // this.asmrChannel1.loop = true;
-      // this.asmrChannel1.volume.value = 12;
+      this.asmrChannel1 = new Tone.Player(this.availableAsmr1.sample()).connect(
+        this.crossFade.a
+      );
+      this.asmrChannel1.autostart = true;
+      this.asmrChannel1.loop = true;
+      this.asmrChannel1.volume.value = 12;
 
-      // this.asmrChannel2 = new Tone.Player(this.availableAsmr2.sample()).connect(
-      //   this.crossFade.b
-      // );
-      // this.asmrChannel2.autostart = true;
-      // this.asmrChannel2.loop = true;
-      // this.asmrChannel2.volume.value = 6;
-      // this.crossFadeInterval = setInterval(this.doCrossFade, 5000);
+      this.asmrChannel2 = new Tone.Player(this.availableAsmr2.sample()).connect(
+        this.crossFade.b
+      );
+      this.asmrChannel2.autostart = true;
+      this.asmrChannel2.loop = true;
+      this.asmrChannel2.volume.value = 6;
+      this.crossFadeInterval = setInterval(this.doCrossFade, 5000);
+
       const file = this.availableTos.sample()
-      console.log("to play:", file)
       this.tosPlayer = new Tone.Player(file).toDestination();
-      this.tosPlayer.autostart = true;
+      this.tosPlayer.autostart = false;
       this.tosPlayer.loop = false;
-      // this.tosPlayer.volume.value = 0;
+      this.tosPlayer.volume.value = 0;
 
       this.setRainVolume();
       this.setVolume();
