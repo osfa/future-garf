@@ -1,8 +1,42 @@
 <template>
+<transition mode="out-in" appear :name="getAnimation">
 <div v-show="!isLoading" class='page' :style='backgroundStyles'></div>
+</transition>
 </template>
 
 <script>
+const randomAnimation = (array) => {
+  return [
+    "bounce",
+    "bounceDown",
+    "bounceLeft",
+    "bounceRight",
+    "bounceUp",
+    "fade",
+    "fadeDown",
+    "fadeDownBig",
+    "fadeLeft",
+    "fadeLeftBig",
+    "fadeRight",
+    "fadeRightBig",
+    "fadeUp",
+    "fadeUpBig",
+    // "rotate",
+    // "rotateDownLeft",
+    // "rotateDownRight",
+    // "rotateUpLeft",
+    // "rotateUpRight",
+    "slideDown",
+    "slideUp",
+    "slideLeft",
+    "slideRight",
+    // "zoom",
+    // "zoomDown",
+    // "zoomUp",
+    // "zoomLeft",
+    // "zoomRight",
+  ].sample();
+};
 // import bkgImg from '/imgs/1987-12-11-0-10e-1646988554-1024x2048-10e-1646990976-splinter-0-gigapixel-lines-scale-2_00x.png';
 export default {
   name: 'ImageCard',
@@ -30,6 +64,9 @@ export default {
         backgroundImage: `url('${imgUrl}')`
       }
     },
+    getAnimation(){
+      return randomAnimation();
+    }
   },
   created() {
     const images = this.imagesToPreload.map(imageSrc => {
