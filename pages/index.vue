@@ -1,6 +1,6 @@
 <template>
     <div class="overflow-hidden">
-    <vue-topprogress ref="topProgress" :speed="100" color="#fff" :height="1"/>
+    <vue-topprogress ref="topProgress" :speed="50" color="#fff" :height="1"/>
     <div v-for="(card, index) in cards" :key="index">
       <ImageCard :key="index" :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
     </div>
@@ -12,7 +12,7 @@ import * as Tone from 'tone'
 import { vueTopprogress } from 'vue-top-progress'
 import ImageCard from '../components/ImageCard'
 
-const INITIAL_FREQ = 4;
+const INITIAL_FREQ = 5;
 
 /* eslint-disable */
  Array.prototype.sample = function () {
@@ -22,11 +22,11 @@ const INITIAL_FREQ = 4;
 
 const randomAnimation = (array) => {
   return [
-    "bounce",
-    "bounceDown",
-    "bounceLeft",
-    "bounceRight",
-    "bounceUp",
+    // "bounce",
+    // "bounceDown",
+    // "bounceLeft",
+    // "bounceRight",
+    // "bounceUp",
     "fade",
     "fadeDown",
     "fadeDownBig",
@@ -85,7 +85,7 @@ export default {
       currentWidth: 1280,
       isAnimating: false,
       currentAnimation: randomAnimation(),
-      animationTime: 1000,
+      animationTime: 1500,
       mustWait: true,
       volume: -30,
       rainVolume: -5,
@@ -154,7 +154,6 @@ export default {
   methods: {
     newAnim(){
       this.currentAnimation = randomAnimation()
-      console.log(this.currentAnimation)
     },
     randomBackgroundUrl() {
       return this.imgs[Math.floor(Math.random()*this.imgs.length)]
@@ -173,13 +172,16 @@ export default {
       }
     },
     pushCard(){
+        setTimeout(() => { 
+          this.$refs.topProgress.done();
+        }, 1);
         console.log('loading done. trigger animation.');
+        
         this.counter += 1
         this.cards.push({ imgUrl: this.preloadedImage.src, show: true })
         this.newAnim()
         setTimeout(() => { 
           this.isAnimating = false
-          this.$refs.topProgress.done();
         }, this.animationTime);
     },
     next(e) {
