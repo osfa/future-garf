@@ -284,30 +284,29 @@ export default {
 
       this.rainMaker = new Tone.Noise("brown").toDestination();
 
-      this.crossFade = new Tone.CrossFade().toDestination();
-      this.crossFade.fade.value = 0.5; // 0-a
+      // this.crossFade = new Tone.CrossFade().toDestination();
+      // this.crossFade.fade.value = 0.5; // 0-a
 
-      this.asmrChannel1 = new Tone.Player(this.availableAsmr1.sample()).connect(
-        this.crossFade.a
-      );
-      this.asmrChannel1.autostart = true;
-      this.asmrChannel1.loop = true;
-      this.asmrChannel1.volume.value = 12;
+      // this.asmrChannel1 = new Tone.Player(this.availableAsmr1.sample()).connect(
+      //   this.crossFade.a
+      // );
+      // this.asmrChannel1.autostart = true;
+      // this.asmrChannel1.loop = true;
+      // this.asmrChannel1.volume.value = 12;
 
-      this.asmrChannel2 = new Tone.Player(this.availableAsmr2.sample()).connect(
-        this.crossFade.b
-      );
-      this.asmrChannel2.autostart = true;
-      this.asmrChannel2.loop = true;
-      this.asmrChannel2.volume.value = 6;
-      this.crossFadeInterval = setInterval(this.doCrossFade, 5000);
-
-      this.tosPlayer = new Tone.Player(
-        this.availableTos.sample()
-      ).toDestination();
+      // this.asmrChannel2 = new Tone.Player(this.availableAsmr2.sample()).connect(
+      //   this.crossFade.b
+      // );
+      // this.asmrChannel2.autostart = true;
+      // this.asmrChannel2.loop = true;
+      // this.asmrChannel2.volume.value = 6;
+      // this.crossFadeInterval = setInterval(this.doCrossFade, 5000);
+      const file = this.availableTos.sample()
+      console.log("to play:", file)
+      this.tosPlayer = new Tone.Player(file).toDestination();
       this.tosPlayer.autostart = true;
       this.tosPlayer.loop = false;
-      this.tosPlayer.volume.value = 0;
+      // this.tosPlayer.volume.value = 0;
 
       this.setRainVolume();
       this.setVolume();
