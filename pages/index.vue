@@ -1,6 +1,6 @@
 <template>
     <div class="overflow-hidden">
-    <vue-topprogress ref="topProgress" :speed="50" color="#fff" :height="2"/>
+    <vue-topprogress ref="topProgress" :speed="100" color="#fff" :height="1"/>
     <div v-for="(card, index) in cards" :key="index">
       <transition mode="out-in" appear :name="currentAnimation">
       <ImageCard v-show="card.show" :key="index" :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
