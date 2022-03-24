@@ -1,7 +1,7 @@
 <template>
     <div class="overflow-hidden">
-    <vue-topprogress speed="100" color="#fff" height=2 ref="topProgress"></vue-topprogress>
-    <div v-for="(card, index) in cards" :key="card.imgUrl">
+    <vue-topprogress ref="topProgress" :speed="50" color="#fff" :height="2"/>
+    <div v-for="(card, index) in cards" :key="index">
       <transition mode="out-in" appear :name="currentAnimation">
       <ImageCard v-show="card.show" :key="index" :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
       </transition>
@@ -168,6 +168,7 @@ export default {
       }
     },
     pushCard(){
+        console.log('loading done. trigger animation.');
         this.counter += 1
         this.cards.push({ imgUrl: this.preloadedImage.src, show: true })
         this.newAnim()
@@ -183,6 +184,7 @@ export default {
 
       if(this.isAnimating && this.mustWait) return
       this.isAnimating = true
+      console.log('next');
 
       this.$refs.topProgress.start()
 
@@ -191,7 +193,8 @@ export default {
       this.preloadedImage.src = this.randomBackgroundUrl()
       this.preloadedImage.onload = this.pushCard()
 
-      this.cards.slice(0, 3);
+      // this.cards = this.cards.slice(0, 3);
+      console.log(this.cards)
     },
     handleResize(e) {
       this.currentWidth = window.innerWidth
