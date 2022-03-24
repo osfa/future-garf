@@ -1,9 +1,8 @@
 <template>
     <div class="overflow-hidden">
-    <vue-topprogress ref="topProgress" :speed="100" color="#fff" :height="1"/>
+    <vue-topprogress ref="topProgress" :speed="25" color="#fff" :height="1"/>
     <div v-for="(card, index) in cards" :key="index">
       <ImageCard :key="index" :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
-      </transition>
     </div>
     </div>
 </template>

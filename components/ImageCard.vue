@@ -65,6 +65,7 @@ export default {
       }
     },
     getAnimation(){
+      console.log('hmm?');
       return randomAnimation();
     }
   },
