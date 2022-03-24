@@ -60,7 +60,7 @@ export default {
       animationTime: 1500,
       mustWait: true,
       volume: -30,
-      rainVolume: 0,
+      rainVolume: -3,
       leftEar: undefined,
       rightEar: undefined,
       binauralBeat: INITIAL_FREQ,
