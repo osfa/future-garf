@@ -26,3 +26,17 @@ static/audio/tos/shaggy-instagram.mp3 filter=lfs diff=lfs merge=lfs -text
 static/audio/tos/sponge-tos-complete.mp3 filter=lfs diff=lfs merge=lfs -text
 static/audio/tos/sponge-tos-complete2.mp3 filter=lfs diff=lfs merge=lfs -text
 static/audio/tos/homer-facebook.mp3 filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(10).wav.asd filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(7).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(1).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(11).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(3).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(4).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(5).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(10).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(6).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(8).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio.wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(2).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(9).wav filter=lfs diff=lfs merge=lfs -text
+static/audio/prayers/audio(12).wav filter=lfs diff=lfs merge=lfs -text

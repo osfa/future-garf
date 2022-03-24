@@ -1,8 +1,9 @@
 <template>
     <div class="overflow-hidden">
-    <div v-for="card in cards" :key="card.imgUrl">
+    <vue-topprogress speed="100" color="#fff" height=2 ref="topProgress"></vue-topprogress>
+    <div v-for="(card, index) in cards" :key="card.imgUrl">
       <transition mode="out-in" appear :name="currentAnimation">
-      <ImageCard v-show="card.show" :key="card.imgUrl" :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
+      <ImageCard v-show="card.show" :key="index" :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
       </transition>
     </div>
     </div>
@@ -10,9 +11,10 @@
 
 <script>
 import * as Tone from 'tone'
+import { vueTopprogress } from 'vue-top-progress'
 import ImageCard from '../components/ImageCard'
 
-const INITIAL_FREQ = 2;
+const INITIAL_FREQ = 4;
 
 /* eslint-disable */
  Array.prototype.sample = function () {
@@ -75,7 +77,7 @@ const allImgs = [
 
 export default {
   name: 'IndexPage',
-  components: { ImageCard },
+  components: { ImageCard, vueTopprogress },
   data() {
     return {
       counter: 0,
@@ -85,7 +87,7 @@ export default {
       currentWidth: 1280,
       isAnimating: false,
       currentAnimation: randomAnimation(),
-      animationTime: 5000,
+      animationTime: 250,
       mustWait: true,
       volume: -30,
       rainVolume: -5,
@@ -154,6 +156,7 @@ export default {
   methods: {
     newAnim(){
       this.currentAnimation = randomAnimation()
+      console.log(this.currentAnimation)
     },
     randomBackgroundUrl() {
       return this.imgs[Math.floor(Math.random()*this.imgs.length)]
@@ -164,6 +167,15 @@ export default {
         this.mainImageUrl = this.randomBackgroundUrl()
       }
     },
+    pushCard(){
+        this.counter += 1
+        this.cards.push({ imgUrl: this.preloadedImage.src, show: true })
+        this.newAnim()
+        setTimeout(() => { 
+          this.isAnimating = false
+          this.$refs.topProgress.done();
+        }, this.animationTime);
+    },
     next(e) {
       if(!this.audioCtx){
         this.toggleAudio()
@@ -171,12 +183,15 @@ export default {
 
       if(this.isAnimating && this.mustWait) return
       this.isAnimating = true
-      this.counter += 1
-      this.cards.push({ imgUrl: allImgs[this.counter], show: true })
-      this.newAnim()
-      setTimeout(() => { 
-        this.isAnimating = false
-      }, this.animationTime);
+
+      this.$refs.topProgress.start()
+
+      this.preloadedImage = new Image(); 
+      this.preloadedImage.src = allImgs[this.counter+1]
+      this.preloadedImage.src = this.randomBackgroundUrl()
+      this.preloadedImage.onload = this.pushCard()
+
+      this.cards.slice(0, 3);
     },
     handleResize(e) {
       this.currentWidth = window.innerWidth
