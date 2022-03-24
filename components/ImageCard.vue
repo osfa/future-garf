@@ -1,6 +1,5 @@
 <template>
-    <div class='page' :style='backgroundStyles'>
-    </div>
+<div v-show="!isLoading" class='page' :style='backgroundStyles'></div>
 </template>
 
 <script>
@@ -11,11 +10,14 @@ export default {
     mainImageUrl: { type: String, required: true },
     currentWidth: { type: Number, required: true }
   },
-  // data() {
-  //   return {
-  //     currentWidth: '',
-  //   }
-  // },
+  data() {
+    return {
+      isLoading: true,
+      imagesToPreload: [
+        this.mainImageUrl
+      ]
+    };
+  },
   computed: {
     backgroundStyles() {
       let imgUrl = this.mainImageUrl
@@ -29,6 +31,23 @@ export default {
       }
     },
   },
+  created() {
+    const images = this.imagesToPreload.map(imageSrc => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.src = imageSrc;
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+    });
+    Promise.all(images).then(() => { 
+      this.isLoading = false;
+    }).catch(error => {
+      console.error(error.message)
+    });
+  },
+
+
   // beforeMount() {
   //   this.currentWidth = window.innerWidth
   //   window.addEventListener('resize', this.handleResize);
