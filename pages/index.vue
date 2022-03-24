@@ -12,13 +12,19 @@ import * as Tone from 'tone'
 import { vueTopprogress } from 'vue-top-progress'
 import ImageCard from '../components/ImageCard'
 
-const INITIAL_FREQ = 5;
+const INITIAL_FREQ = 4;
 
 /* eslint-disable */
  Array.prototype.sample = function () {
   return this[Math.floor(Math.random() * this.length)];
 };
 /* eslint-disable */
+
+export const random = (min, max) => {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min) + min);
+};
 
 const randomAnimation = (array) => {
   return [
@@ -88,7 +94,7 @@ export default {
       animationTime: 1500,
       mustWait: true,
       volume: -30,
-      rainVolume: -5,
+      rainVolume: 0,
       leftEar: undefined,
       rightEar: undefined,
       binauralBeat: INITIAL_FREQ,
@@ -148,20 +154,18 @@ export default {
   },
   computed: {
     animationDuration(){
-      return { animationDuration: (this.animationTime/1000).toString() + 's' }
+      return { animationDuration: this.animationTime.toString() + 'ms' }
     }
   },
   methods: {
-    newAnim(){
-      this.currentAnimation = randomAnimation()
-    },
     randomBackgroundUrl() {
       return this.imgs[Math.floor(Math.random()*this.imgs.length)]
     },
     newRandomBackgroundForPreload() {
-      let oldUrl = this.randomBackgroundUrl()
-      while(oldUrl === this.mainImageUrl){
-        oldUrl = this.randomBackgroundUrl()
+      let oldUrl = this.randomBackgroundUrl();
+      const prev = this.preloadedImage ? this.preloadedImage.src : '';
+      while(oldUrl === prev){
+        oldUrl = this.randomBackgroundUrl();
       }
       return oldUrl;
     },
@@ -179,7 +183,6 @@ export default {
         
         this.counter += 1
         this.cards.push({ imgUrl: this.preloadedImage.src, show: true })
-        this.newAnim()
         setTimeout(() => { 
           this.isAnimating = false
         }, this.animationTime);
@@ -191,17 +194,17 @@ export default {
 
       if(this.isAnimating && this.mustWait) return
       this.isAnimating = true
-      console.log('next');
 
       this.$refs.topProgress.start()
 
+      const newBkgUrl = this.newRandomBackgroundForPreload();
       this.preloadedImage = new Image(); 
-      this.preloadedImage.src = allImgs[this.counter+1]
-      this.preloadedImage.src = this.newRandomBackgroundForPreload()
-      this.preloadedImage.onload = this.pushCard()
-
+      // this.preloadedImage.src = allImgs[this.counter+1]
+      this.preloadedImage.src = newBkgUrl;
+      this.preloadedImage.onload = this.pushCard();
+      this.frequencyShift();
       // this.cards = this.cards.slice(0, 3);
-      console.log(this.cards)
+      // console.log(this.cards)
     },
     handleResize(e) {
       this.currentWidth = window.innerWidth
@@ -302,11 +305,16 @@ export default {
       this.audioCtx = context.rawContext;
 
       const merge = new Tone.Merge().toDestination();
-
+      // const vol = new Tone.Volume(-90).toDestination();
+      // merge.connect()
       this.leftEar = new Tone.Oscillator().connect(merge, 0, 0);
       this.rightEar = new Tone.Oscillator().connect(merge, 0, 1);
+      this.leftEar.volume.value = -12;
+      this.rightEar.volume.value = -12;
 
       this.rainMaker = new Tone.Noise("brown").toDestination();
+
+      // new Tone.Noise("pink").toDestination().start();
 
       this.crossFade = new Tone.CrossFade().toDestination();
       this.crossFade.fade.value = 0.5; // 0-a

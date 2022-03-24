@@ -7,11 +7,11 @@
 <script>
 const randomAnimation = (array) => {
   return [
-    "bounce",
-    "bounceDown",
-    "bounceLeft",
-    "bounceRight",
-    "bounceUp",
+    // "bounce",
+    // "bounceDown",
+    // "bounceLeft",
+    // "bounceRight",
+    // "bounceUp",
     "fade",
     "fadeDown",
     "fadeDownBig",
@@ -66,7 +66,6 @@ export default {
     },
     getAnimation(){
       const a = randomAnimation();
-      console.log(a);
       return a;
     }
   },
