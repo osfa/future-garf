@@ -1,6 +1,6 @@
 <template>
     <div class="overflow-hidden">
-    <vue-topprogress ref="topProgress" :speed="50" color="#fff" :height="1"/>
+    <vue-topprogress ref="topProgress" :speed="100" color="#fff" :height="1"/>
     <div v-for="(card, index) in cards" :key="index">
       <ImageCard :key="index" :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
     </div>
@@ -24,39 +24,6 @@ export const random = (min, max) => {
   min = Math.ceil(min);
   max = Math.floor(max);
   return Math.floor(Math.random() * (max - min) + min);
-};
-
-const randomAnimation = (array) => {
-  return [
-    // "bounce",
-    // "bounceDown",
-    // "bounceLeft",
-    // "bounceRight",
-    // "bounceUp",
-    "fade",
-    "fadeDown",
-    "fadeDownBig",
-    "fadeLeft",
-    "fadeLeftBig",
-    "fadeRight",
-    "fadeRightBig",
-    "fadeUp",
-    "fadeUpBig",
-    // "rotate",
-    // "rotateDownLeft",
-    // "rotateDownRight",
-    // "rotateUpLeft",
-    // "rotateUpRight",
-    "slideDown",
-    "slideUp",
-    "slideLeft",
-    "slideRight",
-    // "zoom",
-    // "zoomDown",
-    // "zoomUp",
-    // "zoomLeft",
-    // "zoomRight",
-  ].sample();
 };
 
 const allImgs = [
@@ -90,7 +57,6 @@ export default {
       mainImageUrl: allImgs[0],
       currentWidth: 1280,
       isAnimating: false,
-      currentAnimation: randomAnimation(),
       animationTime: 1500,
       mustWait: true,
       volume: -30,
@@ -162,18 +128,14 @@ export default {
       return this.imgs[Math.floor(Math.random()*this.imgs.length)]
     },
     newRandomBackgroundForPreload() {
-      let oldUrl = this.randomBackgroundUrl();
+      let newUrl = this.randomBackgroundUrl();
       const prev = this.preloadedImage ? this.preloadedImage.src : '';
-      while(oldUrl === prev){
-        oldUrl = this.randomBackgroundUrl();
+      console.log(prev);
+      while(newUrl === prev){
+        newUrl = this.randomBackgroundUrl();
       }
-      return oldUrl;
-    },
-    newRandomBackground() {
-      const oldUrl = this.mainImageUrl
-      while(oldUrl === this.mainImageUrl){
-        this.mainImageUrl = this.randomBackgroundUrl()
-      }
+      console.log(newUrl)
+      return newUrl;
     },
     pushCard(){
         setTimeout(() => { 
@@ -194,7 +156,6 @@ export default {
 
       if(this.isAnimating && this.mustWait) return
       this.isAnimating = true
-
       this.$refs.topProgress.start()
 
       const newBkgUrl = this.newRandomBackgroundForPreload();
@@ -203,8 +164,6 @@ export default {
       this.preloadedImage.src = newBkgUrl;
       this.preloadedImage.onload = this.pushCard();
       this.frequencyShift();
-      // this.cards = this.cards.slice(0, 3);
-      // console.log(this.cards)
     },
     handleResize(e) {
       this.currentWidth = window.innerWidth
