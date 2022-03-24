@@ -112,6 +112,8 @@ export default {
   },
   beforeMount() {
     this.currentWidth = window.innerWidth
+    this.preloadedImage = new Image(); 
+    this.preloadedImage.src = this.newRandomBackgroundForPreload();
     window.addEventListener('resize', this.handleResize);
   },
   beforeDestroy() {
@@ -130,24 +132,22 @@ export default {
     newRandomBackgroundForPreload() {
       let newUrl = this.randomBackgroundUrl();
       const prev = this.preloadedImage ? this.preloadedImage.src : '';
-      console.log(prev);
       while(newUrl === prev){
         newUrl = this.randomBackgroundUrl();
       }
-      console.log(newUrl)
       return newUrl;
     },
-    pushCard(){
-        setTimeout(() => { 
-          this.$refs.topProgress.done();
-        }, 1);
-        console.log('loading done. trigger animation.');
-        
+    pushCard(){        
         this.counter += 1
         this.cards.push({ imgUrl: this.preloadedImage.src, show: true })
         setTimeout(() => { 
           this.isAnimating = false
         }, this.animationTime);
+    },
+    doneLoad(){
+      setTimeout(() => { 
+        this.$refs.topProgress.done();
+      }, 1);
     },
     next(e) {
       if(!this.audioCtx){
@@ -157,12 +157,12 @@ export default {
       if(this.isAnimating && this.mustWait) return
       this.isAnimating = true
       this.$refs.topProgress.start()
+      this.pushCard();
 
       const newBkgUrl = this.newRandomBackgroundForPreload();
       this.preloadedImage = new Image(); 
-      // this.preloadedImage.src = allImgs[this.counter+1]
       this.preloadedImage.src = newBkgUrl;
-      this.preloadedImage.onload = this.pushCard();
+      this.preloadedImage.onload = this.doneLoad(); // this.pushCard();
       this.frequencyShift();
     },
     handleResize(e) {
