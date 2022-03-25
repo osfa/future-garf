@@ -1,5 +1,5 @@
 <template>
-<transition mode="out-in" appear :name="getAnimation">
+<transition mode="out-in" :appear="animationOn" :name="getAnimation">
 <div v-show="!isLoading" class='page' :style='backgroundStyles'></div>
 </transition>
 </template>
@@ -42,7 +42,9 @@ export default {
   name: 'ImageCard',
   props: {
     mainImageUrl: { type: String, required: true },
-    currentWidth: { type: Number, required: true }
+    currentWidth: { type: Number, required: true },
+    setAnimation: { type: String, default: '' },
+    animationOn : { type: Boolean, default: true },
   },
   data() {
     return {
@@ -65,6 +67,9 @@ export default {
       }
     },
     getAnimation(){
+      if(this.setAnimation !== ''){
+        return this.setAnimation;
+      }
       const a = randomAnimation();
       return a;
     }

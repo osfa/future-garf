@@ -2,8 +2,9 @@
     <div class="overflow-hidden">
     <vue-topprogress ref="topProgress" :speed="100" color="#fff" :height="1"/>
     <div v-for="(card, index) in cards" :key="index">
-      <ImageCard :key="index" :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
+      <ImageCard :key="index" set-animation='customFade' :style="animationDuration" :main-image-url='card.imgUrl' :current-width='currentWidth' @click.native="next()"/>
     </div>
+<!--     <ImageCard :style="animationDuration" :main-image-url='imgs.sample()' :current-width='currentWidth' @click.native="next()" set-animation='fade' /> -->
     </div>
 </template>
 
@@ -52,12 +53,12 @@ export default {
   data() {
     return {
       counter: 0,
-      cards: [ { imgUrl: allImgs[0], show: true }],
+      cards: [ { imgUrl: allImgs[0], show: true } ],
       imgs: allImgs,
       mainImageUrl: allImgs[0],
       currentWidth: 1280,
       isAnimating: false,
-      animationTime: 1500,
+      animationTime: 500,
       mustWait: true,
       volume: -30,
       rainVolume: -3,
@@ -70,7 +71,8 @@ export default {
       crossFadeInterval: undefined,
       rainMaker: undefined,
       audioDialog: true,
-      tosPlayer: undefined,
+      sampler1: undefined,
+      uiSampler: undefined,
       asmrChannel1: undefined,
       asmrChannel2: undefined,
       availableAsmr1: [
@@ -94,6 +96,20 @@ export default {
         "/audio/airplane2.mp3",
         "/audio/ocean.mp3",
         "/audio/fireplace.mp3",
+      ],
+      sampleSlot1: [
+       "/audio/tos/homer-facebook.mp3",
+       "/audio/tos/krusty-insta.mp3",
+       "/audio/tos/scooby-facebook.mp3",
+       "/audio/tos/shaggy-instagram.mp3",
+       "/audio/tos/sponge-tos-complete.mp3",
+      ],
+      uiSamples: [
+       "/audio/tos/homer-facebook.mp3",
+       "/audio/tos/krusty-insta.mp3",
+       "/audio/tos/scooby-facebook.mp3",
+       "/audio/tos/shaggy-instagram.mp3",
+       "/audio/tos/sponge-tos-complete.mp3",
       ],
       availableTos: [
         "/audio/tos/homer-facebook.mp3",
@@ -131,13 +147,13 @@ export default {
     },
     newRandomBackgroundForPreload() {
       let newUrl = this.randomBackgroundUrl();
-      const prev = this.preloadedImage ? this.preloadedImage.src : '';
-      while(newUrl === prev){
+      while(newUrl.replace('/imgs/', '') === this.preloadedImage.src.split('/imgs/')[1]){
         newUrl = this.randomBackgroundUrl();
       }
       return newUrl;
     },
     pushCard(){        
+        console.log('pushCard');
         this.counter += 1
         this.cards.push({ imgUrl: this.preloadedImage.src, show: true })
         setTimeout(() => { 
@@ -158,6 +174,10 @@ export default {
       this.isAnimating = true
       this.$refs.topProgress.start()
       this.pushCard();
+
+      // if (this.uiSampler.state === "stopped") {
+      //   this.uiSampler.load(this.uiSamples.sample());
+      // }
 
       const newBkgUrl = this.newRandomBackgroundForPreload();
       this.preloadedImage = new Image(); 
@@ -265,7 +285,7 @@ export default {
 
       const merge = new Tone.Merge().toDestination();
       // const vol = new Tone.Volume(-90).toDestination();
-      // merge.connect()
+
       this.leftEar = new Tone.Oscillator().connect(merge, 0, 0);
       this.rightEar = new Tone.Oscillator().connect(merge, 0, 1);
       this.leftEar.volume.value = -12;
@@ -293,11 +313,17 @@ export default {
       this.asmrChannel2.volume.value = 6;
       this.crossFadeInterval = setInterval(this.doCrossFade, 5000);
 
-      const file = this.availableTos.sample()
-      this.tosPlayer = new Tone.Player(file).toDestination();
-      this.tosPlayer.autostart = false;
-      this.tosPlayer.loop = false;
-      this.tosPlayer.volume.value = 0;
+      const file1 = this.sampleSlot1.sample()
+      this.sampler1 = new Tone.Player(file1).toDestination();
+      this.sampler1.autostart = false;
+      this.sampler1.loop = false;
+      this.sampler1.volume.value = 0;
+
+      const file2 = this.uiSamples.sample()
+      this.uiSampler = new Tone.Player(file2).toDestination();
+      this.uiSampler.autostart = false;
+      this.uiSampler.loop = false;
+      this.uiSampler.volume.value = 0;
 
       this.setRainVolume();
       this.setVolume();
@@ -326,11 +352,14 @@ export default {
   background-position: center;
   background-size: cover;
 }
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 2.5s;
+
+.customFade-enter-active, .customFade-leave-active {
+  transition: all 500ms ease-out;
+  /*transition: opacity 5s;*/
 }
-.fade-enter, .fade-leave-to {
+.customFade-enter, .customFade-leave-to {
   opacity: 0;
+  transform: scale(1.05);
 }
 
 .slide-fade-enter-active {
