@@ -1,5 +1,36 @@
 # future-garf
 
+- reaaally slow animations?
+- transition sounds effects, faster fades on click, more and louder noise, higher tone or toneswitch? pitched garf prayers. more diff bkg sounds like vopod etc? chorus or reverb on top? page flip opp
+
+- load sounds after short while. slower entry animation adn then randomizes liek a scene?
+- have a timer for the instlalation thing? unix time stamp counter?
+
+- flip anims? https://codepen.io/timrijkse/pen/rMrXWW
+- smoke? css?
+
+## stories
+
+- custom 404
+- sizes: 512 for mobile? 16 colors?
+- have hq flag that triggers raw for local network or something?
+- now its double loading for mbile? need chk for preloading...
+
+## audio
+
+- garf mumblings of some text, laughts, door creaking, fly sounds, pink noise, bowls? channel switch effect?
+- add like fly animations? or fly sounds at least? pie sounds?
+- pop sounds on click? what else can u do on click? something around cursor? butterfly? ui sounds?
+
+## aeshetics
+
+- pattern dither for more comiccy?
+- time to pick epoch i guess?
+- saturate a tiny bit? other auto adjustments?
+
+either dither or make main image small and with backgorund color o rsomething? to save size...
+have square ones and diff dims in middle? like composiiotns?
+
 ## Build Setup
 
 ```bash
