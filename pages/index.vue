@@ -205,8 +205,8 @@ export default {
       ) {
         newUrl = this.randomBackgroundUrl()
       }
-      const resolution = '1k-dithered-16bit'
-      return newUrl.replace('2k-dithered-16bit', resolution)
+      const desiredResolution = '2k'
+      return newUrl.replace('2k', desiredResolution)
     },
     pushCard() {
       console.log('pushCard')
@@ -270,13 +270,17 @@ export default {
       }
     },
     doCrossFade() {
-      const stepSize = 0.1
+      const stepSize = 0.25
       if (this.crossFade.fade.value === 1.0 || this.crossFade.fade.value <= 0) {
         this.crossDirection = !this.crossDirection
         if (this.crossFade.fade.value === 1.0) {
-          this.asmrChannel1.load(this.availableAsmr1.sample())
+          const chosen = this.availableAsmr1.sample()
+          console.log('new sample 1: ', chosen)
+          this.asmrChannel1.load(chosen)
         } else {
-          this.asmrChannel2.load(this.availableAsmr2.sample())
+          const chosen = this.availableAsmr2.sample()
+          console.log('new sample 2: ', chosen)
+          this.asmrChannel2.load(chosen)
         }
       }
       if (this.crossDirection) {
