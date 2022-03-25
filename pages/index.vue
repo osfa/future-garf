@@ -1,9 +1,25 @@
 <template>
   <div class="overflow-hidden">
     <vue-topprogress ref="topProgress" :speed="100" color="#fff" :height="1" />
+    <transition mode="out-in" appear name="customFade">
+      <div
+        v-show="isPlaying"
+        class="volume bg-white rounded-full"
+        @click="toggleAudio()"
+      ></div>
+    </transition>
+    <transition mode="out-in" appear name="customFade">
+      <div
+        v-show="!isPlaying"
+        class="volume bg-black rounded-full"
+        @click="toggleAudio()"
+      ></div>
+    </transition>
+
     <div v-for="(card, index) in cards" :key="index">
       <!-- set-animation="customFade" -->
       <ImageCard
+        set-animation="customFade"
         :key="index"
         :style="animationDuration"
         :main-image-url="card.imgUrl"
@@ -92,6 +108,7 @@ export default {
   components: { ImageCard, vueTopprogress },
   data() {
     return {
+      isPlaying: false,
       counter: 0,
       cards: [{ imgUrl: allImgs.sample(), show: true }],
       imgs: allImgs,
@@ -101,7 +118,7 @@ export default {
       debounceTime: 40,
       mustWait: true,
       volume: -30,
-      rainVolume: -3,
+      rainVolume: -6,
       leftEar: undefined,
       rightEar: undefined,
       binauralBeat: INITIAL_FREQ,
@@ -125,6 +142,7 @@ export default {
         '/audio/rain2.mp3',
         '/audio/rain3.mp3',
         '/audio/tiktock.mp3',
+        '/audio/war.mp3',
       ],
       availableAsmr2: [
         '/audio/cave.mp3',
@@ -144,13 +162,7 @@ export default {
         '/audio/tos/shaggy-instagram.mp3',
         '/audio/tos/sponge-tos-complete.mp3',
       ],
-      uiSamples: [
-        '/audio/tos/homer-facebook.mp3',
-        '/audio/tos/krusty-insta.mp3',
-        '/audio/tos/scooby-facebook.mp3',
-        '/audio/tos/shaggy-instagram.mp3',
-        '/audio/tos/sponge-tos-complete.mp3',
-      ],
+      uiSamples: ['/audio/ui/pop1.ogg'],
       availableTos: [
         '/audio/tos/homer-facebook.mp3',
         '/audio/tos/krusty-insta.mp3',
@@ -193,7 +205,8 @@ export default {
       ) {
         newUrl = this.randomBackgroundUrl()
       }
-      return newUrl
+      const resolution = '1k-dithered-16bit'
+      return newUrl.replace('2k-dithered-16bit', resolution)
     },
     pushCard() {
       console.log('pushCard')
@@ -221,9 +234,10 @@ export default {
       this.$refs.topProgress.start()
       this.pushCard()
 
-      // if (this.uiSampler.state === "stopped") {
-      //   this.uiSampler.load(this.uiSamples.sample());
-      // }
+      if (this.uiSampler.state === 'stopped') {
+        console.log('play ui sound')
+        this.uiSampler.load(this.uiSamples.sample())
+      }
 
       const newBkgUrl = this.newRandomBackgroundForPreload()
       this.preloadedImage = new Image()
@@ -237,6 +251,7 @@ export default {
     /* AUDIO */
     toggleAudio() {
       console.log('toggleAudio')
+      this.isPlaying = !this.isPlaying
       this.audioDialog = false
 
       if (!this.audioCtx) {
@@ -332,8 +347,8 @@ export default {
 
       this.leftEar = new Tone.Oscillator().connect(merge, 0, 0)
       this.rightEar = new Tone.Oscillator().connect(merge, 0, 1)
-      this.leftEar.volume.value = -12
-      this.rightEar.volume.value = -12
+      this.leftEar.volume.value = -16
+      this.rightEar.volume.value = -16
 
       this.rainMaker = new Tone.Noise('brown').toDestination()
 
@@ -347,7 +362,7 @@ export default {
       )
       this.asmrChannel1.autostart = true
       this.asmrChannel1.loop = true
-      this.asmrChannel1.volume.value = 12
+      this.asmrChannel1.volume.value = 6
 
       this.asmrChannel2 = new Tone.Player(this.availableAsmr2.sample()).connect(
         this.crossFade.b
@@ -355,7 +370,7 @@ export default {
       this.asmrChannel2.autostart = true
       this.asmrChannel2.loop = true
       this.asmrChannel2.volume.value = 6
-      this.crossFadeInterval = setInterval(this.doCrossFade, 5000)
+      this.crossFadeInterval = setInterval(this.doCrossFade, 1000)
 
       const file1 = this.sampleSlot1.sample()
       this.sampler1 = new Tone.Player(file1).toDestination()
@@ -365,9 +380,9 @@ export default {
 
       const file2 = this.uiSamples.sample()
       this.uiSampler = new Tone.Player(file2).toDestination()
-      this.uiSampler.autostart = false
+      this.uiSampler.autostart = true
       this.uiSampler.loop = false
-      this.uiSampler.volume.value = 0
+      this.uiSampler.volume.value = 18
 
       this.setRainVolume()
       this.setVolume()
@@ -381,6 +396,18 @@ export default {
 }
 </script>
 <style scoped>
+.volume {
+  width: 2vw;
+  height: 2vw;
+  /* border-radius: 2vw; */
+  top: 1vw;
+  right: 1vw;
+  position: absolute;
+  z-index: 1000;
+  cursor: pointer;
+  /* border-style: solid; */
+}
+
 .page {
   overflow: hidden;
   position: absolute;
@@ -397,7 +424,7 @@ export default {
 
 .customFade-enter-active,
 .customFade-leave-active {
-  transition: all 500ms ease-out;
+  transition: all 250ms ease-out;
   /*transition: opacity 5s;*/
 }
 .customFade-enter,

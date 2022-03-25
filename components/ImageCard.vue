@@ -86,13 +86,12 @@ export default {
         img.onerror = reject
       })
     })
-    Promise.all(images)
-      .then(() => {
-        this.isLoading = false
-      })
-      .catch((error) => {
-        console.error(error.message)
-      })
+    Promise.all(images).then(() => {
+      this.isLoading = false
+    })
+    // .catch((error) => {
+    //   console.error(error.message)
+    // })
   },
 
   // beforeMount() {
