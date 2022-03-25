@@ -2,9 +2,9 @@
   <div class="overflow-hidden">
     <vue-topprogress ref="topProgress" :speed="100" color="#fff" :height="1" />
     <div v-for="(card, index) in cards" :key="index">
+      <!-- set-animation="customFade" -->
       <ImageCard
         :key="index"
-        set-animation="customFade"
         :style="animationDuration"
         :main-image-url="card.imgUrl"
         :current-width="currentWidth"
@@ -93,12 +93,12 @@ export default {
   data() {
     return {
       counter: 0,
-      cards: [{ imgUrl: allImgs[0], show: true }],
+      cards: [{ imgUrl: allImgs.sample(), show: true }],
       imgs: allImgs,
-      mainImageUrl: allImgs[0],
       currentWidth: 1280,
       isAnimating: false,
-      animationTime: 500,
+      animationTime: 750,
+      debounceTime: 40,
       mustWait: true,
       volume: -30,
       rainVolume: -3,
@@ -199,9 +199,12 @@ export default {
       console.log('pushCard')
       this.counter += 1
       this.cards.push({ imgUrl: this.preloadedImage.src, show: true })
+      // setTimeout(() => {
+      //   this.isAnimating = false
+      // }, this.animationTime)
       setTimeout(() => {
         this.isAnimating = false
-      }, this.animationTime)
+      }, this.debounceTime)
     },
     doneLoad() {
       setTimeout(() => {
