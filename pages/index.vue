@@ -111,7 +111,7 @@ export default {
       counter: 0,
       cards: [{ imgUrl: allImgs.sample(), show: true }],
       imgs: allImgs,
-      currentEpoch: 25,
+      currentEpoch: 10,
       currentWidth: 1280,
       isAnimating: false,
       animationTime: 750,
