@@ -4,14 +4,14 @@
     <transition mode="out-in" appear name="customFade">
       <div
         v-show="isPlaying"
-        class="volume bg-white rounded-full"
+        class="w-8 h-8 volume active bg-white rounded-full border"
         @click="toggleAudio()"
       ></div>
     </transition>
     <transition mode="out-in" appear name="customFade">
       <div
         v-show="!isPlaying"
-        class="volume bg-black rounded-full"
+        class="w-8 h-8 volume bg-white border-4 border-black rounded-full"
         @click="toggleAudio()"
       ></div>
     </transition>
@@ -115,7 +115,7 @@ export default {
       currentWidth: 1280,
       isAnimating: false,
       animationTime: 750,
-      debounceTime: 40,
+      debounceTime: 100,
       mustWait: true,
       volume: -30,
       rainVolume: -6,
@@ -205,16 +205,19 @@ export default {
       ) {
         newUrl = this.randomBackgroundUrl()
       }
+      if (this.currentWidth < 1024) {
+        newUrl = newUrl.replace('.png', '-v.png')
+      }
       const desiredResolution = '2k'
       return newUrl.replace('2k', desiredResolution)
     },
     pushCard() {
       console.log('pushCard')
       this.counter += 1
-      this.cards.push({ imgUrl: this.preloadedImage.src, show: true })
-      // setTimeout(() => {
-      //   this.isAnimating = false
-      // }, this.animationTime)
+      this.cards.push({
+        imgUrl: this.preloadedImage.src.replace('-v.png', '.png'),
+        show: true,
+      })
       setTimeout(() => {
         this.isAnimating = false
       }, this.debounceTime)
@@ -227,17 +230,16 @@ export default {
     next(e) {
       if (!this.audioCtx) {
         this.toggleAudio()
+      } else {
+        if (this.uiSampler.state === 'stopped') {
+          // this.uiSampler.start()
+        }
       }
 
       if (this.isAnimating && this.mustWait) return
       this.isAnimating = true
       this.$refs.topProgress.start()
       this.pushCard()
-
-      if (this.uiSampler.state === 'stopped') {
-        console.log('play ui sound')
-        this.uiSampler.load(this.uiSamples.sample())
-      }
 
       const newBkgUrl = this.newRandomBackgroundForPreload()
       this.preloadedImage = new Image()
@@ -270,7 +272,7 @@ export default {
       }
     },
     doCrossFade() {
-      const stepSize = 0.25
+      const stepSize = 0.15
       if (this.crossFade.fade.value === 1.0 || this.crossFade.fade.value <= 0) {
         this.crossDirection = !this.crossDirection
         if (this.crossFade.fade.value === 1.0) {
@@ -384,9 +386,10 @@ export default {
 
       const file2 = this.uiSamples.sample()
       this.uiSampler = new Tone.Player(file2).toDestination()
-      this.uiSampler.autostart = true
+      this.uiSampler.autostart = false
       this.uiSampler.loop = false
       this.uiSampler.volume.value = 18
+      // this.uiSampler.load(this.uiSamples.sample())
 
       this.setRainVolume()
       this.setVolume()
@@ -401,8 +404,8 @@ export default {
 </script>
 <style scoped>
 .volume {
-  width: 2vw;
-  height: 2vw;
+  /* width: 2vw;
+  height: 2vw; */
   /* border-radius: 2vw; */
   top: 1vw;
   right: 1vw;
@@ -422,13 +425,13 @@ export default {
   height: 100vh;
   background-size: 98%;
   background-repeat: no-repeat;
-  background-position: center;
+  background-position: top;
   background-size: cover;
 }
 
 .customFade-enter-active,
 .customFade-leave-active {
-  transition: all 250ms ease-out;
+  transition: all 250ms cubic-bezier(1, 0.5, 0.8, 1);
   /*transition: opacity 5s;*/
 }
 .customFade-enter,
@@ -466,6 +469,26 @@ export default {
   }
   100% {
     transform: scale(1);
+  }
+}
+.volume.active {
+  transform: scale(1);
+  animation: pulse 2s infinite;
+}
+@keyframes pulse {
+  0% {
+    transform: scale(0.85);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(255, 255, 255, 0);
+  }
+
+  100% {
+    transform: scale(0.85);
+    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
   }
 }
 </style>

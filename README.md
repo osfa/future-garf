@@ -9,18 +9,40 @@
 - flip anims? https://codepen.io/timrijkse/pen/rMrXWW
 - smoke? css?
 
+- jquery ripplle? or physics? bouncding sheets?
+
+- reflection pools or no? tap to switch? card shuffle? lots of possible effects...
+
+- rocks grinding sound and then these morphs?
+
+- init turn on effect
+- just unix timer? ants on top?
+
 ## stories
+
+- have diff pools of garfs? (epochs)
 
 - custom 404
 - sizes: 512 for mobile? 16 colors?
 - have hq flag that triggers raw for local network or something?
 - now its double loading for mbile? need chk for preloading...
 
+- 3 panels test
+
+  - if 3x1 (also have 3x1 tiny grids? inside?) so boxxes in boxes. 3x1large panels with various combos: click switches only one of them?
+  - triptych? of reg panels and thens eomtimes big special panels?
+
+- tone switch and then switch to diff epoch pool?
+
+- add more audio elements and prayer
+
 ## audio
 
 - garf mumblings of some text, laughts, door creaking, fly sounds, pink noise, bowls? channel switch effect?
 - add like fly animations? or fly sounds at least? pie sounds?
 - pop sounds on click? what else can u do on click? something around cursor? butterfly? ui sounds?
+
+- some kind of wiki leaks voice over? or tiktok voice?
 
 ## aeshetics
 
