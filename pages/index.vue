@@ -19,7 +19,6 @@
     <div v-for="(card, index) in cards" :key="index">
       <!-- set-animation="customFade" -->
       <ImageCard
-        set-animation="customFade"
         :key="index"
         :style="animationDuration"
         :main-image-url="card.imgUrl"
@@ -112,6 +111,7 @@ export default {
       counter: 0,
       cards: [{ imgUrl: allImgs.sample(), show: true }],
       imgs: allImgs,
+      currentEpoch: 25,
       currentWidth: 1280,
       isAnimating: false,
       animationTime: 750,
@@ -162,7 +162,7 @@ export default {
         '/audio/tos/shaggy-instagram.mp3',
         '/audio/tos/sponge-tos-complete.mp3',
       ],
-      uiSamples: ['/audio/ui/pop1.ogg'],
+      uiSamples: ['/audio/ui/pop1.mp3'],
       availableTos: [
         '/audio/tos/homer-facebook.mp3',
         '/audio/tos/krusty-insta.mp3',
@@ -195,7 +195,11 @@ export default {
   },
   methods: {
     randomBackgroundUrl() {
-      return this.imgs[Math.floor(Math.random() * this.imgs.length)]
+      let picked = this.imgs[Math.floor(Math.random() * this.imgs.length)]
+      let epoch = picked.split('-')[6].replace('.png', '')
+      return this.currentEpoch
+        ? picked.replace(epoch, `${this.currentEpoch}e`)
+        : picked
     },
     newRandomBackgroundForPreload() {
       let newUrl = this.randomBackgroundUrl()
@@ -232,7 +236,7 @@ export default {
         this.toggleAudio()
       } else {
         if (this.uiSampler.state === 'stopped') {
-          // this.uiSampler.start()
+          this.uiSampler.start()
         }
       }
 
