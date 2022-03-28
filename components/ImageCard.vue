@@ -121,15 +121,15 @@ export default {
 }
 </script>
 <style scoped>
-.page {
-  /* background-color: #fff;
+/* .page {
+   background-color: #fff;
   width: 100vw;
   height: 100vh;
   background-size: 98%;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover; */
-}
+  background-size: cover;
+} */
 .page {
   object-fit: cover;
 }

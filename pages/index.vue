@@ -9,20 +9,13 @@
       ></div>
     </transition>
     <transition mode="out-in" appear name="customFade">
-      <!-- <div
-        v-show="!isPlaying"
-        class="w-8 h-8 volume bg-white rounded-full"
-        @click="toggleAudio()"
-      ></div> -->
       <div
         v-show="!isPlaying"
         class="w-8 h-8 volume close"
         @click="toggleAudio()"
-      >
-        <!-- <span class="w-4 h-4 bg-black absolute"></span> -->
-      </div>
+      ></div>
     </transition>
-    <div class="fogwrapper">
+    <div v-if="hasLoaded" class="fogwrapper">
       <div id="foglayer_01" class="fog">
         <div class="image01"></div>
         <div class="image02"></div>
@@ -40,6 +33,7 @@
       <!-- set-animation="customFade" -->
       <ImageCard
         :key="index"
+        :set-animation="firstImg ? 'fade' : undefined"
         :style="animationDuration"
         :main-image-url="card.imgUrl"
         :current-width="currentWidth"
@@ -128,7 +122,9 @@ export default {
   components: { ImageCard, vueTopprogress },
   data() {
     return {
+      hasLoaded: false,
       isPlaying: false,
+      firstImg: true,
       counter: 0,
       epochSwitchIdx: 8,
       cards: [{ imgUrl: allImgs.sample(), show: true }],
@@ -255,9 +251,11 @@ export default {
   },
   mounted() {
     console.log('mounted')
-    // this.initAudio();
-    // var synth = new Tone.Synth().toMaster();
-    // synth.triggerAttackRelease("C4", "8n");
+    const first = new Image()
+    first.src = this.cards[0].imgUrl
+    first.onload = () => {
+      this.hasLoaded = true
+    }
   },
   beforeMount() {
     this.currentWidth = window.innerWidth
@@ -325,6 +323,7 @@ export default {
       }, 1)
     },
     next(e) {
+      this.firstImg = false
       if (!this.audioCtx) {
         this.toggleAudio()
       } else {
