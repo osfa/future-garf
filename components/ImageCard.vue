@@ -1,6 +1,12 @@
 <template>
   <transition mode="out-in" :appear="animationOn" :name="getAnimation">
-    <div v-show="!isLoading" class="page" :style="backgroundStyles"></div>
+    <!-- <div v-show="!isLoading" class="page" :style="backgroundStyles"></div> -->
+    <img
+      v-show="!isLoading"
+      class="page"
+      :src="imgUrl"
+      @load="isLoading = false"
+    />
   </transition>
 </template>
 
@@ -58,15 +64,18 @@ export default {
     }
   },
   computed: {
-    backgroundStyles() {
+    imgUrl() {
       let imgUrl = this.mainImageUrl
       if (process.client) {
         if (this.currentWidth < 1024) {
           imgUrl = imgUrl.replace('.png', '-v.png')
         }
       }
+      return imgUrl
+    },
+    backgroundStyles() {
       return {
-        backgroundImage: `url('${imgUrl}')`,
+        backgroundImage: `url('${this.imgUrl()}')`,
       }
     },
     getAnimation() {
@@ -78,17 +87,17 @@ export default {
     },
   },
   created() {
-    const images = this.imagesToPreload.map((imageSrc) => {
-      return new Promise((resolve, reject) => {
-        const img = new Image()
-        img.src = imageSrc
-        img.onload = resolve
-        img.onerror = reject
-      })
-    })
-    Promise.all(images).then(() => {
-      this.isLoading = false
-    })
+    // const images = this.imagesToPreload.map((imageSrc) => {
+    //   return new Promise((resolve, reject) => {
+    //     const img = new Image()
+    //     img.src = imageSrc
+    //     img.onload = resolve
+    //     img.onerror = reject
+    //   })
+    // })
+    // Promise.all(images).then(() => {
+    //   this.isLoading = false
+    // })
     // .catch((error) => {
     //   console.error(error.message)
     // })
@@ -113,12 +122,15 @@ export default {
 </script>
 <style scoped>
 .page {
-  background-color: #fff;
+  /* background-color: #fff;
   width: 100vw;
   height: 100vh;
   background-size: 98%;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
+  background-size: cover; */
+}
+.page {
+  object-fit: cover;
 }
 </style>
