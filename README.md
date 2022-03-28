@@ -24,6 +24,9 @@
 
 - same audio for each 8x8? or 8x16?
 
+- def no noise sometimes?
+  and no tone etc...
+
 ## stories
 
 - have diff pools of garfs? (epochs)

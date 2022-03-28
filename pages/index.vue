@@ -126,7 +126,7 @@ export default {
       animationTime: 750,
       debounceTime: 100,
       mustWait: true,
-      volume: -30,
+      volume: -36,
       rainVolume: -6,
       leftEar: undefined,
       rightEar: undefined,
@@ -141,6 +141,8 @@ export default {
       uiSampler: undefined,
       asmrChannel1: undefined,
       asmrChannel2: undefined,
+      availableReal: [],
+      availableFake: [],
       availableAsmr1: [
         '/audio/tapping1.mp3',
         '/audio/tapping2.mp3',
@@ -383,8 +385,6 @@ export default {
 
       this.rainMaker = new Tone.Noise('brown').toDestination()
 
-      // new Tone.Noise("pink").toDestination().start();
-
       this.crossFade = new Tone.CrossFade().toDestination()
       this.crossFade.fade.value = 0.5 // 0-a
 
@@ -403,8 +403,9 @@ export default {
       this.asmrChannel2.volume.value = 6
       this.crossFadeInterval = setInterval(this.doCrossFade, 1000)
 
+      const reverb = new Tone.Reverb(1.25).toDestination()
       const file1 = this.sampleSlot1.sample()
-      this.sampler1 = new Tone.Player(file1).toDestination()
+      this.sampler1 = new Tone.Player(file1).connect(reverb) //.toDestination()
       this.sampler1.autostart = false
       this.sampler1.loop = false
       this.sampler1.volume.value = 0
@@ -414,7 +415,6 @@ export default {
       this.uiSampler.autostart = false
       this.uiSampler.loop = false
       this.uiSampler.volume.value = 18
-      // this.uiSampler.load(this.uiSamples.sample())
 
       this.setRainVolume()
       this.setVolume()

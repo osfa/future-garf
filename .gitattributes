@@ -42,3 +42,4 @@ static/audio/prayers/audio(9).wav filter=lfs diff=lfs merge=lfs -text
 static/audio/prayers/audio(12).wav filter=lfs diff=lfs merge=lfs -text
 static/audio/ui/** filter=lfs diff=lfs merge=lfs -text
 static/audio/ui/* filter=lfs diff=lfs merge=lfs -text
+static/audio/** filter=lfs diff=lfs merge=lfs -text
