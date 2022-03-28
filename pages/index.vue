@@ -9,11 +9,18 @@
       ></div>
     </transition>
     <transition mode="out-in" appear name="customFade">
+      <!-- <div
+        v-show="!isPlaying"
+        class="w-8 h-8 volume bg-white rounded-full"
+        @click="toggleAudio()"
+      ></div> -->
       <div
         v-show="!isPlaying"
-        class="w-8 h-8 volume bg-white border-4 border-black rounded-full"
+        class="w-8 h-8 volume close"
         @click="toggleAudio()"
-      ></div>
+      >
+        <!-- <span class="w-4 h-4 bg-black absolute"></span> -->
+      </div>
     </transition>
 
     <div v-for="(card, index) in cards" :key="index">
@@ -109,8 +116,10 @@ export default {
     return {
       isPlaying: false,
       counter: 0,
+      epochSwitchIdx: 8,
       cards: [{ imgUrl: allImgs.sample(), show: true }],
       imgs: allImgs,
+      availableEpochs: [10, 25, 60],
       currentEpoch: 10,
       currentWidth: 1280,
       isAnimating: false,
@@ -215,6 +224,15 @@ export default {
       const desiredResolution = '2k'
       return newUrl.replace('2k', desiredResolution)
     },
+    switchSuite() {
+      console.log('switch suite')
+      // new audio? ui sounds swap here?
+      let selected = this.availableEpochs.sample()
+      while (this.currentEpoch == selected) {
+        selected = this.availableEpochs.sample()
+      }
+      this.currentEpoch = selected
+    },
     pushCard() {
       console.log('pushCard')
       this.counter += 1
@@ -222,6 +240,9 @@ export default {
         imgUrl: this.preloadedImage.src.replace('-v.png', '.png'),
         show: true,
       })
+      if (this.counter % this.epochSwitchIdx === 0) {
+        this.switchSuite()
+      }
       setTimeout(() => {
         this.isAnimating = false
       }, this.debounceTime)
@@ -431,6 +452,7 @@ export default {
   background-repeat: no-repeat;
   background-position: top;
   background-size: cover;
+  cursor: pointer;
 }
 
 .customFade-enter-active,
@@ -494,5 +516,32 @@ export default {
     transform: scale(0.85);
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
   }
+}
+
+.close {
+  position: absolute;
+  /* right: 32px;
+  top: 32px;
+  width: 32px;
+  height: 32px;
+  opacity: 0.3; */
+}
+.close:hover {
+  opacity: 1;
+}
+.close:before,
+.close:after {
+  position: absolute;
+  left: 15px;
+  content: ' ';
+  height: 33px;
+  width: 4px;
+  background-color: #fff;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
 }
 </style>

@@ -1,5 +1,7 @@
 # future-garf
 
+- need ip doxing thin g for garf blob transitions?
+
 - reaaally slow animations?
 - transition sounds effects, faster fades on click, more and louder noise, higher tone or toneswitch? pitched garf prayers. more diff bkg sounds like vopod etc? chorus or reverb on top? page flip opp
 
@@ -18,10 +20,14 @@
 - init turn on effect
 - just unix timer? ants on top?
 
+- change size on sphere based on what epochs? weird buttons on side? kiki boubaas?
+
+- same audio for each 8x8? or 8x16?
+
 ## stories
 
 - have diff pools of garfs? (epochs)
-
+  - when garf pool : have all the same anims? and sounds?
 - custom 404
 - sizes: 512 for mobile? 16 colors?
 - have hq flag that triggers raw for local network or something?
@@ -29,6 +35,7 @@
 
 - 3 panels test
 
+  - def have 3x3 etc grids as well...3x1 5x5 3x3
   - if 3x1 (also have 3x1 tiny grids? inside?) so boxxes in boxes. 3x1large panels with various combos: click switches only one of them?
   - triptych? of reg panels and thens eomtimes big special panels?
 
@@ -38,11 +45,14 @@
 
 ## audio
 
+- candy crush ui sounds...
 - garf mumblings of some text, laughts, door creaking, fly sounds, pink noise, bowls? channel switch effect?
 - add like fly animations? or fly sounds at least? pie sounds?
 - pop sounds on click? what else can u do on click? something around cursor? butterfly? ui sounds?
 
 - some kind of wiki leaks voice over? or tiktok voice?
+
+- add thos bawh sounds? where are those? was like a sample pack somewhere...
 
 ## aeshetics
 
