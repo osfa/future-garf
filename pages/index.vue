@@ -2,16 +2,18 @@
   <div class="overflow-hidden">
     <vue-topprogress ref="topProgress" :speed="100" color="#fff" :height="1" />
     <transition mode="out-in" appear name="customFade">
+      <!-- :style="{ backgroundColor: '#86ff77' }" -->
+
       <div
         v-show="isPlaying"
-        class="w-8 h-8 volume active bg-white rounded-full border"
+        class="w-6 h-6 v-controls active bg-white rounded-full border"
         @click="toggleAudio()"
       ></div>
     </transition>
     <transition mode="out-in" appear name="customFade">
       <div
         v-show="!isPlaying"
-        class="w-8 h-8 volume close"
+        class="v-controls button-play"
         @click="toggleAudio()"
       ></div>
     </transition>
@@ -34,14 +36,13 @@
       <ImageCard
         :key="index"
         :set-animation="firstImg ? 'fade' : undefined"
-        :style="animationDuration"
-        :main-image-url="card.imgUrl"
+        :style="[animationDuration, { backgroundColor: card.color }]"
+        :main-image-url="card.color ? undefined : card.imgUrl"
         :current-width="currentWidth"
+        @loaded="doneLoad"
         @click.native="next()"
       />
     </div>
-
-    <!--     <ImageCard :style="animationDuration" :main-image-url='imgs.sample()' :current-width='currentWidth' @click.native="next()" set-animation='fade' /> -->
   </div>
 </template>
 
@@ -129,6 +130,7 @@ export default {
       epochSwitchIdx: 8,
       cards: [{ imgUrl: allImgs.sample(), show: true }],
       imgs: allImgs,
+      colors: ['#fbcbff', '#c1d3fd', '#fffd81'], // '#fea71a'], //
       availableEpochs: [10, 25, 60],
       currentEpoch: 10,
       currentWidth: 1280,
@@ -137,7 +139,7 @@ export default {
       debounceTime: 250,
       mustWait: true,
       volume: -36,
-      rainVolume: -9,
+      rainVolume: -16,
       leftEar: undefined,
       rightEar: undefined,
       binauralBeat: INITIAL_FREQ,
@@ -303,12 +305,11 @@ export default {
       }
       this.currentEpoch = selected
     },
-    pushCard() {
-      console.log('pushCard')
+    pushCard(color) {
       this.counter += 1
       this.cards.push({
+        color: color,
         imgUrl: this.preloadedImage.src.replace('-v.png', '.png'),
-        show: true,
       })
       if (this.counter % this.epochSwitchIdx === 0) {
         this.switchSuite()
@@ -337,13 +338,15 @@ export default {
 
       if (this.isAnimating && this.mustWait) return
       this.isAnimating = true
-      this.$refs.topProgress.start()
-      this.pushCard()
-
-      const newBkgUrl = this.newRandomBackgroundForPreload()
-      this.preloadedImage = new Image()
-      this.preloadedImage.src = newBkgUrl
-      this.preloadedImage.onload = this.doneLoad() // this.pushCard();
+      const doColor = random(0, 10) > 7 ? this.colors.sample() : undefined
+      this.pushCard(doColor)
+      if (!doColor) {
+        this.$refs.topProgress.start()
+        const newBkgUrl = this.newRandomBackgroundForPreload()
+        this.preloadedImage = new Image()
+        this.preloadedImage.src = newBkgUrl
+        this.preloadedImage.onload = this.doneLoad() // this.pushCard();
+      }
       this.frequencyShift()
       this.rainShift()
     },
@@ -455,8 +458,8 @@ export default {
 
       this.leftEar = new Tone.Oscillator().connect(merge, 0, 0)
       this.rightEar = new Tone.Oscillator().connect(merge, 0, 1)
-      this.leftEar.volume.value = -16
-      this.rightEar.volume.value = -16
+      this.leftEar.volume.value = -20
+      this.rightEar.volume.value = -20
 
       this.rainMaker = new Tone.Noise('brown').toDestination()
 
@@ -506,16 +509,43 @@ export default {
 }
 </script>
 <style scoped>
-.volume {
-  /* width: 2vw;
-  height: 2vw; */
-  /* border-radius: 2vw; */
-  top: 1vw;
-  right: 1vw;
+.button-play {
+  position: relative;
+  /* width: 50px;
+  height: 50px;
+  background: black;
+  padding-top: 10px; */
+}
+.button-play:before {
+  content: '';
+  position: absolute;
+  width: 35px;
+  height: 35px;
+  background: black;
+  opacity: 0.25;
+  right: -6px;
+  top: -7px;
+}
+
+.button-play:after {
+  display: block;
+  position: absolute;
+  content: '';
+  right: 0;
+  width: 0;
+  height: 0;
+  border: 20px solid transparent;
+  border-width: 10px 0px 10px 18px;
+  border-radius: 0;
+  border-left-color: white;
+}
+
+.v-controls {
+  top: 2rem;
+  right: 2rem;
   position: absolute;
   z-index: 1000;
   cursor: pointer;
-  /* border-style: solid; */
 }
 
 .page {
@@ -523,7 +553,7 @@ export default {
   position: absolute;
   left: 0;
   top: 0;
-  background-color: black;
+  background-color: white;
   width: 100vw;
   height: 100vh;
   background-size: 98%;
@@ -531,6 +561,7 @@ export default {
   background-position: top;
   background-size: cover;
   cursor: pointer;
+  padding: 1rem;
 }
 
 .customFade-enter-active,
@@ -541,41 +572,9 @@ export default {
 .customFade-enter,
 .customFade-leave-to {
   opacity: 0;
-  transform: scale(1.05);
+  /* transform: scale(1.05); */
 }
-
-.slide-fade-enter-active {
-  transition: all 0.3s ease-out;
-}
-
-.slide-fade-leave-active {
-  transition: all 0.8s cubic-bezier(1, 0.5, 0.8, 1);
-}
-
-.slide-fade-enter-from,
-.slide-fade-leave-to {
-  transform: translateX(100vw);
-  opacity: 0;
-}
-
-.bounce-enter-active {
-  animation: bounce-in 0.5s;
-}
-.bounce-leave-active {
-  animation: bounce-in 0.5s reverse;
-}
-@keyframes bounce-in {
-  0% {
-    transform: scale(0);
-  }
-  50% {
-    transform: scale(1.25);
-  }
-  100% {
-    transform: scale(1);
-  }
-}
-.volume.active {
+.v-controls.active {
   transform: scale(1);
   animation: pulse 2s infinite;
 }
@@ -598,11 +597,6 @@ export default {
 
 .close {
   position: absolute;
-  /* right: 32px;
-  top: 32px;
-  width: 32px;
-  height: 32px;
-  opacity: 0.3; */
 }
 .close:hover {
   opacity: 1;
@@ -623,25 +617,11 @@ export default {
   transform: rotate(-45deg);
 }
 
-html,
-body {
-  margin: 0;
-  padding: 0;
-}
-body {
-  background: #000;
-  background: rgba(0, 0, 0, 1);
-  overflow-x: hidden;
-}
-
-/* ---------- Fog ---------- */
 .fogwrapper {
   height: 100%;
   position: absolute;
   top: 0;
   width: 100%;
-  /* -webkit-filter: blur(1px) grayscale(0.2) saturate(1.2) sepia(0.2);
-  filter: blur(1px) grayscale(0.2) saturate(1.2) sepia(0.2); */
   z-index: 100;
   opacity: 0.8;
   pointer-events: none;

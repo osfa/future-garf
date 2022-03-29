@@ -1,12 +1,17 @@
 <template>
   <transition mode="out-in" :appear="animationOn" :name="getAnimation">
-    <!-- <div v-show="!isLoading" class="page" :style="backgroundStyles"></div> -->
     <img
+      v-if="mainImageUrl"
       v-show="!isLoading"
       class="page"
       :src="imgUrl"
-      @load="isLoading = false"
+      @load="hasLoaded"
     />
+    <div
+      v-if="!mainImageUrl"
+      class="page solid"
+      :style="{ backroundColor: mainColor }"
+    ></div>
   </transition>
 </template>
 
@@ -47,7 +52,8 @@ const randomAnimation = (array) => {
 export default {
   name: 'ImageCard',
   props: {
-    mainImageUrl: { type: String, required: true },
+    mainImageUrl: { type: String, default: undefined },
+    mainColor: { type: String, default: '#fea71a' },
     currentWidth: { type: Number, required: true },
     setAnimation: { type: String, default: '' },
     animationOn: { type: Boolean, default: true },
@@ -102,34 +108,25 @@ export default {
     //   console.error(error.message)
     // })
   },
-
-  // beforeMount() {
-  //   this.currentWidth = window.innerWidth
-  //   window.addEventListener('resize', this.handleResize);
-  // },
-  // beforeDestroy() {
-  //   window.removeEventListener('resize', this.handleResize);
-  // },
   methods: {
-    // handleResize(e) {
-    //   this.currentWidth = window.innerWidth
-    // },
-    // clickHandler(e) {
-    //   console.log('clickHandler')
-    // }
+    hasLoaded() {
+      this.isLoading = false
+      this.$emit('loaded')
+    },
   },
 }
 </script>
 <style scoped>
-/* .page {
-   background-color: #fff;
+.page.solid {
+  background-color: black;
   width: 100vw;
   height: 100vh;
-  background-size: 98%;
+  border: 1rem solid white;
+  /* background-size: 98%;
   background-repeat: no-repeat;
   background-position: center;
-  background-size: cover;
-} */
+  background-size: cover; */
+}
 .page {
   object-fit: cover;
 }
