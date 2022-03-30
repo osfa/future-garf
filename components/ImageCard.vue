@@ -52,7 +52,7 @@ const randomAnimation = (array) => {
 export default {
   name: 'ImageCard',
   props: {
-    mainImageUrl: { type: String, default: undefined },
+    mainImageUrl: { type: String, default: '' },
     mainColor: { type: String, default: '#fea71a' },
     currentWidth: { type: Number, required: true },
     setAnimation: { type: String, default: '' },

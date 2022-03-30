@@ -1,12 +1,11 @@
 <template>
   <div class="overflow-hidden">
-    <vue-topprogress ref="topProgress" :speed="100" color="#fff" :height="1" />
+    <vue-topprogress ref="topProgress" :speed="30" color="#f00" :height="3" />
     <transition mode="out-in" appear name="customFade">
       <!-- :style="{ backgroundColor: '#86ff77' }" -->
-
       <div
         v-show="isPlaying"
-        class="w-6 h-6 v-controls active bg-white rounded-full border"
+        class="w-6 h-6 v-controls active bg-white rounded-full"
         @click="toggleAudio()"
       ></div>
     </transition>
@@ -17,20 +16,7 @@
         @click="toggleAudio()"
       ></div>
     </transition>
-    <div v-if="hasLoaded" class="fogwrapper">
-      <div id="foglayer_01" class="fog">
-        <div class="image01"></div>
-        <div class="image02"></div>
-      </div>
-      <div id="foglayer_02" class="fog">
-        <div class="image01"></div>
-        <div class="image02"></div>
-      </div>
-      <div id="foglayer_03" class="fog">
-        <div class="image01"></div>
-        <div class="image02"></div>
-      </div>
-    </div>
+    <Fog />
     <div v-for="(card, index) in cards" :key="index">
       <!-- set-animation="customFade" -->
       <ImageCard
@@ -50,6 +36,9 @@
 import * as Tone from 'tone'
 import { vueTopprogress } from 'vue-top-progress'
 import ImageCard from '../components/ImageCard'
+import Fog from '../components/Fog'
+import { allImgs } from './data/panelLibrary.js'
+import { audioLibrary } from './data/audioLibrary.js'
 
 const INITIAL_FREQ = 4
 
@@ -65,62 +54,9 @@ export const random = (min, max) => {
   return Math.floor(Math.random() * (max - min) + min)
 }
 
-const allImgs = [
-  '/imgs/2k-dithered-16bit/1992-09-22-2-10e.png',
-  '/imgs/2k-dithered-16bit/1992-09-22-2-25e.png',
-  '/imgs/2k-dithered-16bit/1992-09-22-2-5e.png',
-  '/imgs/2k-dithered-16bit/1992-09-22-2-60e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-0-10e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-0-25e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-0-5e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-0-60e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-1-10e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-1-25e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-1-5e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-1-60e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-2-10e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-2-25e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-2-5e.png',
-  '/imgs/2k-dithered-16bit/1992-10-01-2-60e.png',
-  '/imgs/2k-dithered-16bit/1992-10-10-0-10e.png',
-  '/imgs/2k-dithered-16bit/1992-10-10-0-25e.png',
-  '/imgs/2k-dithered-16bit/1992-10-10-0-5e.png',
-  '/imgs/2k-dithered-16bit/1992-10-10-0-60e.png',
-  '/imgs/2k-dithered-16bit/1992-10-10-1-10e.png',
-  '/imgs/2k-dithered-16bit/1992-10-10-1-25e.png',
-  '/imgs/2k-dithered-16bit/1992-10-10-1-5e.png',
-  '/imgs/2k-dithered-16bit/1992-10-10-1-60e.png',
-  '/imgs/2k-dithered-16bit/1992-11-06-0-10e.png',
-  '/imgs/2k-dithered-16bit/1992-11-06-0-25e.png',
-  '/imgs/2k-dithered-16bit/1992-11-06-0-5e.png',
-  '/imgs/2k-dithered-16bit/1992-11-06-0-60e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-0-10e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-0-25e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-0-5e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-0-60e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-1-10e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-1-25e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-1-5e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-1-60e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-2-10e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-2-25e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-2-5e.png',
-  '/imgs/2k-dithered-16bit/1995-04-04-2-60e.png',
-  '/imgs/2k-dithered-16bit/1995-05-05-0-10e.png',
-  '/imgs/2k-dithered-16bit/1995-05-05-0-25e.png',
-  '/imgs/2k-dithered-16bit/1995-05-05-0-5e.png',
-  '/imgs/2k-dithered-16bit/1995-05-05-0-60e.png',
-  '/imgs/2k-dithered-16bit/1995-05-05-1-10e.png',
-  '/imgs/2k-dithered-16bit/1995-05-05-1-25e.png',
-  '/imgs/2k-dithered-16bit/1995-05-05-1-5e.png',
-  '/imgs/2k-dithered-16bit/1995-05-05-1-60e.png',
-  '/imgs/2k-dithered-16bit/1995-05-05-2-10e.png',
-  '/imgs/2k-dithered-16bit/1995-05-05-2-5e.png',
-]
-
 export default {
   name: 'IndexPage',
-  components: { ImageCard, vueTopprogress },
+  components: { ImageCard, vueTopprogress, Fog },
   data() {
     return {
       hasLoaded: false,
@@ -131,14 +67,14 @@ export default {
       cards: [{ imgUrl: allImgs.sample(), show: true }],
       imgs: allImgs,
       colors: ['#fbcbff', '#c1d3fd', '#fffd81'], // '#fea71a'], //
-      availableEpochs: [10, 25, 60],
+      availableEpochs: [10, 25, 50],
       currentEpoch: 10,
       currentWidth: 1280,
       isAnimating: false,
       animationTime: 750,
       debounceTime: 250,
       mustWait: true,
-      volume: -36,
+      volume: -24,
       rainVolume: -16,
       leftEar: undefined,
       rightEar: undefined,
@@ -153,102 +89,6 @@ export default {
       uiSampler: undefined,
       asmrChannel1: undefined,
       asmrChannel2: undefined,
-      availableReal: [
-        '/audio/normalized/natural/flies.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-3-windintrees.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-4-anime-ocean.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-7-blizzard.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-8-blizzard2.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-9-river.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-10-rain-thunder.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-11-rain-thunder2.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-12-forest1.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-13-forest2.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-15-rain5.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-16-cicada.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-25-ocean1.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-26-bees1.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-38-ants.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-39-rain1.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-41-fire1.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-42-forest4.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-43-campfire1.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-47-forest3.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-52-fire2.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-53-campfire2.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-54-howling-wind.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-56-rain4.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-57-rain3.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-58-rain2.mp3',
-        '/audio/normalized/natural/garf-arr-amb-n-relaxing-wind.mp3',
-        '/audio/normalized/natural/garfprayer-3-cave.mp3',
-        '/audio/normalized/natural/garfprayer-4-ocean.mp3',
-        '/audio/normalized/natural/garfprayer-5-rain1.mp3',
-        '/audio/normalized/natural/garfprayer-6-rain2.mp3',
-        '/audio/normalized/natural/garfprayer-7-rain3.mp3',
-        '/audio/normalized/natural/garfprayer-14-tropical.mp3',
-        '/audio/normalized/natural/garfprayer-15-tropical2.mp3',
-        '/audio/normalized/natural/garfprayer-17-war.mp3',
-        '/audio/normalized/natural/garfprayer-18-wind1.mp3',
-        '/audio/normalized/natural/garfprayer-19-wind2.mp3',
-      ],
-      availableFake: [
-        '/audio/normalized/synth/garf-arr-amb-n-2-truck-idling.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-5-pod-sound1.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-6-pod-sound2.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-14-fan.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-17-scifi3.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-18-scifi4.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-19-radio1.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-20-radio2.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-21-scifi1.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-22-scifi2.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-23-flying-above-clouds.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-24-millenium-falcon.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-27-flag sounds.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-28-templar1.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-29-templar2.mp3',
-        // '/audio/normalized/synth/garf-arr-amb-n-30-library.mp3',
-        // '/audio/normalized/synth/garf-arr-amb-n-31-dark-academia.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-32-bowl1.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-33-anime-cicada.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-34-village-ambience.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-35-heavy-rain.mp3',
-        // '/audio/normalized/synth/garf-arr-amb-n-36-bacon.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-37-pod-sound3.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-40-rain-woods-bowl.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-44-meditation-bowls-2.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-45-bowl3.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-46-bowl2.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-48-office.mp3',
-        // '/audio/normalized/synth/garf-arr-amb-n-49-prayers.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-50-talking.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-51-meditation-bowls.mp3',
-        '/audio/normalized/synth/garf-arr-amb-n-55-engine-shifting.mp3',
-        '/audio/normalized/synth/garfprayer-1-airplane1.mp3',
-        '/audio/normalized/synth/garfprayer-2-airplane2.mp3',
-        '/audio/normalized/synth/garfprayer-8-server1.mp3',
-        '/audio/normalized/synth/garfprayer-9-server2.mp3',
-        '/audio/normalized/synth/garfprayer-10-tapping1.mp3',
-        '/audio/normalized/synth/garfprayer-11-tapping2.mp3',
-        '/audio/normalized/synth/garfprayer-12-tapping3.mp3',
-        '/audio/normalized/synth/garfprayer-13-tiktock.mp3',
-        '/audio/normalized/synth/garfprayer-16-war-propeller.mp3',
-      ],
-      sampleSlot1: [
-        '/audio/prayers/prayer1.mp3',
-        '/audio/prayers/prayer2.mp3',
-        '/audio/prayers/prayer3.mp3',
-        '/audio/prayers/prayer4.mp3',
-      ],
-      uiSamples: ['/audio/ui/pop1.mp3'],
-      availableTos: [
-        '/audio/tos/homer-facebook.mp3',
-        '/audio/tos/krusty-insta.mp3',
-        '/audio/tos/scooby-facebook.mp3',
-        '/audio/tos/shaggy-instagram.mp3',
-        '/audio/tos/sponge-tos-complete.mp3',
-      ],
     }
   },
   mounted() {
@@ -328,7 +168,8 @@ export default {
       if (!this.audioCtx) {
         this.toggleAudio()
       } else {
-        if (this.uiSampler.state === 'stopped') {
+        if (this.uiSampler) {
+          this.uiSampler.load(audioLibrary.hangDrum.sample())
           this.uiSampler.start()
         }
         if (this.sampler1.state === 'stopped') {
@@ -341,6 +182,7 @@ export default {
       const doColor = random(0, 10) > 7 ? this.colors.sample() : undefined
       this.pushCard(doColor)
       if (!doColor) {
+        console.log('loader started?')
         this.$refs.topProgress.start()
         const newBkgUrl = this.newRandomBackgroundForPreload()
         this.preloadedImage = new Image()
@@ -379,11 +221,11 @@ export default {
       if (this.crossFade.fade.value === 1.0 || this.crossFade.fade.value <= 0) {
         this.crossDirection = !this.crossDirection
         if (this.crossFade.fade.value === 1.0) {
-          const chosen = this.availableReal.sample()
+          const chosen = audioLibrary.availableReal.sample()
           console.log('new sample from real for 1: ', chosen)
           this.asmrChannel1.load(chosen)
         } else {
-          const chosen = this.availableFake.sample()
+          const chosen = audioLibrary.availableFake.sample()
           console.log('new sample from fake for 2: ', chosen)
           this.asmrChannel2.load(chosen)
         }
@@ -466,23 +308,23 @@ export default {
       this.crossFade = new Tone.CrossFade().toDestination()
       this.crossFade.fade.value = 0.5 // 0-a
 
-      this.asmrChannel1 = new Tone.Player(this.availableReal.sample()).connect(
-        this.crossFade.a
-      )
+      this.asmrChannel1 = new Tone.Player(
+        audioLibrary.availableReal.sample()
+      ).connect(this.crossFade.a)
       this.asmrChannel1.autostart = true
       this.asmrChannel1.loop = true
       this.asmrChannel1.volume.value = -3
 
-      this.asmrChannel2 = new Tone.Player(this.availableFake.sample()).connect(
-        this.crossFade.b
-      )
+      this.asmrChannel2 = new Tone.Player(
+        audioLibrary.availableFake.sample()
+      ).connect(this.crossFade.b)
       this.asmrChannel2.autostart = true
       this.asmrChannel2.loop = true
       this.asmrChannel2.volume.value = -3
       this.crossFadeInterval = setInterval(this.doCrossFade, 5000)
 
       const reverb = new Tone.Reverb(0.8).toDestination()
-      const file1 = this.sampleSlot1.sample()
+      const file1 = audioLibrary.sampleSlot1.sample()
       this.sampler1 = new Tone.Player(file1).connect(reverb)
       // this.sampler1 = new Tone.Player(file1).toDestination()
       this.sampler1.playbackRate = 0.9
@@ -491,11 +333,12 @@ export default {
       this.sampler1.volume.value = 6
       // this.sampler1.volume.value = 12
 
-      const file2 = this.uiSamples.sample()
+      //uisamples
+      const file2 = audioLibrary.hangDrum.sample()
       this.uiSampler = new Tone.Player(file2).toDestination()
       this.uiSampler.autostart = false
       this.uiSampler.loop = false
-      this.uiSampler.volume.value = 18
+      this.uiSampler.volume.value = 0 //18
 
       this.setRainVolume()
       this.setVolume()
@@ -577,6 +420,7 @@ export default {
 .v-controls.active {
   transform: scale(1);
   animation: pulse 2s infinite;
+  /* background: red; */
 }
 @keyframes pulse {
   0% {
@@ -615,127 +459,5 @@ export default {
 }
 .close:after {
   transform: rotate(-45deg);
-}
-
-.fogwrapper {
-  height: 100%;
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-  opacity: 0.8;
-  pointer-events: none;
-}
-#foglayer_01,
-#foglayer_02,
-#foglayer_03 {
-  height: 100%;
-  position: absolute;
-  width: 200%;
-}
-#foglayer_01 {
-  animation: foglayer_01_opacity 10s linear infinite,
-    foglayer_moveme 90s linear infinite;
-}
-#foglayer_02 {
-  animation: foglayer_02_opacity 21s linear infinite,
-    foglayer_moveme 92s linear infinite;
-}
-#foglayer_03 {
-  animation: foglayer_02_opacity 21s linear infinite,
-    foglayer_moveme 94s linear infinite;
-}
-
-#foglayer_01,
-#foglayer_01 {
-  background: url('/imgs/fog1.png') center center/cover no-repeat transparent;
-}
-#foglayer_02,
-#foglayer_03 {
-  background: url('/imgs/2fog2.png') center center/cover no-repeat transparent;
-}
-/* 
-@keyframes foglayer_01_opacity {
-  0% {
-    opacity: 0.1;
-  }
-  22% {
-    opacity: 0.5;
-  }
-  40% {
-    opacity: 0.28;
-  }
-  58% {
-    opacity: 0.4;
-  }
-  80% {
-    opacity: 0.16;
-  }
-  100% {
-    opacity: 0.1;
-  }
-}
-@keyframes foglayer_02_opacity {
-  0% {
-    opacity: 0.5;
-  }
-  25% {
-    opacity: 0.2;
-  }
-  50% {
-    opacity: 0.1;
-  }
-  80% {
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 0.5;
-  }
-}
-@-webkit-keyframes foglayer_03_opacity {
-  0% {
-    opacity: 0.8;
-  }
-  27% {
-    opacity: 0.2;
-  }
-  52% {
-    opacity: 0.6;
-  }
-  68% {
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 0.8;
-  }
-}
-@keyframes foglayer_03_opacity {
-  0% {
-    opacity: 0.8;
-  }
-  27% {
-    opacity: 0.2;
-  }
-  52% {
-    opacity: 0.6;
-  }
-  68% {
-    opacity: 0.3;
-  }
-  100% {
-    opacity: 0.8;
-  }
-} */
-/* ---------- Keyframe moveMe ---------- */
-@keyframes foglayer_moveme {
-  0% {
-    left: 0;
-  }
-  50% {
-    left: -100%;
-  }
-  100% {
-    left: 0%;
-  }
 }
 </style>
