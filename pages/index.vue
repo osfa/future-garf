@@ -86,6 +86,7 @@ export default {
       rainMaker: undefined,
       audioDialog: true,
       sampler1: undefined,
+      mainSampler: undefined,
       uiSampler: undefined,
       asmrChannel1: undefined,
       asmrChannel2: undefined,
@@ -169,8 +170,11 @@ export default {
         this.toggleAudio()
       } else {
         if (this.uiSampler) {
-          this.uiSampler.load(audioLibrary.hangDrum.sample())
+          this.uiSampler.load(audioLibrary.uiSamples.sample())
           this.uiSampler.start()
+        }
+        if (this.mainSampler) {
+          this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
         }
         if (this.sampler1.state === 'stopped') {
           this.sampler1.start()
@@ -334,11 +338,23 @@ export default {
       // this.sampler1.volume.value = 12
 
       //uisamples
-      const file2 = audioLibrary.hangDrum.sample()
-      this.uiSampler = new Tone.Player(file2).toDestination()
-      this.uiSampler.autostart = false
-      this.uiSampler.loop = false
-      this.uiSampler.volume.value = 0 //18
+      const file2 = audioLibrary.uiSamples.sample()
+      const uiSampler = new Tone.Player(file2, () => {
+        this.uiSampler = uiSampler
+        this.uiSampler.autostart = false
+        this.uiSampler.loop = false
+        this.uiSampler.volume.value = 18
+      }).toDestination()
+
+      const urls = audioLibrary.hangDrum.reduce(
+        (acc, curr) => ((acc[curr] = curr), acc),
+        {}
+      )
+      console.log('loading: ', urls)
+      const mainSampler = new Tone.Players(urls, () => {
+        console.log('loaded hangdrums')
+        this.mainSampler = mainSampler
+      }).toDestination()
 
       this.setRainVolume()
       this.setVolume()

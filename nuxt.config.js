@@ -1,23 +1,29 @@
 export default {
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
-
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: 'mondays.cloud',
     meta: [
       { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+      {
+        name: 'viewport',
+        content: 'width=device-width, initial-scale=1,minimum-scale=1.0',
+      },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-      {rel: 'stylesheet', type: 'text/css', href: '/css/vue2-animate.min.css'}
+      {
+        rel: 'stylesheet',
+        type: 'text/css',
+        href: '/css/vue2-animate.min.css',
+      },
     ],
     bodyAttrs: {
-      class: 'overflow-hidden bg-white'
-    }
+      class: 'overflow-hidden bg-white',
+    },
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
@@ -64,19 +70,19 @@ export default {
   content: {},
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
-    build: {
+  build: {
     extend(config, ctx) {
       config.module.rules.push({
         test: /\.(ogg|mp3|wav|mpe?g)$/i,
         loader: 'file-loader',
         options: {
-          name: '[path][name].[ext]'
-        }
+          name: '[path][name].[ext]',
+        },
       })
-    }
+    },
   },
 
   image: {
     provider: 'netlify',
-  }
+  },
 }
