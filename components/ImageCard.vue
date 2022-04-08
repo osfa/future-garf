@@ -23,15 +23,15 @@ const randomAnimation = (array) => {
     // "bounceLeft",
     // "bounceRight",
     // "bounceUp",
-    'fade',
-    'fadeDown',
-    'fadeDownBig',
-    'fadeLeft',
-    'fadeLeftBig',
-    'fadeRight',
-    'fadeRightBig',
-    'fadeUp',
-    'fadeUpBig',
+    // 'fade',
+    // 'fadeDown',
+    // 'fadeDownBig',
+    // 'fadeLeft',
+    // 'fadeLeftBig',
+    // 'fadeRight',
+    // 'fadeRightBig',
+    // 'fadeUp',
+    // 'fadeUpBig',
     // "rotate",
     // "rotateDownLeft",
     // "rotateDownRight",
@@ -55,6 +55,7 @@ export default {
     mainImageUrl: { type: String, default: '' },
     mainColor: { type: String, default: '#fea71a' },
     currentWidth: { type: Number, required: true },
+    currentHeight: { type: Number, required: true },
     setAnimation: { type: String, default: '' },
     animationOn: { type: Boolean, default: true },
     // animationDuration: { type: Object, required: true, default: () => return {} },
@@ -73,7 +74,7 @@ export default {
     imgUrl() {
       let imgUrl = this.mainImageUrl
       if (process.client) {
-        if (this.currentWidth < 1024) {
+        if (!this.isHorisontal()) {
           imgUrl = imgUrl.replace('.png', '-v.png')
         }
       }
@@ -112,6 +113,9 @@ export default {
     hasLoaded() {
       this.isLoading = false
       this.$emit('loaded')
+    },
+    isHorisontal() {
+      return this.currentWidth / this.currentHeight > 1
     },
   },
 }

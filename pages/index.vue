@@ -25,6 +25,7 @@
         :style="[animationDuration, { backgroundColor: card.color }]"
         :main-image-url="card.color ? undefined : card.imgUrl"
         :current-width="currentWidth"
+        :current-height="currentHeight"
         @loaded="doneLoad"
         @click.native="next()"
       />
@@ -102,6 +103,7 @@ export default {
   },
   beforeMount() {
     this.currentWidth = window.innerWidth
+    this.currentHeight = window.innerHeight
     this.preloadedImage = new Image()
     this.preloadedImage.src = this.newRandomBackgroundForPreload()
     window.addEventListener('resize', this.handleResize)
@@ -123,6 +125,9 @@ export default {
         ? picked.replace(epoch, `${this.currentEpoch}e`)
         : picked
     },
+    isHorisontal() {
+      return this.currentWidth / this.currentHeight > 1
+    },
     newRandomBackgroundForPreload() {
       let newUrl = this.randomBackgroundUrl()
       while (
@@ -131,7 +136,7 @@ export default {
       ) {
         newUrl = this.randomBackgroundUrl()
       }
-      if (this.currentWidth < 1024) {
+      if (!this.isHorisontal()) {
         newUrl = newUrl.replace('.png', '-v.png')
       }
       const desiredResolution = '2k'
