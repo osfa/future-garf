@@ -1,6 +1,13 @@
 <template>
   <div class="overflow-hidden">
     <vue-topprogress ref="topProgress" :speed="30" color="#f00" :height="3" />
+
+    <ul class="voting">
+      <li v-for="index in 5" :key="index" @click="vote(index)">
+        {{ index }}
+      </li>
+    </ul>
+
     <transition mode="out-in" appear name="customFade">
       <!-- :style="{ backgroundColor: '#86ff77' }" -->
       <div
@@ -60,17 +67,19 @@ export default {
   components: { ImageCard, vueTopprogress, Fog },
   data() {
     return {
+      votingObject: {},
       hasLoaded: false,
       isPlaying: false,
       firstImg: true,
       counter: 0,
       epochSwitchIdx: 8,
-      cards: [{ imgUrl: allImgs.sample(), show: true }],
+      cards: [{ imgUrl: allImgs[0], show: true }], // allImgs.sample()
       imgs: allImgs,
       colors: ['#fbcbff', '#c1d3fd', '#fffd81'], // '#fea71a'], //
       availableEpochs: [10, 25, 50],
       currentEpoch: 10,
       currentWidth: 1280,
+      currentHeight: 720,
       isAnimating: false,
       animationTime: 750,
       debounceTime: 250,
@@ -118,6 +127,16 @@ export default {
     },
   },
   methods: {
+    currentImage() {
+      return this.cards[this.cards.length - 1].imgUrl
+    },
+    vote(value) {
+      console.log('voted: ', value)
+      const currentImg = this.currentImage()
+      this.votingObject[currentImg] = value
+      console.log(JSON.stringify(this.votingObject))
+      this.next()
+    },
     randomBackgroundUrl() {
       let picked = this.imgs[Math.floor(Math.random() * this.imgs.length)]
       let epoch = picked.split('-')[6].replace('.png', '')
@@ -129,7 +148,7 @@ export default {
       return this.currentWidth / this.currentHeight > 1
     },
     newRandomBackgroundForPreload() {
-      let newUrl = this.randomBackgroundUrl()
+      let newUrl = this.imgs[this.counter + 1] //this.randomBackgroundUrl()
       while (
         newUrl.replace('/imgs/', '') ===
         this.preloadedImage.src.split('/imgs/')[1]
@@ -188,16 +207,14 @@ export default {
 
       if (this.isAnimating && this.mustWait) return
       this.isAnimating = true
-      const doColor = random(0, 10) > 7 ? this.colors.sample() : undefined
-      this.pushCard(doColor)
-      if (!doColor) {
-        console.log('loader started?')
-        this.$refs.topProgress.start()
-        const newBkgUrl = this.newRandomBackgroundForPreload()
-        this.preloadedImage = new Image()
-        this.preloadedImage.src = newBkgUrl
-        this.preloadedImage.onload = this.doneLoad() // this.pushCard();
-      }
+      this.pushCard()
+      console.log('loader started?')
+      this.$refs.topProgress.start()
+      const newBkgUrl = this.newRandomBackgroundForPreload()
+      this.preloadedImage = new Image()
+      this.preloadedImage.src = newBkgUrl
+      this.preloadedImage.onload = this.doneLoad() // this.pushCard();
+
       this.frequencyShift()
       this.rainShift()
     },
@@ -480,5 +497,18 @@ export default {
 }
 .close:after {
   transform: rotate(-45deg);
+}
+
+.voting {
+  position: absolute;
+  left: 0;
+  top: 0;
+  background: black;
+  color: white;
+  z-index: 1000;
+}
+.voting li {
+  padding: 10px;
+  cursor: pointer;
 }
 </style>
