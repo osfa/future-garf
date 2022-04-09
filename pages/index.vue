@@ -2,7 +2,7 @@
   <div class="overflow-hidden">
     <vue-topprogress ref="topProgress" :speed="30" color="#f00" :height="3" />
 
-    <ul class="voting">
+    <ul v-if="VOTING" class="voting">
       <li v-for="index in 5" :key="index" @click="vote(index)">
         {{ index }}
       </li>
@@ -45,10 +45,11 @@ import * as Tone from 'tone'
 import { vueTopprogress } from 'vue-top-progress'
 import ImageCard from '../components/ImageCard'
 import Fog from '../components/Fog'
-import { allImgs } from './data/panelLibrary.js'
+import { allImgs, toVote } from './data/panelLibrary.js'
 import { audioLibrary } from './data/audioLibrary.js'
 
 const INITIAL_FREQ = 4
+const VOTING = false
 
 /* eslint-disable */
 Array.prototype.sample = function () {
@@ -61,7 +62,8 @@ export const random = (min, max) => {
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min) + min)
 }
-
+const activeSelection = VOTING ? toVote : allImgs
+const start = 0
 export default {
   name: 'IndexPage',
   components: { ImageCard, vueTopprogress, Fog },
@@ -71,10 +73,10 @@ export default {
       hasLoaded: false,
       isPlaying: false,
       firstImg: true,
-      counter: 0,
+      counter: start,
       epochSwitchIdx: 8,
-      cards: [{ imgUrl: allImgs[0], show: true }], // allImgs.sample()
-      imgs: allImgs,
+      cards: [{ imgUrl: activeSelection[start], show: true }], // allImgs.sample()
+      imgs: activeSelection,
       colors: ['#fbcbff', '#c1d3fd', '#fffd81'], // '#fea71a'], //
       availableEpochs: [10, 25, 50],
       currentEpoch: 10,
@@ -155,7 +157,7 @@ export default {
       ) {
         newUrl = this.randomBackgroundUrl()
       }
-      if (!this.isHorisontal()) {
+      if (!this.isHorisontal() && !VOTING) {
         newUrl = newUrl.replace('.png', '-v.png')
       }
       const desiredResolution = '2k'
