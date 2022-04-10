@@ -1,5 +1,12 @@
 <template>
   <div>
+    <div class="curated px-5 full-w bg-white flex flex-row">
+      <div v-for="(savedComp, idx) in savedComps" :key="idx">
+        <a class="text-xs pr-5" href="#" @click="setActiveComp(idx)"
+          >Set {{ idx + 1 }}</a
+        >
+      </div>
+    </div>
     <div class="toolbar flex flex-col fixed right p-10">
       <a @click="isViewing = !isViewing">Toggle View</a>
       <a @click="saveComp">Save</a>
@@ -89,6 +96,52 @@ const init3 = [
   '/imgs/raw/5/1978-07-07-1-10e-1645947500-1024x2048-10e-1645949613-splinter-0.png',
   '/imgs/raw/5/yeet.png-50e-1646461111-1024x2048-50e-1646463530-splinter-0.png',
 ]
+const init4 = [
+  '/imgs/raw/5/1978-06-19-0-25e-1645657279-1024x2048-25e-1645659405-splinter-0.png',
+  '/imgs/raw/5/1978-06-20-2-25e-1645689499-1024x2048-25e-1645691614-splinter-0.png',
+  '/imgs/raw/5/1978-07-10-2-50e-1646076126-1024x2048-50e-1646078245-splinter-0.png',
+  '/imgs/raw/5/1987-10-23-2-50e-1646919941-1024x2048-50e-1646922358-splinter-0.png',
+  '/imgs/raw/5/1992-10-01-0-25e-1647961857-1024x2048-25e-1647964278-splinter-0.png',
+  '/imgs/raw/5/1978-07-04-0-25e-1645885326-1024x2048-25e-1645887437-splinter-0.png',
+  '/imgs/raw/5/1992-09-22-2-25e-1647945452-1024x2048-25e-1647947871-splinter-0.png',
+  '/imgs/raw/5/1978-09-11-0-25e-1646563180-1024x2048-25e-1646565596-splinter-0.png',
+  '/imgs/raw/5/1978-07-07-1-25e-1645949643-1024x2048-25e-1645951757-splinter-0.png',
+  '/imgs/raw/5/yeet.png-50e-1646461111-1024x2048-50e-1646463530-splinter-0.png',
+]
+const init5 = [
+  '/imgs/raw/5/1978-07-06-2-50e-1645938937-1024x2048-50e-1645941048-splinter-0.png',
+  '/imgs/raw/5/1992-01-06-0-10e-1647282771-1024x2048-10e-1647285192-splinter-0.png',
+  '/imgs/raw/5/1978-07-10-2-50e-1646076126-1024x2048-50e-1646078245-splinter-0.png',
+  '/imgs/raw/5/1978-06-20-0-50e-1645678773-1024x2048-50e-1645680888-splinter-0.png',
+  '/imgs/raw/5/1978-06-20-2-25e-1645689499-1024x2048-25e-1645691614-splinter-0.png',
+  '/imgs/raw/5/1987-10-23-2-50e-1646919941-1024x2048-50e-1646922358-splinter-0.png',
+  '/imgs/raw/5/1992-09-22-2-25e-1647945452-1024x2048-25e-1647947871-splinter-0.png',
+  '/imgs/raw/5/1992-10-01-1-10e-1647974160-1024x2048-10e-1647976579-splinter-0.png',
+  '/imgs/raw/5/1978-09-11-0-25e-1646563180-1024x2048-25e-1646565596-splinter-0.png',
+  '/imgs/raw/5/yeet.png-50e-1646461111-1024x2048-50e-1646463530-splinter-0.png',
+]
+const init6 = [
+  '/imgs/raw/5/1978-07-06-2-50e-1645938937-1024x2048-50e-1645941048-splinter-0.png',
+  '/imgs/raw/5/1992-01-06-0-10e-1647282771-1024x2048-10e-1647285192-splinter-0.png',
+  '/imgs/raw/5/1978-07-10-2-50e-1646076126-1024x2048-50e-1646078245-splinter-0.png',
+  '/imgs/raw/5/1978-06-20-0-50e-1645678773-1024x2048-50e-1645680888-splinter-0.png',
+  '/imgs/raw/5/1978-06-20-2-25e-1645689499-1024x2048-25e-1645691614-splinter-0.png',
+  '/imgs/raw/5/1987-10-23-2-50e-1646919941-1024x2048-50e-1646922358-splinter-0.png',
+  '/imgs/raw/5/1992-09-22-2-25e-1647945452-1024x2048-25e-1647947871-splinter-0.png',
+  '/imgs/raw/5/1992-10-01-1-10e-1647974160-1024x2048-10e-1647976579-splinter-0.png',
+  '/imgs/raw/5/1978-09-11-0-25e-1646563180-1024x2048-25e-1646565596-splinter-0.png',
+  '/imgs/raw/5/yeet.png-50e-1646461111-1024x2048-50e-1646463530-splinter-0.png',
+  '/imgs/raw/5/1992-01-22-0-25e-1647371068-1024x2048-25e-1647373489-splinter-0.png',
+  '/imgs/raw/5/1987-11-06-1-10e-1646927283-1024x2048-10e-1646929700-splinter-0.png',
+  '/imgs/raw/5/1978-12-21-2-10e-1646611240-1024x2048-10e-1646613650-splinter-0.png',
+  '/imgs/raw/5/1978-07-06-2-10e-1645934647-1024x2048-10e-1645936757-splinter-0.png',
+  '/imgs/raw/5/1992-10-01-0-25e-1647961857-1024x2048-25e-1647964278-splinter-0.png',
+  '/imgs/raw/5/1978-07-07-1-25e-1645949643-1024x2048-25e-1645951757-splinter-0.png',
+  '/imgs/raw/5/1992-04-18-0-25e-1647493752-1024x2048-25e-1647496174-splinter-0.png',
+  '/imgs/raw/5/1978-06-19-0-50e-1645659444-1024x2048-50e-1645661565-splinter-0.png',
+  '/imgs/raw/5/1992-04-01-2-25e-1647420148-1024x2048-25e-1647422568-splinter-0.png',
+  '/imgs/raw/5/1992-04-18-1-25e-1647506025-1024x2048-25e-1647508448-splinter-0.png',
+]
 export default {
   name: 'selector',
   components: { ImageCard },
@@ -98,8 +151,7 @@ export default {
       isViewing: false,
       activeMap: tsneMap15groups,
       activeComp: init1,
-      savedComps: [],
-      compLength: 10,
+      savedComps: [init1, init2, init3, init4, init5, init6],
       swap: null,
     }
   },
@@ -135,6 +187,9 @@ export default {
         this.activeComp.push(path)
       }
     },
+    setActiveComp(idx) {
+      this.activeComp = this.savedComps[idx]
+    },
     setSwap(idx) {
       console.log('setSwap')
       if (this.swap == idx) {
@@ -168,7 +223,7 @@ export default {
       this.activeComp = []
     },
     dumpComps() {
-      console.log(JSON.stringify(this.savedComps))
+      console.log(JSON.stringify(this.activeComp))
     },
   },
 }
@@ -195,7 +250,8 @@ export default {
   padding: 5px;
   cursor: pointer;
 }
-.toolbar a:hover {
+.toolbar a:hover,
+.curated a:hover {
   text-decoration: underline;
 }
 .isActive {
@@ -219,5 +275,8 @@ export default {
 }
 .disp-panel-img {
   max-height: 95vh;
+}
+.curated {
+  align-items: center;
 }
 </style>
