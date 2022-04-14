@@ -26,7 +26,7 @@
         @click="toggleAudio()"
       ></div>
     </transition>
-    <Fog />
+    <!-- <Fog /> -->
     <div v-for="(card, index) in cards" :key="index">
       <!-- set-animation="customFade" -->
       <ImageCard

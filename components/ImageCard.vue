@@ -105,7 +105,6 @@ export default {
   },
   methods: {
     hasLoaded() {
-      console.log('hasLoaded')
       this.isLoading = false
       this.$emit('loaded')
     },

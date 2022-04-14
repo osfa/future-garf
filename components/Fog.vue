@@ -72,7 +72,7 @@ export default {
 #fog3 {
   background: url('/imgs/2fog2.png') center center/cover no-repeat transparent;
 }
-/* 
+
 @keyframes foglayer_01_opacity {
   0% {
     opacity: 0.1;
@@ -143,7 +143,7 @@ export default {
   100% {
     opacity: 0.8;
   }
-} */
+}
 /* ---------- Keyframe moveMe ---------- */
 @keyframes foglayer_moveme {
   0% {
