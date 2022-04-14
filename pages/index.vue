@@ -3,8 +3,12 @@
     <vue-topprogress ref="topProgress" :speed="50" color="#000" :height="3" />
 
     <transition mode="out-in" appear name="customFade">
-      <div v-show="!hasInit" class="main-play w-screen h-screen">
-        <div class="button-play" @click="next()"></div>
+      <div
+        v-show="!hasInit"
+        class="main-play w-screen h-screen"
+        @click="next()"
+      >
+        <div class="button-play"></div>
       </div>
     </transition>
 
@@ -110,6 +114,7 @@ export default {
     const first = new Image()
     first.src = this.cards[0].imgUrl
     first.onload = () => {
+      console.log('first image fire')
       this.hasLoaded = true
     }
   },
@@ -118,6 +123,7 @@ export default {
     this.currentHeight = window.innerHeight
     this.preloadedImage = new Image()
     this.preloadedImage.src = this.newRandomBackgroundForPreload()
+    this.preloadedImage.onload = this.donePreLoad()
     window.addEventListener('resize', this.handleResize)
   },
   beforeDestroy() {
@@ -174,6 +180,7 @@ export default {
       this.currentEpoch = selected
     },
     pushCard(color) {
+      console.log('showing:', this.preloadedImage.src)
       this.counter += 1
       this.cards.push({
         color: color,
@@ -186,12 +193,12 @@ export default {
         this.isAnimating = false
       }, this.debounceTime)
     },
-    donePreLoad() {
-      console.log('donePreLoad')
+    donePreLoad(newBkgUrl) {
+      console.log('donePreLoad: ', newBkgUrl)
     },
     doneLoad() {
-      console.log('load done')
       setTimeout(() => {
+        this.mustWait = false
         this.$refs.topProgress.done()
       }, 1)
     },
@@ -214,17 +221,20 @@ export default {
         }
       }
 
-      if (this.isAnimating && this.mustWait) return
+      if (this.isAnimating || this.mustWait) return
       this.isAnimating = true
+      this.mustWait = true
       this.$refs.topProgress.start()
 
       this.pushCard()
-      console.log('loader started:')
 
       const newBkgUrl = this.newRandomBackgroundForPreload()
+
+      console.log('loader started:', newBkgUrl)
+
       this.preloadedImage = new Image()
       this.preloadedImage.src = newBkgUrl
-      this.preloadedImage.onload = this.donePreLoad() // this.pushCard();
+      this.preloadedImage.onload = this.donePreLoad(newBkgUrl)
 
       this.frequencyShift()
       this.rainShift()
