@@ -1,24 +1,23 @@
 <template>
   <div class="overflow-hidden">
-    <vue-topprogress ref="topProgress" :speed="30" color="#f00" :height="3" />
-
-    <ul v-if="VOTING" class="voting">
-      <li v-for="index in 5" :key="index" @click="vote(index)">
-        {{ index }}
-      </li>
-    </ul>
+    <vue-topprogress ref="topProgress" :speed="50" color="#000" :height="3" />
 
     <transition mode="out-in" appear name="customFade">
-      <!-- :style="{ backgroundColor: '#86ff77' }" -->
+      <div v-show="!hasInit" class="main-play w-screen h-screen">
+        <div class="button-play" @click="next()"></div>
+      </div>
+    </transition>
+
+    <transition mode="out-in" appear name="customFade">
       <div
-        v-show="isPlaying"
+        v-show="isPlaying && hasInit"
         class="w-6 h-6 v-controls active bg-white rounded-full"
         @click="toggleAudio()"
       ></div>
     </transition>
     <transition mode="out-in" appear name="customFade">
       <div
-        v-show="!isPlaying"
+        v-show="!isPlaying && hasInit"
         class="v-controls button-play"
         @click="toggleAudio()"
       ></div>
@@ -45,11 +44,11 @@ import * as Tone from 'tone'
 import { vueTopprogress } from 'vue-top-progress'
 import ImageCard from '../components/ImageCard'
 import Fog from '../components/Fog'
-import { allImgs, toVote } from './data/panelLibrary.js'
+import { allImgs } from './data/panelLibrary.js'
 import { audioLibrary } from './data/audioLibrary.js'
 
 const INITIAL_FREQ = 4
-const VOTING = false
+// const VOTING = false
 
 /* eslint-disable */
 Array.prototype.sample = function () {
@@ -62,7 +61,8 @@ export const random = (min, max) => {
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min) + min)
 }
-const activeSelection = VOTING ? toVote : allImgs
+// const activeSelection = VOTING ? toVote : allImgs
+const activeSelection = allImgs
 const start = 0
 export default {
   name: 'IndexPage',
@@ -72,6 +72,7 @@ export default {
       votingObject: {},
       hasLoaded: false,
       isPlaying: false,
+      hasInit: false,
       firstImg: true,
       counter: start,
       epochSwitchIdx: 8,
@@ -157,7 +158,7 @@ export default {
       ) {
         newUrl = this.randomBackgroundUrl()
       }
-      if (!this.isHorisontal() && !VOTING) {
+      if (!this.isHorisontal()) {
         newUrl = newUrl.replace('.png', '-v.png')
       }
       const desiredResolution = '2k'
@@ -185,13 +186,19 @@ export default {
         this.isAnimating = false
       }, this.debounceTime)
     },
+    donePreLoad() {
+      console.log('donePreLoad')
+    },
     doneLoad() {
+      console.log('load done')
       setTimeout(() => {
         this.$refs.topProgress.done()
       }, 1)
     },
     next(e) {
       this.firstImg = false
+      this.hasInit = true
+
       if (!this.audioCtx) {
         this.toggleAudio()
       } else {
@@ -202,26 +209,31 @@ export default {
         if (this.mainSampler) {
           this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
         }
-        if (this.sampler1.state === 'stopped') {
+        if (this.sampler1 && this.sampler1.state === 'stopped') {
           this.sampler1.start()
         }
       }
 
       if (this.isAnimating && this.mustWait) return
       this.isAnimating = true
-      this.pushCard()
-      console.log('loader started?')
       this.$refs.topProgress.start()
+
+      this.pushCard()
+      console.log('loader started:')
+
       const newBkgUrl = this.newRandomBackgroundForPreload()
       this.preloadedImage = new Image()
       this.preloadedImage.src = newBkgUrl
-      this.preloadedImage.onload = this.doneLoad() // this.pushCard();
+      this.preloadedImage.onload = this.donePreLoad() // this.pushCard();
 
       this.frequencyShift()
       this.rainShift()
+
+      // setTimeout(this.next, 10000)
     },
     handleResize(e) {
       this.currentWidth = window.innerWidth
+      this.currentHeight = window.innerHeight
     },
     /* AUDIO */
     toggleAudio() {
@@ -353,15 +365,18 @@ export default {
 
       const reverb = new Tone.Reverb(0.8).toDestination()
       const file1 = audioLibrary.sampleSlot1.sample()
-      this.sampler1 = new Tone.Player(file1).connect(reverb)
+      // this.sampler1 = new Tone.Player(file1).connect(reverb)
+      const sampler1 = new Tone.Player(file1, () => {
+        this.sampler1 = sampler1
+        this.sampler1.playbackRate = 0.9
+        this.sampler1.autostart = false
+        this.sampler1.loop = false
+        this.sampler1.volume.value = 6
+        // this.sampler1.volume.value = 12
+      }).connect(reverb) //.toDestination()
       // this.sampler1 = new Tone.Player(file1).toDestination()
-      this.sampler1.playbackRate = 0.9
-      this.sampler1.autostart = false
-      this.sampler1.loop = false
-      this.sampler1.volume.value = 6
-      // this.sampler1.volume.value = 12
 
-      //uisamples
+      // uisamples
       const file2 = audioLibrary.uiSamples.sample()
       const uiSampler = new Tone.Player(file2, () => {
         this.uiSampler = uiSampler
@@ -394,11 +409,8 @@ export default {
 <style scoped>
 .button-play {
   position: relative;
-  /* width: 50px;
-  height: 50px;
-  background: black;
-  padding-top: 10px; */
 }
+
 .button-play:before {
   content: '';
   position: absolute;
@@ -431,6 +443,16 @@ export default {
   cursor: pointer;
 }
 
+.main-play {
+  z-index: 1000;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .page {
   overflow: hidden;
   position: absolute;
@@ -452,16 +474,19 @@ export default {
   transition: all 250ms cubic-bezier(1, 0.5, 0.8, 1);
   /*transition: opacity 5s;*/
 }
+
 .customFade-enter,
 .customFade-leave-to {
   opacity: 0;
   /* transform: scale(1.05); */
 }
+
 .v-controls.active {
   transform: scale(1);
   animation: pulse 2s infinite;
   /* background: red; */
 }
+
 @keyframes pulse {
   0% {
     transform: scale(0.85);

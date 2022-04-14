@@ -45,6 +45,7 @@ export default {
   z-index: 100;
   opacity: 0.8;
   pointer-events: none;
+  overflow: hidden;
 }
 .fog {
   height: 100%;

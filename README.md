@@ -66,6 +66,14 @@
 either dither or make main image small and with backgorund color o rsomething? to save size...
 have square ones and diff dims in middle? like composiiotns?
 
+---
+
+    <!-- <ul v-if="VOTING" class="voting">
+      <li v-for="index in 5" :key="index" @click="vote(index)">
+        {{ index }}
+      </li>
+    </ul> -->
+
 ## Build Setup
 
 ```bash

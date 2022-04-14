@@ -33,7 +33,8 @@ bower_components
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
 build/Release
-
+static/imgs/_selected4k/
+static/imgs/_all-prune-test-512-x1024/
 # Dependency directories
 node_modules/
 jspm_packages/

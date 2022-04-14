@@ -1,12 +1,6 @@
 <template>
   <transition mode="out-in" :appear="animationOn" :name="getAnimation">
-    <img
-      v-if="mainImageUrl"
-      v-show="!isLoading"
-      class="page"
-      :src="imgUrl"
-      @load="hasLoaded"
-    />
+    <img v-show="!isLoading" class="page" :src="imgUrl" @load="hasLoaded" />
     <div
       v-if="!mainImageUrl"
       class="page solid"
@@ -25,13 +19,13 @@ const randomAnimation = (array) => {
     // "bounceUp",
     // 'fade',
     // 'fadeDown',
-    // 'fadeDownBig',
     // 'fadeLeft',
-    // 'fadeLeftBig',
     // 'fadeRight',
-    // 'fadeRightBig',
     // 'fadeUp',
     // 'fadeUpBig',
+    // 'fadeRightBig',
+    // 'fadeLeftBig',
+    // 'fadeDownBig',
     // "rotate",
     // "rotateDownLeft",
     // "rotateDownRight",
@@ -64,7 +58,7 @@ export default {
     return {
       isLoading: true,
       imagesToPreload: [
-        this.currentWidth < 1024
+        !this.isHorisontal()
           ? this.mainImageUrl.replace('.png', '-v.png')
           : this.mainImageUrl,
       ],
@@ -111,6 +105,7 @@ export default {
   },
   methods: {
     hasLoaded() {
+      console.log('hasLoaded')
       this.isLoading = false
       this.$emit('loaded')
     },
@@ -132,6 +127,10 @@ export default {
   background-size: cover; */
 }
 .page {
+  /* transition: transform 300ms linear; */
+  /* will-change: transform; */
   object-fit: cover;
+  animation-duration: 250ms !important;
+  /* animation-delay: 1000ms; */
 }
 </style>
