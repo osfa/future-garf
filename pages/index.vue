@@ -2,6 +2,14 @@
   <div class="overflow-hidden">
     <vue-topprogress ref="topProgress" :speed="50" color="#000" :height="3" />
 
+    <!-- <div class="toolbar flex flex-col fixed left p-10">
+      <a @click="dumpComps">Dump</a>
+      <span>{{ counter }} /{{ imgs.length }}</span>
+      <div v-for="(q, idx) in qualities" :key="idx">
+        <a class="pr-5" href="#" @click="setQuality(idx)">{{ q + 1 }}</a>
+      </div>
+    </div> -->
+
     <transition mode="out-in" appear name="customFade">
       <div
         v-show="!hasInit"
@@ -27,7 +35,11 @@
       ></div>
     </transition>
     <!-- <Fog /> -->
-    <div v-for="(card, index) in cards" :key="index">
+    <div
+      v-for="(card, index) in cards"
+      :key="index"
+      @contextmenu="markForDeletion($event, card.imgUrl)"
+    >
       <!-- set-animation="customFade" -->
       <ImageCard
         :key="index"
@@ -38,6 +50,7 @@
         :current-height="currentHeight"
         @loaded="doneLoad"
         @click.native="next()"
+        @dblclick="dblclick()"
       />
     </div>
   </div>
@@ -48,7 +61,7 @@ import * as Tone from 'tone'
 import { vueTopprogress } from 'vue-top-progress'
 import ImageCard from '../components/ImageCard'
 import Fog from '../components/Fog'
-import { allImgs } from './data/panelLibrary.js'
+import { the681, seedSeq, pSeq } from './data/panelLibrary.js'
 import { audioLibrary } from './data/audioLibrary.js'
 
 const INITIAL_FREQ = 4
@@ -65,14 +78,43 @@ export const random = (min, max) => {
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min) + min)
 }
-// const activeSelection = VOTING ? toVote : allImgs
-const activeSelection = allImgs
+
+const baseFolder = '/imgs/_out/_out-681'
+// const baseFolder = '/imgs/on-disk'
+
+const seedFolder = '/imgs/_out/_out-seq'
+
+const quality = '/4k/png8-64-noise-p/'
+
+let activeSelection = the681.map(
+  (item) => baseFolder + item.replace('/4k/png8-64-noise-p/', quality)
+)
+
+const PATTERN = 'gigapixel-lines'
+
+activeSelection = pSeq
+  .map((item) => seedFolder + item)
+  .filter(function (str) {
+    return str.indexOf(PATTERN) === -1
+  })
+
+activeSelection = seedSeq
+  .map((item) => seedFolder + item)
+  .filter(function (str) {
+    return str.indexOf(PATTERN) === -1
+  })
+
+activeSelection = the681.map(
+  (item) => baseFolder + item.replace('/4k/png8-128-noise-p/', quality)
+)
+
 const start = 0
 export default {
   name: 'IndexPage',
   components: { ImageCard, vueTopprogress, Fog },
   data() {
     return {
+      toRemove: [],
       votingObject: {},
       hasLoaded: false,
       isPlaying: false,
@@ -82,7 +124,6 @@ export default {
       epochSwitchIdx: 8,
       cards: [{ imgUrl: activeSelection[start], show: true }], // allImgs.sample()
       imgs: activeSelection,
-      colors: ['#fbcbff', '#c1d3fd', '#fffd81'], // '#fea71a'], //
       availableEpochs: [10, 25, 50],
       currentEpoch: 10,
       currentWidth: 1280,
@@ -136,6 +177,17 @@ export default {
     },
   },
   methods: {
+    markForDeletion(e, identifier) {
+      e.preventDefault()
+      this.toRemove.push(identifier)
+      this.next()
+    },
+    setQuality(idx) {
+      console.log(idx)
+    },
+    dumpComps() {
+      console.log(JSON.stringify(this.toRemove))
+    },
     currentImage() {
       return this.cards[this.cards.length - 1].imgUrl
     },
@@ -154,7 +206,8 @@ export default {
         : picked
     },
     isHorisontal() {
-      return this.currentWidth / this.currentHeight > 1
+      return true
+      // return this.currentWidth / this.currentHeight > 1
     },
     newRandomBackgroundForPreload() {
       let newUrl = this.imgs[this.counter + 1] //this.randomBackgroundUrl()
@@ -179,11 +232,10 @@ export default {
       }
       this.currentEpoch = selected
     },
-    pushCard(color) {
+    pushCard() {
       console.log('showing:', this.preloadedImage.src)
       this.counter += 1
       this.cards.push({
-        color: color,
         imgUrl: this.preloadedImage.src.replace('-v.png', '.png'),
       })
       if (this.counter % this.epochSwitchIdx === 0) {
@@ -201,6 +253,9 @@ export default {
         this.mustWait = false
         this.$refs.topProgress.done()
       }, 1)
+    },
+    dblclick() {
+      console.log('dblclick')
     },
     next(e) {
       this.firstImg = false
@@ -547,5 +602,47 @@ export default {
 .voting li {
   padding: 10px;
   cursor: pointer;
+}
+
+.toolbar {
+  background: white;
+  padding: 5px;
+  left: 5px;
+  top: 5px;
+  font-size: 8px;
+  z-index: 1000;
+}
+.toolbar a {
+  padding: 5px;
+  cursor: pointer;
+}
+.toolbar a:hover,
+.curated a:hover {
+  text-decoration: underline;
+}
+.isActive {
+  border: 3px solid red;
+}
+.display-panel {
+  position: relative;
+  box-sizing: border-box;
+}
+.tooltip {
+  display: none;
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 12px;
+  padding: 5px;
+  background: white;
+}
+.display-panel:hover .tooltip {
+  display: block;
+}
+.disp-panel-img {
+  max-height: 95vh;
+}
+.curated {
+  align-items: center;
 }
 </style>

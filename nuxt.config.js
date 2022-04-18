@@ -26,9 +26,9 @@ export default {
       //   href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
       // },
     ],
-    bodyAttrs: {
-      class: 'overflow-hidden bg-white',
-    },
+    // bodyAttrs: {
+    //   class: 'overflow-hidden bg-white',
+    // },
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],

@@ -58,14 +58,14 @@
 
 <script>
 import { tsne8x85 } from './data/tsne8x85.js'
-import { sel4, thirdSel } from './data/selected72.js'
+import { sel4, thirdSel, genSel, sel110, sel94 } from './data/selected72.js'
 
 /* eslint-disable */
 Array.prototype.sample = function () {
   return this[Math.floor(Math.random() * this.length)]
 }
 /* eslint-disable */
-const activeComp = sel4
+const activeComp = sel94
 
 const grouped = []
 
@@ -75,12 +75,13 @@ export default {
   data() {
     return {
       folderPath: '/imgs/_all-prune-test-512-x1024/',
-      folderPath4k: '/imgs/_selected4k/',
+      // folderPath4k: '/imgs/_selected4k/',
+      folderPath4k: '/imgs/_out/_out-681/4k/png8-64-noise-p/',
       cols: [],
       isViewing: false,
       activeMap: tsne8x85,
       activeComp: activeComp.sort(),
-      savedComps: [sel4, thirdSel],
+      savedComps: [sel4, thirdSel, genSel, sel110, sel94],
       swap: null,
     }
   },

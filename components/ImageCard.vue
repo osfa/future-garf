@@ -1,6 +1,12 @@
 <template>
   <transition mode="out-in" :appear="animationOn" :name="getAnimation">
-    <img v-show="!isLoading" class="page" :src="imgUrl" @load="hasLoaded" />
+    <img
+      v-show="!isLoading"
+      class="page"
+      :src="imgUrl"
+      @load="hasLoaded"
+      @error="hasLoaded"
+    />
     <div
       v-if="!mainImageUrl"
       class="page solid"
@@ -42,7 +48,6 @@ const randomAnimation = (array) => {
     // "zoomRight",
   ].sample()
 }
-// import bkgImg from '/imgs/1987-12-11-0-10e-1646988554-1024x2048-10e-1646990976-splinter-0-gigapixel-lines-scale-2_00x.png';
 export default {
   name: 'ImageCard',
   props: {
@@ -109,7 +114,8 @@ export default {
       this.$emit('loaded')
     },
     isHorisontal() {
-      return this.currentWidth / this.currentHeight > 1
+      return true
+      // return this.currentWidth / this.currentHeight > 1
     },
   },
 }
