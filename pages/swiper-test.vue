@@ -14,7 +14,7 @@
           class="pic"
           :class="{ active: scope.data.counter % 4 === 0 || true }"
           :style="{
-            'background-image': `url(/imgs/seq-all/${scope.data.id}`,
+            'background-image': `url(/imgs/2k/png8-16-noise-p/${scope.data.id}`,
           }"
         />
       </template>
@@ -28,7 +28,7 @@
 import Tinder from '../components/vue-tinder/Tinder.vue'
 import Fog from '../components/Fog'
 import AudioModule from '../components/AudioModule.vue'
-import { minitest as source } from './data/panelLibrary.js'
+import { the330 as source } from './data/panelLibrary.js'
 
 /* eslint-disable */
 Array.prototype.sample = function () {
