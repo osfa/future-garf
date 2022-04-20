@@ -1,11 +1,12 @@
 <template>
   <div class="audio-container">
     <div
-      class="rec w-7 h-7 absolute rounded-full flex"
+      v-show="isActive"
+      class="rec w-4 h-4 lg:w-5 lg:h-5 absolute rounded-full flex"
       :class="{ active: isActive }"
       @click="toggle"
     >
-      <span class="text-sm">{{ isActive ? 'REC' : 'GO' }}</span>
+      <span class="blink text-sm">{{ isActive ? 'REC' : 'GO' }}</span>
     </div>
     <transition mode="out-in" appear name="customFade">
       <div
@@ -19,7 +20,7 @@
     <transition mode="out-in" name="customFade">
       <div
         v-show="isPlaying && hasInit"
-        class="w-6 h-6 v-controls active bg-white"
+        class="w-4 h-4 xl:w-5 xl:h-5 v-controls active bg-white"
         @click="toggleAudio()"
       ></div>
     </transition>
@@ -77,12 +78,16 @@ export default {
       if (this.mainSampler) {
         if (this.ticks % 8 === 0) {
           this.toggle()
-          this.mainSampler.player(audioLibrary.trailerSounds.sample()).start()
+          const s = audioLibrary.trailerSounds.sample()
+          console.log(s)
+          this.mainSampler.player(s).start()
 
           // this.mainSampler.player(audioLibrary.trailer25.sample()).start()
         } else if (this.ticks % 4 === 0) {
           this.toggle()
-          this.mainSampler.player(audioLibrary.trailerSounds.sample()).start()
+          const s = audioLibrary.trailerSounds.sample()
+          console.log(s)
+          this.mainSampler.player(s).start()
           // this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
         }
       }
@@ -108,7 +113,7 @@ export default {
     next(e) {
       console.log('next audiomodule')
       this.toggleAudio()
-      this.$emit('next')
+      // this.$emit('next')
     },
     toggle() {
       console.log('wtf')
@@ -119,6 +124,7 @@ export default {
       console.log('audiomodule toggleAudio')
       this.isPlaying = !this.isPlaying
       this.audioDialog = false
+      this.$emit('toggleAudio')
 
       if (!this.audioCtx) {
         this.initAudio()
@@ -277,7 +283,7 @@ export default {
       const mainSampler = new Tone.Players(urls, () => {
         console.log('loaded hangdrums')
         this.mainSampler = mainSampler
-        this.mainSampler.volume.value = -12
+        this.mainSampler.volume.value = -6
       }).toDestination()
 
       this.setRainVolume()
@@ -339,7 +345,7 @@ export default {
   align-items: center;
 }
 .rec span {
-  margin-left: 80px;
+  margin-left: 70px;
   color: white;
 }
 .rec.active {
@@ -359,7 +365,7 @@ export default {
 
 .v-controls.active {
   transform: scale(1);
-  animation: pulse 2s infinite;
+  /* animation: pulse 2s infinite; */
   /* background: red; */
 }
 .customFade-enter-active,
@@ -388,6 +394,20 @@ export default {
   100% {
     transform: scale(0.85);
     box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+  }
+}
+
+.blink {
+  animation: blink-animation 1s steps(5, start) infinite;
+}
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
   }
 }
 

@@ -20,7 +20,7 @@
       </template>
     </Tinder>
     <Fog />
-    <audio-module ref="audioModule" @next="next" />
+    <audio-module ref="audioModule" @next="next" @toggleAudio="toggleAudio" />
   </div>
 </template>
 
@@ -43,23 +43,29 @@ export default {
     offset: 0,
     history: [],
     tickInterval: 1000,
+    isPaused: true,
   }),
   created() {
     this.mock()
   },
   mounted() {
-    this.tick()
+    if (this.kioskMode) {
+      this.tick()
+    }
   },
   methods: {
     tick() {
       setTimeout(() => {
-        this.decide(['like', 'nope', 'super'].sample())
+        if (!this.isPaused) this.decide(['like', 'nope', 'super'].sample())
         this.tick()
-      }, [10000, 1000].sample())
+      }, [10000, 2500, 1000].sample())
     },
     next(e) {
       console.log('next')
       this.decide(['like', 'nope', 'super'].sample())
+    },
+    toggleAudio() {
+      this.isPaused = !this.isPaused
     },
     mock(count = 5, append = true) {
       console.log(source.length)
@@ -153,10 +159,10 @@ body {
   background-position: top;
 }
 .tinder-card {
-  border: 10px solid white;
+  border: 7px solid white;
 }
 .pic.active {
-  animation: scale 30s;
+  /* animation: scale 30s; */
   animation-iteration-count: infinite;
   animation-direction: alternate;
 }
