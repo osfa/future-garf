@@ -23,13 +23,6 @@
         @click="toggleAudio()"
       ></div>
     </transition>
-    <!-- <transition mode="out-in" appear name="customFade">
-      <div
-        v-show="!isPlaying && hasInit"
-        class="v-controls button-play"
-        @click="toggleAudio()"
-      ></div>
-    </transition> -->
   </div>
 </template>
 

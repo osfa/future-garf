@@ -18,27 +18,16 @@
           }"
         />
       </template>
-      <!-- <img class="like-pointer" slot="like" src="~img/like-txt.png" />
-      <img class="nope-pointer" slot="nope" src="~img/nope-txt.png" />
-      <img class="super-pointer" slot="super" src="~img/super-txt.png" />
-      <img class="down-pointer" slot="down" src="~img/down-txt.png" />
-      <img class="rewind-pointer" slot="rewind" src="~img/rewind-txt.png" /> -->
     </Tinder>
-    <!-- <div class="btns">
-      <span @click="decide('like')">LIKE</span>
-    </div> -->
-
     <Fog />
     <audio-module ref="audioModule" @next="next" />
   </div>
 </template>
 
 <script>
-// import VueTinder from 'vue-tinder'
 import Tinder from '../components/vue-tinder/Tinder.vue'
 import Fog from '../components/Fog'
 import AudioModule from '../components/AudioModule.vue'
-
 import { minitest as source } from './data/panelLibrary.js'
 
 /* eslint-disable */
@@ -59,12 +48,6 @@ export default {
     this.mock()
   },
   mounted() {
-    // setInterval(() => {
-    //   this.decide(['like', 'nope', 'super'].sample())
-    // }, this.tickInterval)
-    // setTimeout(() => {
-    //   this.decide(['like', 'nope', 'super'].sample())
-    // }, [10000, 1000].sample())
     this.tick()
   },
   methods: {
@@ -109,8 +92,7 @@ export default {
       this.history.push(item)
     },
     decide(choice) {
-      console.log('decide')
-
+      console.log('decide:', choice)
       this.$refs.tinder.decide(choice)
     },
   },
@@ -132,80 +114,36 @@ body {
 
 #app .vue-tinder {
   position: absolute;
-  z-index: 1;
-  left: 0;
-  right: 0;
-  top: 1%;
-  margin: auto;
-  width: calc(100% - 4%);
-  height: calc(100% - 23px - 65px - 47px - 16px);
-  height: calc(100% - 1% - 65px);
-  /* min-width: 300px;
-  max-width: 355px; */
-  max-width: 435px;
-}
+  z-index: 1000;
 
-#app .vue-tinder {
-  position: absolute;
-  z-index: 1;
   left: 0;
   right: 0;
-  top: 4%;
+  top: 6%;
   margin: auto;
+
   width: calc(100% - 10%);
-  height: calc(100% - 23px - 65px - 47px - 16px);
-  height: calc(100% - 8% - 65px);
-  /* min-width: 300px;
-  max-width: 355px; */
-  max-width: 435px;
-  max-width: 80vw;
+  /* height: calc(100% - 23px - 65px - 47px - 16px); */
 
-  z-index: 500;
+  height: calc(100% - 6% - 65px);
+  max-width: 85vw;
 }
 
-.nope-pointer,
-.like-pointer {
-  position: absolute;
-  z-index: 1;
-  top: 20px;
-  width: 64px;
-  height: 64px;
+@media (orientation: landscape) {
+  #app .vue-tinder {
+    top: 4%;
+    height: calc(100% - 8% - 65px);
+    max-width: 25vw;
+  }
 }
 
-.nope-pointer {
-  right: 10px;
-}
-
-.like-pointer {
-  left: 10px;
-}
-
-.super-pointer,
-.down-pointer {
-  position: absolute;
-  z-index: 1;
-  left: 0;
-  right: 0;
-  margin: auto;
-  width: 112px;
-  height: 78px;
-}
-
-.super-pointer {
-  bottom: 40px;
-}
-
-.down-pointer {
-  top: 40px;
-}
-
-.rewind-pointer {
-  position: absolute;
-  z-index: 1;
-  top: 20px;
-  right: 10px;
-  width: 112px;
-  height: 78px;
+/* 4k standing */
+/* handle via zoom and rem instead? */
+@media (orientation: portrait) and (min-width: 2000px) {
+  #app .vue-tinder {
+    top: 3%;
+    height: calc(100% - 6% - 65px);
+    max-width: 80vw;
+  }
 }
 
 .pic {
@@ -228,7 +166,7 @@ body {
   }
 
   100% {
-    transform: scale(1.2);
+    transform: scale(1.1);
   }
 }
 @keyframes shake {
