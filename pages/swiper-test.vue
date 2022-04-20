@@ -1,0 +1,311 @@
+<template>
+  <div id="app">
+    <Tinder
+      ref="tinder"
+      key-name="id"
+      :queue.sync="queue"
+      :max="4"
+      :offset-y="10"
+      allow-down
+      @submit="onSubmit"
+    >
+      <template slot-scope="scope">
+        <div
+          class="pic"
+          :class="{ active: scope.data.counter % 4 === 0 || true }"
+          :style="{
+            'background-image': `url(/imgs/seq-all/${scope.data.id}`,
+          }"
+        />
+      </template>
+      <!-- <img class="like-pointer" slot="like" src="~img/like-txt.png" />
+      <img class="nope-pointer" slot="nope" src="~img/nope-txt.png" />
+      <img class="super-pointer" slot="super" src="~img/super-txt.png" />
+      <img class="down-pointer" slot="down" src="~img/down-txt.png" />
+      <img class="rewind-pointer" slot="rewind" src="~img/rewind-txt.png" /> -->
+    </Tinder>
+    <!-- <div class="btns">
+      <span @click="decide('like')">LIKE</span>
+    </div> -->
+
+    <Fog />
+    <audio-module ref="audioModule" @next="next" />
+  </div>
+</template>
+
+<script>
+// import VueTinder from 'vue-tinder'
+import Tinder from '../components/vue-tinder/Tinder.vue'
+import Fog from '../components/Fog'
+import AudioModule from '../components/AudioModule.vue'
+
+import { minitest as source } from './data/panelLibrary.js'
+
+/* eslint-disable */
+Array.prototype.sample = function () {
+  return this[Math.floor(Math.random() * this.length)]
+}
+/* eslint-disable */
+export default {
+  name: 'App',
+  components: { Tinder, Fog, 'audio-module': AudioModule },
+  data: () => ({
+    queue: [],
+    offset: 0,
+    history: [],
+    tickInterval: 1000,
+  }),
+  created() {
+    this.mock()
+  },
+  mounted() {
+    // setInterval(() => {
+    //   this.decide(['like', 'nope', 'super'].sample())
+    // }, this.tickInterval)
+    // setTimeout(() => {
+    //   this.decide(['like', 'nope', 'super'].sample())
+    // }, [10000, 1000].sample())
+    this.tick()
+  },
+  methods: {
+    tick() {
+      setTimeout(() => {
+        this.decide(['like', 'nope', 'super'].sample())
+        this.tick()
+      }, [10000, 1000].sample())
+    },
+    next(e) {
+      console.log('next')
+      this.decide(['like', 'nope', 'super'].sample())
+    },
+    mock(count = 5, append = true) {
+      console.log(source.length)
+      console.log(this.offset % source.length)
+      const list = []
+      for (let i = 0; i < count; i++) {
+        list.push({
+          id: source[this.offset % source.length],
+          counter: this.offset,
+        })
+        this.offset++
+      }
+      if (append) {
+        this.queue = this.queue.concat(list)
+      } else {
+        this.queue.unshift(...list)
+      }
+    },
+    onSubmit({ item }) {
+      // counter check here and animate state on the lil button somehow
+      // scope.data.counter
+
+      console.log('onSubmit')
+      if (this.$refs.audioModule) {
+        this.$refs.audioModule.playSample()
+      }
+      if (this.queue.length < 3) {
+        this.mock()
+      }
+      this.history.push(item)
+    },
+    decide(choice) {
+      console.log('decide')
+
+      this.$refs.tinder.decide(choice)
+    },
+  },
+}
+</script>
+
+<style>
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background-color: lightblue !important;
+  /* background-color: #333 !important; */
+  overflow: hidden;
+}
+
+#app .vue-tinder {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  top: 1%;
+  margin: auto;
+  width: calc(100% - 4%);
+  height: calc(100% - 23px - 65px - 47px - 16px);
+  height: calc(100% - 1% - 65px);
+  /* min-width: 300px;
+  max-width: 355px; */
+  max-width: 435px;
+}
+
+#app .vue-tinder {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  top: 4%;
+  margin: auto;
+  width: calc(100% - 10%);
+  height: calc(100% - 23px - 65px - 47px - 16px);
+  height: calc(100% - 8% - 65px);
+  /* min-width: 300px;
+  max-width: 355px; */
+  max-width: 435px;
+  max-width: 80vw;
+
+  z-index: 500;
+}
+
+.nope-pointer,
+.like-pointer {
+  position: absolute;
+  z-index: 1;
+  top: 20px;
+  width: 64px;
+  height: 64px;
+}
+
+.nope-pointer {
+  right: 10px;
+}
+
+.like-pointer {
+  left: 10px;
+}
+
+.super-pointer,
+.down-pointer {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  right: 0;
+  margin: auto;
+  width: 112px;
+  height: 78px;
+}
+
+.super-pointer {
+  bottom: 40px;
+}
+
+.down-pointer {
+  top: 40px;
+}
+
+.rewind-pointer {
+  position: absolute;
+  z-index: 1;
+  top: 20px;
+  right: 10px;
+  width: 112px;
+  height: 78px;
+}
+
+.pic {
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: top;
+}
+.tinder-card {
+  border: 10px solid white;
+}
+.pic.active {
+  animation: scale 30s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+@keyframes scale {
+  0% {
+    transform: scale(1);
+  }
+
+  100% {
+    transform: scale(1.2);
+  }
+}
+@keyframes shake {
+  10%,
+  90% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  20%,
+  80% {
+    transform: translate3d(1px, 0, 0);
+  }
+
+  30%,
+  50%,
+  70% {
+    transform: translate3d(-1px, 0, 0);
+  }
+
+  40%,
+  60% {
+    transform: translate3d(1px, 0, 0);
+  }
+}
+
+.btns {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 30px;
+  margin: auto;
+  height: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 300px;
+  max-width: 516px;
+}
+
+.btns img {
+  margin-right: 12px;
+  box-shadow: 0 4px 9px rgba(0, 0, 0, 0.15);
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.btns img:nth-child(2n + 1) {
+  width: 53px;
+}
+
+.btns img:nth-child(2n) {
+  width: 65px;
+}
+
+.btns img:nth-last-child(1) {
+  margin-right: 0;
+}
+
+/* .vue-tinder.right-end,
+.vue-tinder.left-end {
+  transform: translateZ(20px);
+}
+.vue-tinder.right-end .tinder-card:nth-child(1) {
+  animation: rightEnd 0.2s ease-in-out;
+}
+.vue-tinder.left-end .tinder-card:nth-child(1) {
+  animation: leftEnd 0.2s ease-in-out;
+}
+@keyframes leftEnd {
+  50% {
+    transform: rotateY(8deg);
+  }
+}
+@keyframes rightEnd {
+  50% {
+    transform: rotateY(-8deg);
+  }
+} */
+</style>

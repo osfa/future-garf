@@ -1,4 +1,7 @@
 export default {
+  // server: {
+  //   host: '0', // default: localhost
+  // },
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -26,9 +29,9 @@ export default {
       //   href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
       // },
     ],
-    // bodyAttrs: {
-    //   class: 'overflow-hidden bg-white',
-    // },
+    bodyAttrs: {
+      class: 'overflow-hidden bg-black',
+    },
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],

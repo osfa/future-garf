@@ -36,6 +36,8 @@ build/Release
 static/imgs/_out
 static/imgs/_selected4k/
 static/imgs/_all-prune-test-512-x1024/
+static/imgs/seq-all/
+
 # Dependency directories
 node_modules/
 jspm_packages/

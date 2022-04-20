@@ -1,128 +1,57 @@
 <template>
-  <div class="overflow-hidden">
-    <vue-topprogress ref="topProgress" :speed="50" color="#000" :height="3" />
-    <!-- <div class="toolbar flex flex-col fixed left p-10">
-      <a @click="dumpComps">Dump</a>
-      <span>{{ counter }} /{{ imgs.length }}</span>
-      <div v-for="(q, idx) in qualities" :key="idx">
-        <a class="pr-5" href="#" @click="setQuality(idx)">{{ q + 1 }}</a>
-      </div>
-    </div> -->
+  <div class="audio-container">
+    <div
+      class="rec w-7 h-7 absolute rounded-full flex"
+      :class="{ active: isActive }"
+      @click="toggle"
+    >
+      <span class="text-sm">{{ isActive ? 'REC' : 'GO' }}</span>
+    </div>
     <transition mode="out-in" appear name="customFade">
       <div
-        v-show="!hasInit"
+        v-show="!isPlaying"
         class="main-play w-screen h-screen"
         @click="next()"
       >
         <div class="button-play"></div>
       </div>
     </transition>
-    <transition mode="out-in" appear name="customFade">
+    <transition mode="out-in" name="customFade">
       <div
         v-show="isPlaying && hasInit"
-        class="w-6 h-6 v-controls active bg-white rounded-full"
+        class="w-6 h-6 v-controls active bg-white"
         @click="toggleAudio()"
       ></div>
     </transition>
-    <transition mode="out-in" appear name="customFade">
+    <!-- <transition mode="out-in" appear name="customFade">
       <div
         v-show="!isPlaying && hasInit"
         class="v-controls button-play"
         @click="toggleAudio()"
       ></div>
-    </transition>
-    <!-- <Fog /> -->
-    <div v-for="(card, index) in cards" :key="index">
-      <!-- set-animation="customFade" -->
-      <ImageCard
-        :key="index"
-        :set-animation="firstImg ? 'fade' : undefined"
-        :style="[animationDuration, { backgroundColor: card.color }]"
-        :main-image-url="card.color ? undefined : card.imgUrl"
-        :current-width="currentWidth"
-        :current-height="currentHeight"
-        @loaded="doneLoad"
-        @click.native="next()"
-      />
-    </div>
+    </transition> -->
   </div>
 </template>
 
 <script>
 import * as Tone from 'tone'
-import { vueTopprogress } from 'vue-top-progress'
-import ImageCard from '../components/ImageCard'
-import Fog from '../components/Fog'
-import { the681, seedSeq, pSeq, sel80raw } from './data/panelLibrary.js'
-import { audioLibrary } from './data/audioLibrary.js'
-
-const INITIAL_FREQ = 4
-// const VOTING = false
-
-/* eslint-disable */
-Array.prototype.sample = function () {
-  return this[Math.floor(Math.random() * this.length)]
-}
-/* eslint-disable */
-
+import { audioLibrary } from '../pages/data/audioLibrary.js'
 export const random = (min, max) => {
   min = Math.ceil(min)
   max = Math.floor(max)
   return Math.floor(Math.random() * (max - min) + min)
 }
-
-const baseFolder = '/imgs/_out/_out-681'
-const seedFolder = '/imgs/_out/_out-seq'
-const quality = '/4k/png8-64-noise-p/'
-
-let activeSelection = the681.map(
-  (item) => baseFolder + item.replace('/4k/png8-64-noise-p/', quality)
-)
-
-const PATTERN = 'gigapixel-lines'
-
-activeSelection = pSeq
-  .map((item) => seedFolder + item)
-  .filter(function (str) {
-    return str.indexOf(PATTERN) === -1
-  })
-
-activeSelection = seedSeq
-  .map((item) => seedFolder + item)
-  .filter(function (str) {
-    return str.indexOf(PATTERN) === -1
-  })
-
-activeSelection = sel80raw.map(
-  (item) =>
-    baseFolder +
-    quality +
-    item.replace('.png', '-gigapixel-standard-scale-2_00x.png')
-)
-
-const start = 0
+const INITIAL_FREQ = 4
 export default {
-  name: 'IndexPage',
-  components: { ImageCard, vueTopprogress, Fog },
+  name: 'ImageCard',
+  props: {
+    mainImageUrl: { type: String, default: '' },
+  },
   data() {
     return {
-      toRemove: [],
-      hasLoaded: false,
+      isActive: true,
       isPlaying: false,
       hasInit: false,
-      firstImg: true,
-      counter: start,
-      epochSwitchIdx: 8,
-      cards: [{ imgUrl: activeSelection[start], show: true }], // allImgs.sample()
-      imgs: activeSelection,
-      availableEpochs: [10, 25, 50],
-      currentEpoch: 10,
-      currentWidth: 1280,
-      currentHeight: 720,
-      isAnimating: false,
-      animationTime: 750,
-      debounceTime: 250,
-      mustWait: true,
       volume: -24,
       rainVolume: -16,
       leftEar: undefined,
@@ -139,159 +68,68 @@ export default {
       uiSampler: undefined,
       asmrChannel1: undefined,
       asmrChannel2: undefined,
+      ticks: 0,
     }
   },
-  mounted() {
-    console.log('mounted')
-    const first = new Image()
-    first.src = this.cards[0].imgUrl
-    first.onload = () => {
-      console.log('first image fire')
-      this.hasLoaded = true
-    }
-  },
-  beforeMount() {
-    this.currentWidth = window.innerWidth
-    this.currentHeight = window.innerHeight
-    this.preloadedImage = new Image()
-    this.preloadedImage.src = this.newRandomBackgroundForPreload()
-    this.preloadedImage.onload = this.donePreLoad()
-    window.addEventListener('resize', this.handleResize)
-  },
-  beforeDestroy() {
-    clearInterval(this.crossFadeInterval)
-    window.removeEventListener('resize', this.handleResize)
-  },
-  computed: {
-    animationDuration() {
-      return { animationDuration: this.animationTime.toString() + 'ms' }
-    },
-  },
+  computed: {},
+  created() {},
   methods: {
-    markForDeletion(e, identifier) {
-      e.preventDefault()
-      this.toRemove.push(identifier)
-      this.next()
-    },
-    setQuality(idx) {
-      console.log(idx)
-    },
-    dumpComps() {
-      console.log(JSON.stringify(this.toRemove))
-    },
-    currentImage() {
-      return this.cards[this.cards.length - 1].imgUrl
-    },
-    randomBackgroundUrl() {
-      let picked = this.imgs[Math.floor(Math.random() * this.imgs.length)]
-      let epoch = picked.split('-')[6].replace('.png', '')
-      return this.currentEpoch
-        ? picked.replace(epoch, `${this.currentEpoch}e`)
-        : picked
-    },
-    isHorisontal() {
-      return true
-      // return this.currentWidth / this.currentHeight > 1
-    },
-    newRandomBackgroundForPreload() {
-      let newUrl = this.imgs[this.counter + 1] //this.randomBackgroundUrl()
-      while (
-        newUrl.replace('/imgs/', '') ===
-        this.preloadedImage.src.split('/imgs/')[1]
+    playSample() {
+      if (!this.isPlaying) return
+      console.log('playSample')
+      if (this.uiSampler) {
+        this.uiSampler.load(audioLibrary.uiSamples.sample())
+        this.uiSampler.start()
+      }
+      if (this.mainSampler) {
+        if (this.ticks % 8 === 0) {
+          this.toggle()
+          this.mainSampler.player(audioLibrary.trailerSounds.sample()).start()
+
+          // this.mainSampler.player(audioLibrary.trailer25.sample()).start()
+        } else if (this.ticks % 4 === 0) {
+          this.toggle()
+          this.mainSampler.player(audioLibrary.trailerSounds.sample()).start()
+          // this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
+        }
+      }
+      // if (this.ticks % 8 === 0) {
+      //   if (this.mainSampler) {
+      //     this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
+      //   }
+      // }
+      // if (this.ticks % 16 === 0) {
+      //   if (this.mainSampler) {
+      //     this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
+      //   }
+      // }
+      if (
+        this.sampler1 &&
+        this.sampler1.state === 'stopped' &&
+        this.ticks % 16 === 0
       ) {
-        newUrl = this.randomBackgroundUrl()
+        this.sampler1.start()
       }
-      if (!this.isHorisontal()) {
-        newUrl = newUrl.replace('.png', '-v.png')
-      }
-      const desiredResolution = '2k'
-      return newUrl.replace('2k', desiredResolution)
-    },
-    switchSuite() {
-      console.log('switch suite')
-      // new audio? ui sounds swap here?
-      let selected = this.availableEpochs.sample()
-      while (this.currentEpoch == selected) {
-        selected = this.availableEpochs.sample()
-      }
-      this.currentEpoch = selected
-    },
-    pushCard() {
-      console.log('showing:', this.preloadedImage.src)
-      this.counter += 1
-      this.cards.push({
-        imgUrl: this.preloadedImage.src.replace('-v.png', '.png'),
-      })
-      if (this.counter % this.epochSwitchIdx === 0) {
-        this.switchSuite()
-      }
-      setTimeout(() => {
-        this.isAnimating = false
-      }, this.debounceTime)
-    },
-    donePreLoad(newBkgUrl) {
-      console.log('donePreLoad: ', newBkgUrl)
-    },
-    doneLoad() {
-      setTimeout(() => {
-        this.mustWait = false
-        this.$refs.topProgress.done()
-      }, 1)
-    },
-    dblclick() {
-      console.log('dblclick')
+      this.ticks += 1
     },
     next(e) {
-      this.firstImg = false
-      this.hasInit = true
-
-      if (!this.audioCtx) {
-        this.toggleAudio()
-      } else {
-        if (this.uiSampler) {
-          this.uiSampler.load(audioLibrary.uiSamples.sample())
-          this.uiSampler.start()
-        }
-        if (this.mainSampler) {
-          this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
-        }
-        if (this.sampler1 && this.sampler1.state === 'stopped') {
-          this.sampler1.start()
-        }
-      }
-
-      if (this.isAnimating || this.mustWait) return
-      this.isAnimating = true
-      this.mustWait = true
-      this.$refs.topProgress.start()
-
-      this.pushCard()
-
-      const newBkgUrl = this.newRandomBackgroundForPreload()
-
-      console.log('loader started:', newBkgUrl)
-
-      this.preloadedImage = new Image()
-      this.preloadedImage.src = newBkgUrl
-      this.preloadedImage.onload = this.donePreLoad(newBkgUrl)
-
-      this.frequencyShift()
-      this.rainShift()
-
-      // setTimeout(this.next, 10000)
+      console.log('next audiomodule')
+      this.toggleAudio()
+      this.$emit('next')
     },
-    handleResize(e) {
-      this.currentWidth = window.innerWidth
-      this.currentHeight = window.innerHeight
+    toggle() {
+      console.log('wtf')
+      this.isActive = !this.isActive
+      // this.playSample()
     },
-    /* AUDIO */
     toggleAudio() {
-      console.log('toggleAudio')
+      console.log('audiomodule toggleAudio')
       this.isPlaying = !this.isPlaying
       this.audioDialog = false
 
       if (!this.audioCtx) {
         this.initAudio()
+        this.hasInit = true
         return
       }
 
@@ -340,7 +178,7 @@ export default {
       )
     },
     setRainVolume() {
-      let volume = this.rainVolume === -100 ? -Infinity : this.rainVolume
+      const volume = this.rainVolume === -100 ? -Infinity : this.rainVolume
       this.rainMaker.volume.value = volume
     },
     setFrequencies() {
@@ -377,6 +215,7 @@ export default {
     handleFrequencyChange(actualFrequency) {
       const { leftFrequency, rightFrequency } =
         this.calculateFrequencies(actualFrequency)
+      console.log(leftFrequency, rightFrequency)
     },
     initAudio() {
       console.log('initAudio')
@@ -422,7 +261,7 @@ export default {
         this.sampler1.loop = false
         this.sampler1.volume.value = 6
         // this.sampler1.volume.value = 12
-      }).connect(reverb) //.toDestination()
+      }).connect(reverb) // .toDestination()
       // this.sampler1 = new Tone.Player(file1).toDestination()
 
       // uisamples
@@ -434,14 +273,18 @@ export default {
         this.uiSampler.volume.value = 18
       }).toDestination()
 
-      const urls = audioLibrary.hangDrum.reduce(
-        (acc, curr) => ((acc[curr] = curr), acc),
-        {}
-      )
+      /* eslint-disable */
+      const urls = audioLibrary.hangDrum
+        .concat(audioLibrary.trailerSounds)
+        .concat(audioLibrary.trailer25)
+        .reduce((acc, curr) => ((acc[curr] = curr), acc), {})
+      /* eslint-enable */
+
       console.log('loading: ', urls)
       const mainSampler = new Tone.Players(urls, () => {
         console.log('loaded hangdrums')
         this.mainSampler = mainSampler
+        this.mainSampler.volume.value = -12
       }).toDestination()
 
       this.setRainVolume()
@@ -485,11 +328,30 @@ export default {
 }
 
 .v-controls {
-  top: 2rem;
-  right: 2rem;
+  top: 1rem;
+  right: 1rem;
   position: absolute;
   z-index: 1000;
   cursor: pointer;
+}
+
+.rec {
+  top: 1rem;
+  left: 1rem;
+  z-index: 1000;
+  cursor: pointer;
+  background-color: rgb(108, 254, 108);
+  box-shadow: 0 0 9px rgb(108, 254, 108);
+  justify-content: center;
+  align-items: center;
+}
+.rec span {
+  margin-left: 80px;
+  color: white;
+}
+.rec.active {
+  background-color: red;
+  box-shadow: 0 0 9px rgb(254, 108, 108);
 }
 
 .main-play {
@@ -502,22 +364,11 @@ export default {
   justify-content: center;
 }
 
-.page {
-  overflow: hidden;
-  position: absolute;
-  left: 0;
-  top: 0;
-  background-color: white;
-  width: 100vw;
-  height: 100vh;
-  background-size: 98%;
-  background-repeat: no-repeat;
-  background-position: top;
-  background-size: cover;
-  cursor: pointer;
-  padding: 1rem;
+.v-controls.active {
+  transform: scale(1);
+  animation: pulse 2s infinite;
+  /* background: red; */
 }
-
 .customFade-enter-active,
 .customFade-leave-active {
   transition: all 250ms cubic-bezier(1, 0.5, 0.8, 1);
@@ -528,12 +379,6 @@ export default {
 .customFade-leave-to {
   opacity: 0;
   /* transform: scale(1.05); */
-}
-
-.v-controls.active {
-  transform: scale(1);
-  animation: pulse 2s infinite;
-  /* background: red; */
 }
 
 @keyframes pulse {
@@ -573,60 +418,5 @@ export default {
 }
 .close:after {
   transform: rotate(-45deg);
-}
-
-.voting {
-  position: absolute;
-  left: 0;
-  top: 0;
-  background: black;
-  color: white;
-  z-index: 1000;
-}
-.voting li {
-  padding: 10px;
-  cursor: pointer;
-}
-
-.toolbar {
-  background: white;
-  padding: 5px;
-  left: 5px;
-  top: 5px;
-  font-size: 8px;
-  z-index: 1000;
-}
-.toolbar a {
-  padding: 5px;
-  cursor: pointer;
-}
-.toolbar a:hover,
-.curated a:hover {
-  text-decoration: underline;
-}
-.isActive {
-  border: 3px solid red;
-}
-.display-panel {
-  position: relative;
-  box-sizing: border-box;
-}
-.tooltip {
-  display: none;
-  position: absolute;
-  left: 0;
-  top: 0;
-  font-size: 12px;
-  padding: 5px;
-  background: white;
-}
-.display-panel:hover .tooltip {
-  display: block;
-}
-.disp-panel-img {
-  max-height: 95vh;
-}
-.curated {
-  align-items: center;
 }
 </style>

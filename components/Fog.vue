@@ -43,7 +43,7 @@ export default {
   top: 0;
   width: 100%;
   z-index: 100;
-  opacity: 0.8;
+  /* opacity: 0.8; */
   pointer-events: none;
   overflow: hidden;
 }
@@ -66,14 +66,16 @@ export default {
 }
 
 #fog1 {
-  background: url('/imgs/fog1.png') center center/cover no-repeat transparent;
+  background: url('/imgs/_fog/fog1.png') center center/cover no-repeat
+    transparent;
 }
 #fog2,
 #fog3 {
-  background: url('/imgs/2fog2.png') center center/cover no-repeat transparent;
+  background: url('/imgs/_fog/2fog2.png') center center/cover no-repeat
+    transparent;
 }
 
-@keyframes foglayer_01_opacity {
+/* @keyframes foglayer_01_opacity {
   0% {
     opacity: 0.1;
   }
@@ -143,7 +145,7 @@ export default {
   100% {
     opacity: 0.8;
   }
-}
+} */
 /* ---------- Keyframe moveMe ---------- */
 @keyframes foglayer_moveme {
   0% {
