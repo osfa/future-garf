@@ -15,6 +15,26 @@ export default {
       },
       { hid: 'description', name: 'description', content: '' },
       { name: 'format-detection', content: 'telephone=no' },
+      {
+        hid: 'og:image',
+        property: 'og:image',
+        content: '/imgs/og-img.png',
+      },
+      {
+        hid: 'og:title',
+        property: 'og:title',
+        content: 'mondays.cloud',
+      },
+      {
+        hid: 'og:description',
+        property: 'og:description',
+        content: 'over and over again.',
+      },
+      {
+        hid: 'twitter:image',
+        property: 'twitter:image',
+        content: '/imgs/og-img.png',
+      },
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
@@ -23,16 +43,13 @@ export default {
         type: 'text/css',
         href: '/css/vue2-animate.min.css',
       },
-      // {
-      //   rel: 'stylesheet',
-      //   type: 'text/css',
-      //   href: 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
-      // },
     ],
     bodyAttrs: {
       class: 'overflow-hidden bg-white',
     },
   },
+
+  // TODO
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
