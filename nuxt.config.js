@@ -1,7 +1,7 @@
 export default {
-  // server: {
-  //   host: '0', // default: localhost
-  // },
+  server: {
+    host: '0', // default: localhost
+  },
   // Target: https://go.nuxtjs.dev/config-target
   target: 'static',
   // Global page headers: https://go.nuxtjs.dev/config-head
@@ -30,14 +30,14 @@ export default {
       // },
     ],
     bodyAttrs: {
-      class: 'overflow-hidden bg-black',
+      class: 'overflow-hidden bg-white',
     },
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: [],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: ['@/plugins/gtag'],
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
