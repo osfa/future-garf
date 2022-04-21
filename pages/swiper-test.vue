@@ -46,9 +46,11 @@ export default {
     isPaused: true,
   }),
   created() {
+    this.$gtag.pageview(this.$route)
     this.mock()
   },
   mounted() {
+    this.kioskMode = this.$route.query.kioskMode
     if (this.kioskMode) {
       this.tick()
     }

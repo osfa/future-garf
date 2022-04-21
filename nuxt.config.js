@@ -13,12 +13,23 @@ export default {
         name: 'viewport',
         content: 'width=device-width, initial-scale=1,minimum-scale=1.0',
       },
-      { hid: 'description', name: 'description', content: '' },
+      { hid: 'author', name: 'author', content: 'jacob broms engblom' },
+      { hid: 'description', name: 'description', content: 'mondays.cloud' },
       { name: 'format-detection', content: 'telephone=no' },
       {
         hid: 'og:image',
         property: 'og:image',
         content: '/imgs/og-img.png',
+      },
+      {
+        hid: 'og:image:width',
+        property: 'og:image:width',
+        content: '1200',
+      },
+      {
+        hid: 'og:image:height',
+        property: 'og:image:height',
+        content: '630',
       },
       {
         hid: 'og:title',
@@ -33,7 +44,22 @@ export default {
       {
         hid: 'twitter:image',
         property: 'twitter:image',
-        content: '/imgs/og-img.png',
+        content: 'https://www.mondays.cloud/imgs/og-img.png',
+      },
+      {
+        hid: 'twitter:site',
+        property: 'twitter:site',
+        content: '@futuregarfield',
+      },
+      {
+        hid: 'twitter:creator',
+        property: 'twitter:creator',
+        content: '@osfa',
+      },
+      {
+        hid: 'twitter:card',
+        property: 'twitter:card',
+        content: 'summary_large_image',
       },
     ],
     link: [
