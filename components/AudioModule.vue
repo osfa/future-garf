@@ -101,12 +101,11 @@ export default {
   name: 'ImageCard',
   props: {
     mainImageUrl: { type: String, default: '' },
+    automaticFade: { type: Boolean, default: false },
   },
   data() {
     return {
-      debug: process.env.NODE_ENV !== 'production',
-      automaticFade: false,
-
+      debug: false,
       isActive: false,
       isPlaying: false,
       hasInit: false,
@@ -114,7 +113,7 @@ export default {
       currently1: '',
       currently2: '',
 
-      volume: -24,
+      volume: -12,
       noiseVolume: -16,
       noiseMax: -6,
       toneVolume: -18,

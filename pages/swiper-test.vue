@@ -22,13 +22,20 @@
       </template>
     </Tinder>
     <Fog />
-    <audio-module ref="audioModule" @next="next" @toggleAudio="toggleAudio" />
+    <SmallClock />
+    <audio-module
+      ref="audioModule"
+      :automatic-fade="false"
+      @next="next"
+      @toggleAudio="toggleAudio"
+    />
   </div>
 </template>
 
 <script>
 import Tinder from '../components/vue-tinder/Tinder.vue'
 import Fog from '../components/Fog'
+import SmallClock from '../components/SmallClock'
 import AudioModule from '../components/AudioModule.vue'
 import { the330 as source } from './data/panelLibrary.js'
 
@@ -39,7 +46,7 @@ Array.prototype.sample = function () {
 /* eslint-disable */
 export default {
   name: 'App',
-  components: { Tinder, Fog, 'audio-module': AudioModule },
+  components: { Tinder, Fog, SmallClock, 'audio-module': AudioModule },
   data: () => ({
     queue: [],
     offset: 0,
@@ -107,6 +114,7 @@ export default {
 <style>
 body {
   margin: 0;
+
   background-color: lightblue;
   animation: backgroundAnimate 15s infinite;
 
@@ -141,8 +149,8 @@ body {
 
 @media (orientation: landscape) {
   #app .vue-tinder {
-    top: 4%;
-    height: calc(100% - 8% - 65px);
+    top: 5%;
+    height: calc(100% - 5% - 65px);
     max-width: 25vw;
     min-width: 480px;
   }

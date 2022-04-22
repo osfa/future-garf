@@ -1,17 +1,7 @@
 <template>
   <div class="clock-container font-weight-light">
-    <div>28/04/2022</div>
-    <div class="text-red">59.3303°, 18.0634°</div>
     <div v-if="isUnixTime" class="clock-inner">
       <div class="hour text-white">{{ unix }}</div>
-    </div>
-    <div v-else class="clock-inner">
-      <div class="hour">{{ hours }}</div>
-      <div class="dots">:</div>
-      <div class="min">{{ minutes }}</div>
-      <div class="dots">:</div>
-      <div class="secs">{{ seconds }}</div>
-      <div class="mode"></div>
     </div>
   </div>
 </template>
@@ -36,15 +26,8 @@ export default {
   methods: {
     setTime() {
       setInterval(() => {
-        const date = new Date()
-        this.unix = Math.round(date.getTime() / 100)
-        this.hours = date.getHours()
-        this.minutes = this.checkSingleDigit(date.getMinutes())
-        this.seconds = this.checkSingleDigit(date.getSeconds())
+        this.unix = Math.round(new Date().getTime() / 100)
       }, 100)
-    },
-    checkSingleDigit(digit) {
-      return ('0' + digit).slice(-2)
     },
   },
 }
@@ -57,32 +40,25 @@ export default {
   align-items: center;
   margin: auto;
   flex-direction: column;
-  z-index: 10;
+  z-index: 10000;
   font-family: 'Roboto';
   pointer-events: none;
-  background-color: lightblue;
-  width: 100vw;
-  height: 100vh;
-  font-size: 5rem;
-  color: white;
-}
 
-.clock-container.full {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: auto;
-  flex-direction: column;
-  z-index: 10;
-  font-family: 'Roboto';
-  color: white;
-  pointer-events: none;
-}
+  font-size: 1rem;
+  letter-spacing: 1rem;
 
-.clock-container-fixed {
+  color: white;
   position: fixed;
-  bottom: 68px;
-  right: 20px;
+
+  width: 100vw;
+  height: auto;
+
+  top: 0.5rem;
+  left: 0;
+
+  background-color: transparent;
+  pointer-events: none;
+  text-shadow: 0 0 9px rgb(255, 255, 255);
 }
 
 /* .hour,
