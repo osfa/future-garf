@@ -1,5 +1,67 @@
 <template>
   <div class="audio-container">
+    <div v-if="isPlaying && debug" class="flex justify-between w-full">
+      <span>{{ currently1.split('/').pop() }}</span>
+      <span>{{ currently2.split('/').pop() }}</span>
+    </div>
+    <div v-if="isPlaying && debug" class="vol-controls">
+      <label>main: </label>
+      <input
+        v-model="volume"
+        class="w-20 text-xs"
+        type="number"
+        @change="setVolume"
+      />
+
+      <label>noise</label>
+      <input
+        v-model="noiseVolume"
+        class="w-20 text-xs"
+        type="number"
+        @change="updateVolumes"
+      />
+
+      <label>ambiance: </label>
+      <input
+        v-model="ambianceVolume"
+        class="w-20 text-xs"
+        type="number"
+        @change="updateVolumes"
+      />
+
+      <label>ui: </label>
+      <input
+        v-model="uiVolume"
+        class="w-20 text-xs"
+        type="number"
+        @change="updateVolumes"
+      />
+
+      <label>main: </label>
+      <input
+        v-model="mainSamplerVolume"
+        class="w-20 text-xs"
+        type="number"
+        @change="updateVolumes"
+      />
+
+      <label>voice: </label>
+      <input
+        v-model="sampler1Volume"
+        class="w-20 text-xs"
+        type="number"
+        @change="updateVolumes"
+      />
+
+      <label>xfade: </label>
+      <input
+        v-model="crossFadeVal"
+        class="w-20 text-xs"
+        type="number"
+        @change="updateCrossfade"
+      />
+    </div>
+
     <div
       v-show="isActive && isPlaying"
       class="rec w-4 h-4 lg:w-4 lg:h-4 absolute rounded-full flex"
@@ -42,35 +104,60 @@ export default {
   },
   data() {
     return {
+      debug: process.env.NODE_ENV !== 'production',
+      automaticFade: false,
+
       isActive: false,
       isPlaying: false,
       hasInit: false,
+
+      currently1: '',
+      currently2: '',
+
       volume: -24,
-      rainVolume: -16,
-      leftEar: undefined,
-      rightEar: undefined,
-      binauralBeat: INITIAL_FREQ,
-      audioCtx: undefined,
-      crossFade: undefined,
-      crossDirection: false,
-      crossFadeInterval: undefined,
-      rainMaker: undefined,
-      audioDialog: true,
+      noiseVolume: -16,
+      noiseMax: -6,
+      toneVolume: -18,
+
+      noiseRampTime: 15,
+      toneRampTime: 20,
+
+      uiVolume: 14,
+      sampler1Volume: 3,
+      mainSamplerVolume: -6,
+      ambianceVolume: -3,
+
       sampler1: undefined,
       mainSampler: undefined,
       uiSampler: undefined,
       asmrChannel1: undefined,
       asmrChannel2: undefined,
+
+      leftEar: undefined,
+      rightEar: undefined,
+      binauralBeat: INITIAL_FREQ,
+      audioCtx: undefined,
+
+      crossFadeVal: 0.5,
+      crossFade: undefined,
+      crossDirection: false,
+      crossFadeInterval: undefined,
+      crossFadeDuration: 30, // in seconds
+      noiseMaker: undefined,
+
+      audioDialog: true,
+
       ticks: 0,
     }
   },
-  computed: {},
-  created() {},
+  // watch: {
+  //   volume(val) {
+  //     console.log('watch', val)
+  //   },
+  // },
+  // computed: {},
+  // created() {},
   methods: {
-    shift() {
-      this.rainShift()
-      this.frequencyShift()
-    },
     playSample() {
       if (!this.isPlaying) return
 
@@ -78,14 +165,17 @@ export default {
         this.uiSampler.load(audioLibrary.uiSamples.sample())
         this.uiSampler.start()
       }
+
       if (this.mainSampler) {
         if (this.ticks % 8 === 0) {
           this.toggleActive(false)
           const s = audioLibrary.trailerSounds.sample()
           console.log('playsample 8', s)
           this.mainSampler.player(s).start()
+
           this.frequencyShift()
-          this.rainShift()
+          this.noiseShift()
+
           // this.mainSampler.player(audioLibrary.trailer25.sample()).start()
         } else if (this.ticks % 4 === 0) {
           this.toggleActive(false)
@@ -95,18 +185,23 @@ export default {
           this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
         }
       }
+
       if (this.ticks % 16 === 0) {
         this.toggleActive()
       }
+
       if (
         this.sampler1 &&
         this.sampler1.state === 'stopped' &&
         this.ticks % 16 === 0
       ) {
-        // console.log('playsample prayer')
         this.sampler1.start()
       }
       this.ticks += 1
+
+      if (!this.automaticFade) {
+        this.doCrossFade()
+      }
     },
     next(e) {
       this.toggleAudio()
@@ -134,30 +229,41 @@ export default {
     },
     doCrossFade() {
       const stepSize = 0.1
-      if (this.crossFade.fade.value === 1.0 || this.crossFade.fade.value <= 0) {
+      // console.log('current cross fade val:', this.crossFade.fade.value)
+      if (
+        this.crossFade.fade.value === 1.0 ||
+        this.crossFade.fade.value <= 0.0
+      ) {
         this.crossDirection = !this.crossDirection
         if (this.crossFade.fade.value === 1.0) {
           const chosen = audioLibrary.availableReal.sample()
+          this.currently1 = chosen
           console.log('new sample from real for 1: ', chosen)
           this.asmrChannel1.load(chosen)
         } else {
           const chosen = audioLibrary.availableFake.sample()
           console.log('new sample from fake for 2: ', chosen)
+          this.currently2 = chosen
           this.asmrChannel2.load(chosen)
         }
       }
+
+      // crossFadeVal = 0, only currently1
+      // crossFadeVal = 1, only currently2
       if (this.crossDirection) {
         const val = Math.min(
           parseFloat(this.crossFade.fade.value + stepSize),
           1
         )
         this.crossFade.fade.value = val
+        this.crossFadeVal = val.toFixed(1)
       } else {
         const val = Math.max(
           parseFloat(this.crossFade.fade.value - stepSize),
           0
         )
         this.crossFade.fade.value = val
+        this.crossFadeVal = val.toFixed(1)
       }
     },
     setVolume() {
@@ -166,10 +272,21 @@ export default {
         0
       )
     },
-    setRainVolume() {
-      const volume = this.rainVolume === -100 ? -Infinity : this.rainVolume
-      this.rainMaker.volume.value = volume
+    updateVolumes() {
+      this.uiSampler.volume.value = this.uiVolume
+      this.mainSampler.volume.value = this.mainSamplerVolume
+      this.sampler1.volume.value = this.sampler1Volume
+      this.asmrChannel1.volume.value = this.ambianceVolume
+      this.asmrChannel2.volume.value = this.ambianceVolume
+      this.noiseMaker.volume.value = this.noiseVolume
     },
+    updateCrossfade() {
+      this.crossFade.fade.value = this.crossFadeVal
+    },
+    // setNoiseVolume() {
+    //   const volume = this.noiseVolume === -100 ? -Infinity : this.noiseVolume
+    //   this.noiseMaker.volume.value = volume
+    // },
     setFrequencies() {
       const freqs = this.calculateFrequencies(this.binauralBeat)
       this.leftEar.frequency.value = freqs.leftFrequency
@@ -178,17 +295,16 @@ export default {
     frequencyShift() {
       // const lowerBound = Math.max(0, this.binauralBeat + random(-4, 4))
       this.binauralBeat = random(1, 8)
-      console.log('new bb: ', this.binauralBeat)
+      console.log('new bb: ', this.binauralBeat, this.toneRampTime)
       const freqs = this.calculateFrequencies(this.binauralBeat)
-      const rampSeconds = 20
-      this.leftEar.frequency.rampTo(freqs.leftFrequency, rampSeconds)
-      this.rightEar.frequency.rampTo(freqs.rightFrequency, rampSeconds)
+      this.leftEar.frequency.rampTo(freqs.leftFrequency, this.toneRampTime)
+      this.rightEar.frequency.rampTo(freqs.rightFrequency, this.toneRampTime)
     },
-    rainShift() {
-      const rampSeconds = 15
-      const targetVolume = random(this.rainVolume, this.rainVolume + 12)
-      console.log('15s ramping rain to', targetVolume)
-      this.rainMaker.volume.rampTo(targetVolume, rampSeconds)
+    noiseShift() {
+      const targetVolume = random(this.noiseVolume, this.noiseMax)
+      console.log('ramping rain to', targetVolume, this.noiseRampTime)
+      this.noiseVolume = targetVolume
+      this.noiseMaker.volume.rampTo(targetVolume, this.noiseRampTime)
     },
     calculateCarrierFrequency(binauralBeat) {
       // Formula retrieved by using excel on Oster's curve. Can be enhanced with real maths ;)
@@ -218,28 +334,37 @@ export default {
 
       this.leftEar = new Tone.Oscillator().connect(merge, 0, 0)
       this.rightEar = new Tone.Oscillator().connect(merge, 0, 1)
-      this.leftEar.volume.value = -20
-      this.rightEar.volume.value = -20
+      this.leftEar.volume.value = this.toneVolume
+      this.rightEar.volume.value = this.toneVolume
 
-      this.rainMaker = new Tone.Noise('brown').toDestination()
+      this.noiseMaker = new Tone.Noise('brown').toDestination()
+      this.noiseMaker.volume.value = this.noiseVolume
 
       this.crossFade = new Tone.CrossFade().toDestination()
-      this.crossFade.fade.value = 0.5 // 0-a
+      this.crossFade.fade.value = this.crossFadeVal // 0-currently1, 1-currently2
 
-      this.asmrChannel1 = new Tone.Player(
-        audioLibrary.availableReal.sample()
-      ).connect(this.crossFade.a)
+      this.currently1 = audioLibrary.availableReal.sample()
+      this.asmrChannel1 = new Tone.Player(this.currently1).connect(
+        this.crossFade.a
+      )
       this.asmrChannel1.autostart = true
       this.asmrChannel1.loop = true
-      this.asmrChannel1.volume.value = -3
+      this.asmrChannel1.volume.value = this.ambianceVolume
 
-      this.asmrChannel2 = new Tone.Player(
-        audioLibrary.availableFake.sample()
-      ).connect(this.crossFade.b)
+      this.currently2 = audioLibrary.availableFake.sample()
+      this.asmrChannel2 = new Tone.Player(this.currently2).connect(
+        this.crossFade.b
+      )
       this.asmrChannel2.autostart = true
       this.asmrChannel2.loop = true
-      this.asmrChannel2.volume.value = -3
-      this.crossFadeInterval = setInterval(this.doCrossFade, 5000)
+      this.asmrChannel2.volume.value = this.ambianceVolume
+
+      if (this.automaticFade) {
+        this.crossFadeInterval = setInterval(
+          this.doCrossFade,
+          (this.crossFadeDuration / 5) * 1000
+        )
+      }
 
       const reverb = new Tone.Reverb(0.8).toDestination()
       const file1 = audioLibrary.sampleSlot1.sample()
@@ -248,7 +373,7 @@ export default {
         this.sampler1.playbackRate = 0.9
         this.sampler1.autostart = false
         this.sampler1.loop = false
-        this.sampler1.volume.value = 6
+        this.sampler1.volume.value = this.sampler1Volume
       }).connect(reverb)
 
       // uisamples
@@ -257,7 +382,7 @@ export default {
         this.uiSampler = uiSampler
         this.uiSampler.autostart = false
         this.uiSampler.loop = false
-        this.uiSampler.volume.value = 18
+        this.uiSampler.volume.value = this.uiVolume
       }).toDestination()
 
       /* eslint-disable */
@@ -271,16 +396,17 @@ export default {
       const mainSampler = new Tone.Players(urls, () => {
         console.log('loaded mainSampler')
         this.mainSampler = mainSampler
-        this.mainSampler.volume.value = -6
+        this.mainSampler.volume.value = this.mainSamplerVolume
       }).toDestination()
 
-      this.setRainVolume()
+      // this.setNoiseVolume()
       this.setVolume()
+
       this.setFrequencies()
 
       this.leftEar.start()
       this.rightEar.start()
-      this.rainMaker.start()
+      this.noiseMaker.start()
     },
   },
 }
@@ -367,6 +493,12 @@ export default {
   /* transform: scale(1.05); */
 }
 
+.vol-controls {
+  position: fixed;
+  width: 100vw;
+  bottom: 0;
+  left: 0;
+}
 @keyframes pulse {
   0% {
     transform: scale(0.85);

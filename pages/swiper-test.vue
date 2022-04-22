@@ -11,9 +11,6 @@
     >
       <template slot-scope="scope">
         <div class="pic" :class="{ active: scope.data.counter % 4 === 0 }">
-          <span v-if="!scope.data.loaded" class="w-16"
-            ><img src="/imgs/spinner.svg"
-          /></span>
           <transition appear name="fade">
             <img
               v-show="scope.data.loaded"
@@ -169,24 +166,30 @@ body {
   width: 100%;
   height: 100%;
   background-size: cover;
-  background-position: top;
-
-  background-color: white;
-
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-/* .pic.active {
-  border: 1px solid black;
-} */
+.pic {
+  background-color: #ededed;
+  background: linear-gradient(
+      100deg,
+      rgba(255, 255, 255, 0) 40%,
+      rgba(255, 255, 255, 0.5) 50%,
+      rgba(255, 255, 255, 0) 60%
+    )
+    #ededed;
+  background-size: 200% 100%;
+  background-position-x: 180%;
+  animation: 2s loading ease-in-out infinite;
+}
 
-/* .pic.active {
-  animation: scale 30s;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-} */
+@keyframes loading {
+  to {
+    background-position-x: -20%;
+  }
+}
 
 .pic img {
   pointer-events: none;
