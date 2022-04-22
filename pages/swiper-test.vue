@@ -61,10 +61,6 @@ export default {
     }
   },
   methods: {
-    imgLoaded(counter) {
-      console.log('imgLoaded', counter)
-      this.queue[counter].loaded = true
-    },
     tick() {
       setTimeout(() => {
         if (!this.isPaused) this.decide(['like', 'nope', 'super'].sample())
@@ -79,8 +75,6 @@ export default {
       this.isPaused = !this.isPaused
     },
     mock(count = 5, append = true) {
-      console.log(source.length)
-      console.log(this.offset % source.length)
       const list = []
       for (let i = 0; i < count; i++) {
         list.push({
@@ -97,10 +91,6 @@ export default {
       }
     },
     onSubmit({ item }) {
-      // counter check here and animate state on the lil button somehow
-      // scope.data.counter
-
-      console.log('onSubmit')
       if (this.$refs.audioModule) {
         this.$refs.audioModule.playSample()
       }
@@ -118,15 +108,10 @@ export default {
 </script>
 
 <style>
-/* html,
-body {
-  height: 100%;
-} */
-
 body {
   margin: 0;
   background-color: lightblue;
-  animation: backgroundAnimate 30s infinite;
+  animation: backgroundAnimate 15s infinite;
 
   animation-iteration-count: infinite;
   animation-direction: alternate;
@@ -176,6 +161,10 @@ body {
   }
 }
 
+.tinder-card {
+  border: 7px solid white;
+}
+
 .pic {
   width: 100%;
   height: 100%;
@@ -189,13 +178,9 @@ body {
   align-items: center;
 }
 
-.pic.active {
+/* .pic.active {
   border: 1px solid black;
-}
-
-.tinder-card {
-  border: 7px solid white;
-}
+} */
 
 /* .pic.active {
   animation: scale 30s;

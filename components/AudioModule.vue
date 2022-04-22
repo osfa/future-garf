@@ -2,9 +2,8 @@
   <div class="audio-container">
     <div
       v-show="isActive && isPlaying"
-      class="rec w-4 h-4 lg:w-5 lg:h-5 absolute rounded-full flex"
+      class="rec w-4 h-4 lg:w-4 lg:h-4 absolute rounded-full flex"
       :class="{ active: isActive }"
-      @click="toggle"
     >
       <span class="blink text-sm">{{ isActive ? 'REC' : 'GO' }}</span>
     </div>
@@ -43,7 +42,7 @@ export default {
   },
   data() {
     return {
-      isActive: true,
+      isActive: false,
       isPlaying: false,
       hasInit: false,
       volume: -24,
@@ -68,60 +67,55 @@ export default {
   computed: {},
   created() {},
   methods: {
+    shift() {
+      this.rainShift()
+      this.frequencyShift()
+    },
     playSample() {
       if (!this.isPlaying) return
-      console.log('playSample')
+
       if (this.uiSampler) {
         this.uiSampler.load(audioLibrary.uiSamples.sample())
         this.uiSampler.start()
       }
       if (this.mainSampler) {
         if (this.ticks % 8 === 0) {
-          this.toggle()
+          this.toggleActive(false)
           const s = audioLibrary.trailerSounds.sample()
-          console.log(s)
+          console.log('playsample 8', s)
           this.mainSampler.player(s).start()
-
+          this.frequencyShift()
+          this.rainShift()
           // this.mainSampler.player(audioLibrary.trailer25.sample()).start()
         } else if (this.ticks % 4 === 0) {
-          this.toggle()
+          this.toggleActive(false)
           const s = audioLibrary.trailerSounds.sample()
-          console.log(s)
+          console.log('playsample 4', s)
           this.mainSampler.player(s).start()
-          // this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
+          this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
         }
       }
-      // if (this.ticks % 8 === 0) {
-      //   if (this.mainSampler) {
-      //     this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
-      //   }
-      // }
-      // if (this.ticks % 16 === 0) {
-      //   if (this.mainSampler) {
-      //     this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
-      //   }
-      // }
+      if (this.ticks % 16 === 0) {
+        this.toggleActive()
+      }
       if (
         this.sampler1 &&
         this.sampler1.state === 'stopped' &&
         this.ticks % 16 === 0
       ) {
+        // console.log('playsample prayer')
         this.sampler1.start()
       }
       this.ticks += 1
     },
     next(e) {
-      console.log('next audiomodule')
       this.toggleAudio()
       // this.$emit('next')
     },
-    toggle() {
-      console.log('wtf')
-      this.isActive = !this.isActive
-      // this.playSample()
+    toggleActive(val) {
+      this.isActive = val || !this.isActive
     },
     toggleAudio() {
-      console.log('audiomodule toggleAudio')
       this.isPlaying = !this.isPlaying
       this.audioDialog = false
       this.$emit('toggleAudio')
@@ -133,13 +127,9 @@ export default {
       }
 
       if (this.audioCtx.state === 'running') {
-        this.audioCtx.suspend().then(function () {
-          console.log('suspended audio')
-        })
+        this.audioCtx.suspend().then(function () {})
       } else if (this.audioCtx.state === 'suspended') {
-        this.audioCtx.resume().then(function () {
-          console.log('resumed audio')
-        })
+        this.audioCtx.resume().then(function () {})
       }
     },
     doCrossFade() {
@@ -196,7 +186,8 @@ export default {
     },
     rainShift() {
       const rampSeconds = 15
-      const targetVolume = random(this.rainVolume, this.rainVolume + 6)
+      const targetVolume = random(this.rainVolume, this.rainVolume + 12)
+      console.log('15s ramping rain to', targetVolume)
       this.rainMaker.volume.rampTo(targetVolume, rampSeconds)
     },
     calculateCarrierFrequency(binauralBeat) {
@@ -252,16 +243,13 @@ export default {
 
       const reverb = new Tone.Reverb(0.8).toDestination()
       const file1 = audioLibrary.sampleSlot1.sample()
-      // this.sampler1 = new Tone.Player(file1).connect(reverb)
       const sampler1 = new Tone.Player(file1, () => {
         this.sampler1 = sampler1
         this.sampler1.playbackRate = 0.9
         this.sampler1.autostart = false
         this.sampler1.loop = false
         this.sampler1.volume.value = 6
-        // this.sampler1.volume.value = 12
-      }).connect(reverb) // .toDestination()
-      // this.sampler1 = new Tone.Player(file1).toDestination()
+      }).connect(reverb)
 
       // uisamples
       const file2 = audioLibrary.uiSamples.sample()
@@ -281,7 +269,7 @@ export default {
 
       console.log('loading: ', urls)
       const mainSampler = new Tone.Players(urls, () => {
-        console.log('loaded hangdrums')
+        console.log('loaded mainSampler')
         this.mainSampler = mainSampler
         this.mainSampler.volume.value = -6
       }).toDestination()
@@ -338,7 +326,6 @@ export default {
   top: 1rem;
   left: 1rem;
   z-index: 1000;
-  cursor: pointer;
   background-color: rgb(108, 254, 108);
   box-shadow: 0 0 9px rgb(108, 254, 108);
   justify-content: center;
