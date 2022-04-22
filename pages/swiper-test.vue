@@ -10,13 +10,18 @@
       @submit="onSubmit"
     >
       <template slot-scope="scope">
-        <div
-          class="pic"
-          :class="{ active: scope.data.counter % 4 === 0 || true }"
-          :style="{
-            'background-image': `url(/imgs/2k/png8-16-noise-p/${scope.data.id}`,
-          }"
-        />
+        <div class="pic" :class="{ active: scope.data.counter % 4 === 0 }">
+          <span v-if="!scope.data.loaded" class="w-16"
+            ><img src="/imgs/spinner.svg"
+          /></span>
+          <transition appear name="fade">
+            <img
+              v-show="scope.data.loaded"
+              :src="`/imgs/2k/png8-16-noise-p/${scope.data.id}`"
+              @load="scope.data.loaded = true"
+            />
+          </transition>
+        </div>
       </template>
     </Tinder>
     <Fog />
@@ -56,6 +61,10 @@ export default {
     }
   },
   methods: {
+    imgLoaded(counter) {
+      console.log('imgLoaded', counter)
+      this.queue[counter].loaded = true
+    },
     tick() {
       setTimeout(() => {
         if (!this.isPaused) this.decide(['like', 'nope', 'super'].sample())
@@ -77,6 +86,7 @@ export default {
         list.push({
           id: source[this.offset % source.length],
           counter: this.offset,
+          loaded: false,
         })
         this.offset++
       }
@@ -108,16 +118,27 @@ export default {
 </script>
 
 <style>
-html,
+/* html,
 body {
   height: 100%;
-}
+} */
 
 body {
   margin: 0;
-  background-color: lightblue !important;
-  /* background-color: #333 !important; */
-  overflow: hidden;
+  background-color: lightblue;
+  animation: backgroundAnimate 30s infinite;
+
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes backgroundAnimate {
+  from {
+    background-color: lightblue;
+  }
+  to {
+    background-color: darkgrey;
+  }
 }
 
 #app .vue-tinder {
@@ -141,6 +162,7 @@ body {
     top: 4%;
     height: calc(100% - 8% - 65px);
     max-width: 25vw;
+    min-width: 480px;
   }
 }
 
@@ -159,15 +181,35 @@ body {
   height: 100%;
   background-size: cover;
   background-position: top;
+
+  background-color: white;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
+
+.pic.active {
+  border: 1px solid black;
+}
+
 .tinder-card {
   border: 7px solid white;
 }
-.pic.active {
-  /* animation: scale 30s; */
+
+/* .pic.active {
+  animation: scale 30s;
   animation-iteration-count: infinite;
   animation-direction: alternate;
+} */
+
+.pic img {
+  pointer-events: none;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
 }
+
 @keyframes scale {
   0% {
     transform: scale(1);

@@ -1,5 +1,29 @@
 # future-garf
 
+img loading scheme and blocking...
+
+image tag fix...with loader? some sort of placeholder? back of card or something?
+
+rec symbol 2 big mobile. aslo play smybol... 2 much anim on it? rec should blink?
+
+remove some ugly ones? higher fx vol? mp3 loading fix...lower bitrate...
+
+nice with hangdrums sometimes?
+
+white noise stuff?
+
+pop or clank sound when stuff appears?
+
+no sounds ever when it turns on?
+
+where are the shaky sheets? hmm?
+
+---
+
+tremolog?
+
+---
+
 - need ip doxing thin g for garf blob transitions?
 
 - reaaally slow animations?

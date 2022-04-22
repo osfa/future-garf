@@ -1,7 +1,7 @@
 <template>
   <div class="audio-container">
     <div
-      v-show="isActive"
+      v-show="isActive && isPlaying"
       class="rec w-4 h-4 lg:w-5 lg:h-5 absolute rounded-full flex"
       :class="{ active: isActive }"
       @click="toggle"

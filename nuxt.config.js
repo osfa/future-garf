@@ -71,7 +71,7 @@ export default {
       },
     ],
     bodyAttrs: {
-      class: 'overflow-hidden bg-white',
+      class: 'overflow-hidden',
     },
   },
 
