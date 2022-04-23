@@ -103,118 +103,82 @@ export const audioLibrary = {
     // '/audio/trailer-sounds-mp3/whoosh_010.mp3',
   ],
   availableReal: [
+    '/audio/normalized/natural/ants.mp3',
+    '/audio/normalized/natural/bees1.mp3',
+    '/audio/normalized/natural/blizzard.mp3',
+    '/audio/normalized/natural/blizzard2.mp3',
+    '/audio/normalized/natural/campfire1.mp3',
+    '/audio/normalized/natural/campfire2.mp3',
+    '/audio/normalized/natural/cave.mp3',
+    '/audio/normalized/natural/cicada.mp3',
+    '/audio/normalized/natural/fire1.mp3',
+    '/audio/normalized/natural/fire2.mp3',
     '/audio/normalized/natural/flies.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-26-bees1.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-38-ants.mp3',
-
-    '/audio/normalized/natural/garf-arr-amb-n-3-windintrees.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-4-anime-ocean.mp3',
-
-    '/audio/normalized/natural/garf-arr-amb-n-7-blizzard.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-8-blizzard2.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-54-howling-wind.mp3',
-
-    '/audio/normalized/natural/garf-arr-amb-n-9-river.mp3',
-
-    '/audio/normalized/natural/garf-arr-amb-n-12-forest1.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-13-forest2.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-42-forest4.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-47-forest3.mp3',
-
-    '/audio/normalized/natural/garf-arr-amb-n-25-ocean1.mp3',
-
-    '/audio/normalized/natural/garf-arr-amb-n-41-fire1.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-43-campfire1.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-52-fire2.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-53-campfire2.mp3',
-
-    '/audio/normalized/natural/garf-arr-amb-n-10-rain-thunder.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-11-rain-thunder2.mp3',
-
-    '/audio/normalized/natural/garf-arr-amb-n-39-rain1.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-15-rain5.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-56-rain4.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-57-rain3.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-58-rain2.mp3',
-    '/audio/normalized/natural/garfprayer-5-rain1.mp3',
-    '/audio/normalized/natural/garfprayer-6-rain2.mp3',
-    '/audio/normalized/natural/garfprayer-7-rain3.mp3',
-
-    '/audio/normalized/natural/garf-arr-amb-n-relaxing-wind.mp3',
-    '/audio/normalized/natural/garfprayer-3-cave.mp3',
-    '/audio/normalized/natural/garfprayer-4-ocean.mp3',
-
-    '/audio/normalized/natural/garfprayer-14-tropical.mp3',
-    '/audio/normalized/natural/garfprayer-15-tropical2.mp3',
-
-    '/audio/normalized/natural/garfprayer-17-war.mp3',
-
-    '/audio/normalized/natural/garfprayer-18-wind1.mp3',
-    '/audio/normalized/natural/garfprayer-19-wind2.mp3',
+    '/audio/normalized/natural/forest1.mp3',
+    '/audio/normalized/natural/forest2.mp3',
+    '/audio/normalized/natural/forest3.mp3',
+    '/audio/normalized/natural/forest4.mp3',
+    '/audio/normalized/natural/howling-wind.mp3',
+    '/audio/normalized/natural/ocean-anime.mp3',
+    '/audio/normalized/natural/ocean.mp3',
+    '/audio/normalized/natural/ocean1.mp3',
+    '/audio/normalized/natural/rain-heavy.mp3',
+    '/audio/normalized/natural/rain-thunder.mp3',
+    '/audio/normalized/natural/rain-thunder2.mp3',
+    '/audio/normalized/natural/rain1.1.mp3',
+    '/audio/normalized/natural/rain1.mp3',
+    '/audio/normalized/natural/rain2.1.mp3',
+    '/audio/normalized/natural/rain2.mp3',
+    '/audio/normalized/natural/rain3.1.mp3',
+    '/audio/normalized/natural/rain3.mp3',
+    '/audio/normalized/natural/rain4.mp3',
+    '/audio/normalized/natural/rain5.mp3',
+    '/audio/normalized/natural/relaxing-wind.mp3',
+    '/audio/normalized/natural/river.mp3',
+    '/audio/normalized/natural/tropical.mp3',
+    '/audio/normalized/natural/tropical2.mp3',
+    '/audio/normalized/natural/war.mp3',
+    '/audio/normalized/natural/wind1.mp3',
+    '/audio/normalized/natural/wind2.mp3',
+    '/audio/normalized/natural/windintrees.mp3',
   ],
   availableFake: [
-    '/audio/normalized/synth/garf-arr-amb-n-2-truck-idling.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-5-pod-sound1.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-6-pod-sound2.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-14-fan.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-17-scifi3.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-18-scifi4.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-19-radio1.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-20-radio2.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-21-scifi1.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-22-scifi2.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-23-flying-above-clouds.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-24-millenium-falcon.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-27-flag sounds.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-28-templar1.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-29-templar2.mp3',
-
-    // '/audio/normalized/synth/garf-arr-amb-n-30-library.mp3',
-    // '/audio/normalized/synth/garf-arr-amb-n-31-dark-academia.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-33-anime-cicada.mp3',
-    '/audio/normalized/natural/garf-arr-amb-n-16-cicada.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-34-village-ambience.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-35-heavy-rain.mp3', // eh?
-
-    '/audio/normalized/synth/garf-arr-amb-n-37-pod-sound3.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-40-rain-woods-bowl.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-44-meditation-bowls-2.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-51-meditation-bowls.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-45-bowl3.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-46-bowl2.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-32-bowl1.mp3',
-
-    '/audio/normalized/synth/garf-arr-amb-n-48-office.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-50-talking.mp3',
-
-    // '/audio/normalized/synth/garf-arr-amb-n-49-prayers.mp3',
-    '/audio/normalized/synth/garf-arr-amb-n-55-engine-shifting.mp3',
-
-    '/audio/normalized/synth/garfprayer-1-airplane1.mp3',
-    '/audio/normalized/synth/garfprayer-2-airplane2.mp3',
-
-    '/audio/normalized/synth/garfprayer-8-server1.mp3',
-    '/audio/normalized/synth/garfprayer-9-server2.mp3',
-
-    '/audio/normalized/synth/garfprayer-10-tapping1.mp3',
-    '/audio/normalized/synth/garfprayer-11-tapping2.mp3',
-    '/audio/normalized/synth/garfprayer-12-tapping3.mp3',
-
-    '/audio/normalized/synth/garfprayer-13-tiktock.mp3',
-    '/audio/normalized/synth/garfprayer-16-war-propeller.mp3',
+    '/audio/normalized/synth/airplane1.mp3',
+    '/audio/normalized/synth/airplane2.mp3',
+    '/audio/normalized/synth/anime-cicada.mp3',
+    '/audio/normalized/synth/bowl1.mp3',
+    '/audio/normalized/synth/bowl2.mp3',
+    '/audio/normalized/synth/bowl3.mp3',
+    '/audio/normalized/synth/bowls-med4.mp3',
+    '/audio/normalized/synth/bowls-med5.mp3',
+    '/audio/normalized/synth/bowls-med6.mp3',
+    '/audio/normalized/synth/engine-shifting.mp3',
+    '/audio/normalized/synth/fan.mp3',
+    '/audio/normalized/synth/flag-sounds.mp3',
+    '/audio/normalized/synth/flying-above-clouds.mp3',
+    '/audio/normalized/synth/millenium-falcon.mp3',
+    '/audio/normalized/synth/office.mp3',
+    '/audio/normalized/synth/pod-sound1.mp3',
+    '/audio/normalized/synth/pod-sound2.mp3',
+    '/audio/normalized/synth/pod-sound3.mp3',
+    '/audio/normalized/synth/radio1.mp3',
+    '/audio/normalized/synth/radio2.mp3',
+    '/audio/normalized/synth/scifi1.mp3',
+    '/audio/normalized/synth/scifi2.mp3',
+    '/audio/normalized/synth/scifi3.mp3',
+    '/audio/normalized/synth/scifi4.mp3',
+    '/audio/normalized/synth/server1.mp3',
+    '/audio/normalized/synth/server2.mp3',
+    '/audio/normalized/synth/talking.mp3',
+    '/audio/normalized/synth/tapping1.mp3',
+    '/audio/normalized/synth/tapping2.mp3',
+    '/audio/normalized/synth/tapping3.mp3',
+    '/audio/normalized/synth/templar1.mp3',
+    '/audio/normalized/synth/templar2.mp3',
+    '/audio/normalized/synth/tiktock.mp3',
+    '/audio/normalized/synth/truck-idling.mp3',
+    '/audio/normalized/synth/village-ambience.mp3',
+    '/audio/normalized/synth/war-propeller.mp3',
   ],
   sampleSlot1: [
     '/audio/prayers/prayer1.mp3',

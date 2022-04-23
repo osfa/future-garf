@@ -341,13 +341,30 @@ export default {
       this.noiseMaker = new Tone.Noise('brown').toDestination()
       this.noiseMaker.volume.value = this.noiseVolume
 
-      this.crossFade = new Tone.CrossFade().toDestination()
+      let def = {
+        frequency: 1.5,
+        delayTime: 3.5,
+        depth: 0.7,
+        spread: 180,
+      }
+      def = {
+        frequency: 4,
+        delayTime: 2.5,
+        depth: 0.75,
+        spread: 180,
+      }
+
+      const chorus = new Tone.Chorus(def).toDestination()
+      chorus.wet.value = 0.25
+
+      this.crossFade = new Tone.CrossFade().connect(chorus) // .toDestination()
       this.crossFade.fade.value = this.crossFadeVal // 0-currently1, 1-currently2
 
       this.currently1 = audioLibrary.availableReal.sample()
       this.asmrChannel1 = new Tone.Player(this.currently1).connect(
         this.crossFade.a
       )
+
       this.asmrChannel1.autostart = true
       this.asmrChannel1.loop = true
       this.asmrChannel1.volume.value = this.ambianceVolume

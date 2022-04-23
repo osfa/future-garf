@@ -203,6 +203,7 @@ body {
   background-size: 200% 100%;
   background-position-x: 180%;
   animation: 2s loading ease-in-out infinite;
+  cursor: grab;
 }
 
 @keyframes loading {
