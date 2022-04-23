@@ -50,7 +50,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .clock-container {
   display: flex;
   justify-content: center;

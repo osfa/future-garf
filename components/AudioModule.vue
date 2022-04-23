@@ -67,7 +67,9 @@
       class="rec w-4 h-4 lg:w-4 lg:h-4 absolute rounded-full flex"
       :class="{ active: isActive }"
     >
-      <span class="blink text-sm">{{ isActive ? 'REC' : 'GO' }}</span>
+      <span class="blink text-xs md:text-sm ml-14 md:ml-16 text-white">{{
+        isActive ? 'REC' : 'GO'
+      }}</span>
     </div>
     <transition mode="out-in" appear name="customFade">
       <div
@@ -456,10 +458,10 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.rec span {
+/* .rec span {
   margin-left: 70px;
   color: white;
-}
+} */
 .rec.active {
   background-color: red;
   box-shadow: 0 0 9px rgb(254, 108, 108);

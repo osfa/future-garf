@@ -28,6 +28,7 @@
       :automatic-fade="false"
       @next="next"
       @toggleAudio="toggleAudio"
+      @dblclick.native="tick()"
     />
   </div>
 </template>
@@ -37,7 +38,14 @@ import Tinder from '../components/vue-tinder/Tinder.vue'
 import Fog from '../components/Fog'
 import SmallClock from '../components/SmallClock'
 import AudioModule from '../components/AudioModule.vue'
-import { the330 as source } from './data/panelLibrary.js'
+import { the330, the156 } from './data/panelLibrary.js'
+export const source = the330.concat(the156).sort()
+
+export const random = (min, max) => {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min) + min)
+}
 
 /* eslint-disable */
 Array.prototype.sample = function () {
@@ -66,10 +74,11 @@ export default {
   },
   methods: {
     tick() {
+      console.log('tick')
       setTimeout(() => {
         if (!this.isPaused) this.decide(['like', 'nope', 'super'].sample())
         this.tick()
-      }, [10000, 2500, 1000].sample())
+      }, [10000, 1000].sample())
     },
     next(e) {
       console.log('next')
@@ -78,9 +87,12 @@ export default {
     toggleAudio() {
       this.isPaused = !this.isPaused
     },
-    mock(count = 5, append = true) {
+    mock(count = 4, append = true) {
       const list = []
+      this.offset = random(0, parseInt(source.length / 4)) * 4
+      console.log(this.offset)
       for (let i = 0; i < count; i++) {
+        console.log(source[this.offset % source.length])
         list.push({
           id: source[this.offset % source.length],
           counter: this.offset,
@@ -144,13 +156,13 @@ body {
   /* height: calc(100% - 23px - 65px - 47px - 16px); */
 
   height: calc(100% - 6% - 65px);
-  max-width: 85vw;
+  /* max-width: 85vw; */
 }
 
 @media (orientation: landscape) {
   #app .vue-tinder {
-    top: 5%;
-    height: calc(100% - 5% - 65px);
+    top: 6%;
+    height: calc(100% - 6% - 65px);
     max-width: 25vw;
     min-width: 480px;
   }

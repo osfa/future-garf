@@ -1,5 +1,5 @@
 <template>
-  <div class="clock-container font-weight-light">
+  <div class="clock-container text-sm md:text-lg font-weight-light">
     <div v-if="isUnixTime" class="clock-inner">
       <div class="hour text-white">{{ unix }}</div>
     </div>
@@ -33,7 +33,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .clock-container {
   display: flex;
   justify-content: center;
@@ -44,8 +44,8 @@ export default {
   font-family: 'Roboto';
   pointer-events: none;
 
-  font-size: 1rem;
-  letter-spacing: 1rem;
+  /* font-size: 1rem; */
+  letter-spacing: 0.4rem;
 
   color: white;
   position: fixed;
@@ -53,7 +53,7 @@ export default {
   width: 100vw;
   height: auto;
 
-  top: 0.5rem;
+  top: 1rem;
   left: 0;
 
   background-color: transparent;
@@ -61,6 +61,11 @@ export default {
   text-shadow: 0 0 9px rgb(255, 255, 255);
 }
 
+@media (orientation: landscape) {
+  .clock-container {
+    letter-spacing: 1rem;
+  }
+}
 /* .hour,
 .min,
 .secs,
