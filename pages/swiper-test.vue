@@ -2,7 +2,7 @@
   <div id="app">
     <Tinder
       ref="tinder"
-      key-name="id"
+      key-name="uid"
       :queue.sync="queue"
       :max="4"
       :offset-y="10"
@@ -98,12 +98,13 @@ export default {
     mock(count = 4, append = true) {
       const list = []
       const lastOffset = this.offset
+      this.offset = random(0, parseInt(source.length / 4)) * 4
       while (this.offset === lastOffset) {
         this.offset = random(0, parseInt(source.length / 4)) * 4
       }
       for (let i = 0; i < count; i++) {
-        console.log(source[this.offset % source.length])
         list.push({
+          uid: `${new Date().getTime()}-${source[this.offset % source.length]}`,
           id: source[this.offset % source.length],
           counter: this.offset,
           loaded: false,

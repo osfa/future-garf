@@ -190,11 +190,11 @@ export default {
         this.uiSampler.load(audioLibrary.uiSamples.sample())
         this.uiSampler.start()
       }
-
+      const fx = audioLibrary.trailerSounds.concat(audioLibrary.trailer25)
       if (this.mainSampler) {
         if (this.ticks % 8 === 0) {
           this.toggleActive(false)
-          const s = audioLibrary.trailerSounds.sample()
+          const s = fx.sample()
           console.log('playsample 8', s)
           this.mainSampler.player(s).start()
 
@@ -204,7 +204,7 @@ export default {
           // this.mainSampler.player(audioLibrary.trailer25.sample()).start()
         } else if (this.ticks % 4 === 0) {
           this.toggleActive(false)
-          const s = audioLibrary.trailerSounds.sample()
+          const s = fx.sample()
           console.log('playsample 4', s)
           this.mainSampler.player(s).start()
           this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
@@ -261,12 +261,14 @@ export default {
       ) {
         this.crossDirection = !this.crossDirection
         if (this.crossFade.fade.value === 1.0) {
-          const chosen = audioLibrary.availableReal.sample()
+          // const chosen = audioLibrary.availableReal.sample()
+          const chosen = audioLibrary.realGrouped.sample().sample()
           this.currently1 = chosen
           console.log('new sample from real for 1: ', chosen)
           this.asmrChannel1.load(chosen)
         } else {
-          const chosen = audioLibrary.availableFake.sample()
+          // const chosen = audioLibrary.availableFake.sample()
+          const chosen = audioLibrary.fakeGrouped.sample().sample()
           console.log('new sample from fake for 2: ', chosen)
           this.currently2 = chosen
           this.asmrChannel2.load(chosen)
