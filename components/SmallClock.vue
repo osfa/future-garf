@@ -42,7 +42,7 @@ export default {
   flex-direction: column;
   z-index: 10000;
   font-family: 'Roboto';
-  pointer-events: none;
+  /* pointer-events: none; */
 
   /* font-size: 1rem; */
   letter-spacing: 0.4rem;
@@ -57,7 +57,6 @@ export default {
   left: 0;
 
   background-color: transparent;
-  pointer-events: none;
   text-shadow: 0 0 9px rgb(255, 255, 255);
 }
 

@@ -8,6 +8,7 @@
       :offset-y="10"
       allow-down
       @submit="onSubmit"
+      @dblclick.native="initAuto()"
     >
       <template slot-scope="scope">
         <div class="pic" :class="{ active: scope.data.counter % 4 === 0 }">
@@ -22,13 +23,13 @@
       </template>
     </Tinder>
     <Fog />
-    <SmallClock />
+    <SmallClock @dblclick.native="debug = !debug" />
     <audio-module
       ref="audioModule"
       :automatic-fade="false"
+      :debug="debug"
       @next="next"
       @toggleAudio="toggleAudio"
-      @dblclick.native="tick()"
     />
   </div>
 </template>
@@ -56,6 +57,7 @@ export default {
   name: 'App',
   components: { Tinder, Fog, SmallClock, 'audio-module': AudioModule },
   data: () => ({
+    debug: false,
     queue: [],
     offset: 0,
     history: [],
@@ -73,8 +75,14 @@ export default {
     }
   },
   methods: {
+    initAuto() {
+      if (!this.kioskMode) {
+        this.tick()
+      }
+    },
     tick() {
       console.log('tick')
+      this.kioskMode = true
       setTimeout(() => {
         if (!this.isPaused) this.decide(['like', 'nope', 'super'].sample())
         this.tick()
@@ -89,8 +97,10 @@ export default {
     },
     mock(count = 4, append = true) {
       const list = []
-      this.offset = random(0, parseInt(source.length / 4)) * 4
-      console.log(this.offset)
+      const lastOffset = this.offset
+      while (this.offset === lastOffset) {
+        this.offset = random(0, parseInt(source.length / 4)) * 4
+      }
       for (let i = 0; i < count; i++) {
         console.log(source[this.offset % source.length])
         list.push({

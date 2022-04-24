@@ -1,8 +1,24 @@
 <template>
   <div class="audio-container">
     <div v-if="isPlaying && debug" class="flex justify-between w-full">
-      <span>{{ currently1.split('/').pop() }}</span>
-      <span>{{ currently2.split('/').pop() }}</span>
+      <select v-model="currently1" @change="updateAmbiance">
+        <option
+          v-for="item in audioLibrary.availableReal"
+          :key="item"
+          :value="item"
+        >
+          {{ item.split('/').pop() }}
+        </option>
+      </select>
+      <select v-model="currently2" @change="updateAmbiance">
+        <option
+          v-for="item in audioLibrary.availableFake"
+          :key="item"
+          :value="item"
+        >
+          {{ item.split('/').pop() }}
+        </option>
+      </select>
     </div>
     <div v-if="isPlaying && debug" class="vol-controls">
       <label>main: </label>
@@ -60,6 +76,14 @@
         type="number"
         @change="updateCrossfade"
       />
+
+      <label>chorus: </label>
+      <input
+        v-model="chorusWetness"
+        class="w-20 text-xs"
+        type="number"
+        @change="updateChorus"
+      />
     </div>
 
     <div
@@ -100,14 +124,16 @@ export const random = (min, max) => {
 }
 const INITIAL_FREQ = 4
 export default {
-  name: 'ImageCard',
+  name: 'AudioModule',
   props: {
     mainImageUrl: { type: String, default: '' },
     automaticFade: { type: Boolean, default: false },
+    debug: { type: Boolean, default: false },
   },
   data() {
     return {
-      debug: false,
+      audioLibrary,
+
       isActive: false,
       isPlaying: false,
       hasInit: false,
@@ -117,7 +143,8 @@ export default {
 
       volume: -12,
       noiseVolume: -16,
-      noiseMax: -6,
+      noiseMin: -16,
+      noiseMax: -9,
       toneVolume: -18,
 
       noiseRampTime: 15,
@@ -134,6 +161,9 @@ export default {
       asmrChannel1: undefined,
       asmrChannel2: undefined,
 
+      chorus: undefined,
+      chorusWetness: 0.25,
+
       leftEar: undefined,
       rightEar: undefined,
       binauralBeat: INITIAL_FREQ,
@@ -144,6 +174,7 @@ export default {
       crossDirection: false,
       crossFadeInterval: undefined,
       crossFadeDuration: 30, // in seconds
+
       noiseMaker: undefined,
 
       audioDialog: true,
@@ -151,13 +182,6 @@ export default {
       ticks: 0,
     }
   },
-  // watch: {
-  //   volume(val) {
-  //     console.log('watch', val)
-  //   },
-  // },
-  // computed: {},
-  // created() {},
   methods: {
     playSample() {
       if (!this.isPlaying) return
@@ -281,13 +305,17 @@ export default {
       this.asmrChannel2.volume.value = this.ambianceVolume
       this.noiseMaker.volume.value = this.noiseVolume
     },
+    updateChorus() {
+      // ramp to?
+      this.chorus.wet.value = this.chorusWetness
+    },
+    updateAmbiance() {
+      this.asmrChannel1.load(this.currently1)
+      this.asmrChannel2.load(this.currently2)
+    },
     updateCrossfade() {
       this.crossFade.fade.value = this.crossFadeVal
     },
-    // setNoiseVolume() {
-    //   const volume = this.noiseVolume === -100 ? -Infinity : this.noiseVolume
-    //   this.noiseMaker.volume.value = volume
-    // },
     setFrequencies() {
       const freqs = this.calculateFrequencies(this.binauralBeat)
       this.leftEar.frequency.value = freqs.leftFrequency
@@ -302,7 +330,7 @@ export default {
       this.rightEar.frequency.rampTo(freqs.rightFrequency, this.toneRampTime)
     },
     noiseShift() {
-      const targetVolume = random(this.noiseVolume, this.noiseMax)
+      const targetVolume = random(this.noiseMin, this.noiseMax)
       console.log('ramping rain to', targetVolume, this.noiseRampTime)
       this.noiseVolume = targetVolume
       this.noiseMaker.volume.rampTo(targetVolume, this.noiseRampTime)
@@ -348,16 +376,17 @@ export default {
         spread: 180,
       }
       def = {
-        frequency: 4,
+        frequency: 1.5,
         delayTime: 2.5,
         depth: 0.75,
         spread: 180,
+        wet: this.chorusWetness,
       }
 
-      const chorus = new Tone.Chorus(def).toDestination()
-      chorus.wet.value = 0.25
+      this.chorus = new Tone.Chorus(def).toDestination()
+      // this.chorus.wet.value = this.chorusWetness
 
-      this.crossFade = new Tone.CrossFade().connect(chorus) // .toDestination()
+      this.crossFade = new Tone.CrossFade().connect(this.chorus) // .toDestination()
       this.crossFade.fade.value = this.crossFadeVal // 0-currently1, 1-currently2
 
       this.currently1 = audioLibrary.availableReal.sample()
