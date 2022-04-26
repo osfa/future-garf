@@ -54,7 +54,7 @@ Array.prototype.sample = function () {
 }
 /* eslint-disable */
 export default {
-  name: 'App',
+  name: 'swiper-test',
   components: { Tinder, Fog, SmallClock, 'audio-module': AudioModule },
   data: () => ({
     debug: false,

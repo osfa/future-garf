@@ -36,7 +36,7 @@ export const audioLibrary = {
     // '/audio/25-free-sfx/20.mp3',
     '/audio/25-free-sfx/21.mp3',
     '/audio/25-free-sfx/22.mp3',
-    '/audio/25-free-sfx/23.mp3',
+    // '/audio/25-free-sfx/23.mp3',
     '/audio/25-free-sfx/24.mp3',
     // '/audio/25-free-sfx/25.wav',
   ],
@@ -115,7 +115,11 @@ export const audioLibrary = {
 
     ['/audio/normalized/synth/book.mp3', '/audio/normalized/synth/library.mp3'],
 
-    ['/audio/normalized/synth/bowl2.mp3', '/audio/normalized/synth/bowl3.mp3'],
+    [
+      '/audio/normalized/synth/bowl1.mp3',
+      '/audio/normalized/synth/bowl2.mp3',
+      '/audio/normalized/synth/bowl3.mp3',
+    ],
 
     [
       '/audio/normalized/synth/bowls-med4.mp3',
@@ -170,14 +174,12 @@ export const audioLibrary = {
 
     ['/audio/normalized/synth/harr2.mp3', '/audio/normalized/synth/harry.mp3'],
 
-    ['/audio/normalized/synth/laugh.mp3'],
+    [{ path: '/audio/normalized/synth/laugh.mp3', volume: -6 }],
 
     [
       '/audio/normalized/synth/millenium-falcon.mp3',
       '/audio/normalized/synth/spaceship.mp3',
     ],
-
-    ['/audio/normalized/synth/office.mp3'],
 
     [
       '/audio/normalized/synth/oldies-1.mp3',
@@ -209,6 +211,7 @@ export const audioLibrary = {
 
     [
       '/audio/normalized/synth/server-1.mp3',
+      '/audio/normalized/synth/server-2.mp3',
       '/audio/normalized/synth/server-3.mp3',
       '/audio/normalized/synth/server1.mp3',
       '/audio/normalized/synth/server2.mp3',
@@ -220,15 +223,25 @@ export const audioLibrary = {
 
     ['/audio/normalized/synth/talking.mp3'],
 
+    ['/audio/normalized/synth/office.mp3'],
+
     [
       '/audio/normalized/synth/tapping1.mp3',
       '/audio/normalized/synth/tapping2.mp3',
       '/audio/normalized/synth/tapping3.mp3',
     ],
 
+    // choir
+    // [{ path: '/audio/normalized/synth/laugh.mp3', volume: -6 }],
     [
-      '/audio/normalized/synth/templar1.mp3',
-      '/audio/normalized/synth/templar2.mp3',
+      // '/audio/normalized/synth/templar1.mp3',
+      { path: '/audio/normalized/synth/templar1.mp3', volume: -18 },
+      { path: '/audio/normalized/synth/templar2.mp3', volume: -18 },
+    ],
+    [
+      { path: '/audio/normalized/synth/church1.mp3', volume: -16 },
+      { path: '/audio/normalized/synth/church2.mp3', volume: -16 },
+      { path: '/audio/normalized/synth/church2.mp3', volume: -16 },
     ],
 
     // '/audio/normalized/synth/tiktock.mp3',
@@ -268,6 +281,7 @@ export const audioLibrary = {
     ['/audio/normalized/natural/bees1.mp3'],
 
     [
+      '/audio/normalized/natural/bells1-1.mp3',
       '/audio/normalized/natural/bells1-2.mp3',
       '/audio/normalized/natural/bells1-3.mp3',
       '/audio/normalized/natural/bells1-4.mp3',
@@ -289,8 +303,8 @@ export const audioLibrary = {
     ['/audio/normalized/natural/cave.mp3'],
 
     [
-      '/audio/normalized/natural/cicada.mp3',
-      '/audio/normalized/natural/cicada-anime.mp3',
+      { path: '/audio/normalized/natural/cicada.mp3', volume: -9 },
+      { path: '/audio/normalized/natural/cicada-anime.mp3', volume: 0 },
     ],
 
     [
@@ -372,7 +386,7 @@ export const audioLibrary = {
       '/audio/normalized/natural/brooke.mp3',
     ],
 
-    ['/audio/normalized/natural/shh.mp3'],
+    [{ path: '/audio/normalized/natural/shh.mp3', volume: -6 }],
 
     [
       '/audio/normalized/natural/tick-1.mp3',
@@ -590,6 +604,7 @@ export const audioLibrary = {
     '/audio/normalized/synth/scifi4.mp3',
 
     '/audio/normalized/synth/server-1.mp3',
+    '/audio/normalized/synth/server-2.mp3',
     '/audio/normalized/synth/server-3.mp3',
     '/audio/normalized/synth/server1.mp3',
     '/audio/normalized/synth/server2.mp3',
@@ -608,6 +623,10 @@ export const audioLibrary = {
 
     '/audio/normalized/synth/templar1.mp3',
     '/audio/normalized/synth/templar2.mp3',
+
+    '/audio/normalized/synth/church1.mp3',
+    '/audio/normalized/synth/church2.mp3',
+    '/audio/normalized/synth/church3.mp3',
 
     '/audio/normalized/synth/tiktock.mp3',
 

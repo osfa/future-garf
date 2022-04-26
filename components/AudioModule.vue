@@ -1,5 +1,9 @@
 <template>
   <div class="audio-container">
+    <div class="audio-debug">
+      <div v-if="isPlaying && debug" @click="hardFade2()">FADE2</div>
+      <div v-if="isPlaying && debug" @click="hardFade1()">FADE1</div>
+    </div>
     <div v-if="isPlaying && debug" class="flex justify-between w-full">
       <select v-model="currently1" @change="updateAmbiance">
         <option
@@ -133,6 +137,8 @@ export default {
   data() {
     return {
       audioLibrary,
+      audioCounter1: 0,
+      audioCounter2: 0,
 
       isActive: false,
       isPlaying: false,
@@ -142,18 +148,22 @@ export default {
       currently2: '',
 
       volume: -12,
-      noiseVolume: -16,
-      noiseMin: -16,
-      noiseMax: -9,
-      toneVolume: -18,
 
+      noiseVolume: -20,
+      noiseMin: -20,
+      noiseMax: -9,
       noiseRampTime: 15,
+
+      toneVolume: -24,
       toneRampTime: 20,
 
-      uiVolume: 14,
-      sampler1Volume: 3,
-      mainSamplerVolume: -6,
       ambianceVolume: -3,
+
+      sampler1Volume: 3,
+
+      uiVolume: 14,
+      mainSamplerVolume: -6,
+      popSamplerVolume: 12,
 
       sampler1: undefined,
       mainSampler: undefined,
@@ -180,13 +190,28 @@ export default {
       audioDialog: true,
 
       ticks: 0,
+      sampler: undefined,
     }
   },
   methods: {
     playSample() {
       if (!this.isPlaying) return
 
+      // if (this.sampler) {
+      //   // console.log('hello')
+      //   const chord = [
+      //     ['A1'],
+      //     ['A1', 'C1', 'E1'],
+      //     ['A2'],
+      //     ['A2', 'C2', 'E2'],
+      //   ].sample()
+      //   console.log(chord)
+      //   this.sampler.triggerAttackRelease(chord, 1)
+      //   return
+      // }
+
       if (this.uiSampler) {
+        // console.log('no')
         this.uiSampler.load(audioLibrary.uiSamples.sample())
         this.uiSampler.start()
       }
@@ -252,26 +277,57 @@ export default {
         this.audioCtx.resume().then(function () {})
       }
     },
+    isObj(variable) {
+      return (
+        typeof variable === 'object' &&
+        !Array.isArray(variable) &&
+        variable !== null
+      )
+    },
+    load1(chosen) {
+      console.log('load1:', chosen)
+      if (this.isObj(chosen)) {
+        console.log(chosen.path)
+        this.currently1 = chosen.path
+        this.asmrChannel1.volume.rampTo(this.ambianceVolume + chosen.volume, 3)
+      } else {
+        this.currently1 = chosen
+        this.asmrChannel1.volume.rampTo(this.ambianceVolume, 3)
+      }
+      this.asmrChannel1.load(this.currently1)
+    },
+    load2(chosen) {
+      console.log('load2:', chosen)
+      if (this.isObj(chosen)) {
+        this.currently2 = chosen.path
+        this.asmrChannel2.volume.rampTo(this.ambianceVolume + chosen.volume, 3)
+      } else {
+        this.currently2 = chosen
+        this.asmrChannel1.volume.rampTo(this.ambianceVolume, 3)
+      }
+      this.asmrChannel2.load(this.currently2)
+    },
+    hardFade1() {
+      this.load1(audioLibrary.realGrouped[this.audioCounter1].sample())
+      this.audioCounter1 += 1
+    },
+    hardFade2() {
+      this.load2(audioLibrary.fakeGrouped[this.audioCounter2].sample())
+      this.audioCounter2 += 1
+    },
     doCrossFade() {
       const stepSize = 0.1
-      // console.log('current cross fade val:', this.crossFade.fade.value)
       if (
         this.crossFade.fade.value === 1.0 ||
         this.crossFade.fade.value <= 0.0
       ) {
         this.crossDirection = !this.crossDirection
         if (this.crossFade.fade.value === 1.0) {
-          // const chosen = audioLibrary.availableReal.sample()
           const chosen = audioLibrary.realGrouped.sample().sample()
-          this.currently1 = chosen
-          console.log('new sample from real for 1: ', chosen)
-          this.asmrChannel1.load(chosen)
+          this.load1(chosen)
         } else {
-          // const chosen = audioLibrary.availableFake.sample()
           const chosen = audioLibrary.fakeGrouped.sample().sample()
-          console.log('new sample from fake for 2: ', chosen)
-          this.currently2 = chosen
-          this.asmrChannel2.load(chosen)
+          this.load2(chosen)
         }
       }
 
@@ -388,7 +444,9 @@ export default {
       this.chorus = new Tone.Chorus(def).toDestination()
       // this.chorus.wet.value = this.chorusWetness
 
-      this.crossFade = new Tone.CrossFade().connect(this.chorus) // .toDestination()
+      this.crossFade = new Tone.CrossFade()
+        .connect(this.chorus)
+        .connect(new Tone.Reverb(0.1)) // .toDestination()
       this.crossFade.fade.value = this.crossFadeVal // 0-currently1, 1-currently2
 
       this.currently1 = audioLibrary.availableReal.sample()
@@ -414,6 +472,18 @@ export default {
           (this.crossFadeDuration / 5) * 1000
         )
       }
+
+      const sampler = new Tone.Sampler({
+        urls: {
+          A1: 'pop1.mp3',
+        },
+        baseUrl: '/audio/ui/',
+        onload: () => {
+          sampler.volume.value = this.popSamplerVolume
+          this.sampler = sampler
+          // this.sampler.triggerAttackRelease(['C1', 'E1', 'G1', 'B1'], 0.5)
+        },
+      }).toDestination()
 
       const reverb = new Tone.Reverb(0.9).toDestination()
       const file1 = audioLibrary.sampleSlot1.sample()
@@ -599,5 +669,12 @@ export default {
 }
 .close:after {
   transform: rotate(-45deg);
+}
+
+.audio-debug {
+  position: fixed;
+  bottom: 10px;
+  right: 40px;
+  z-index: 5000;
 }
 </style>
