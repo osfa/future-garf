@@ -39,8 +39,8 @@ import Tinder from '../components/vue-tinder/Tinder.vue'
 import Fog from '../components/Fog'
 import SmallClock from '../components/SmallClock'
 import AudioModule from '../components/AudioModule.vue'
-import { the330, the156 } from './data/panelLibrary.js'
-export const source = the330.concat(the156).sort()
+import { the330, the156, the52 } from './data/panelLibrary.js'
+export const source = the330.concat(the156).concat(the52).sort()
 
 export const random = (min, max) => {
   min = Math.ceil(min)
