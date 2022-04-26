@@ -218,7 +218,7 @@ export default {
       if (
         this.sampler1 &&
         this.sampler1.state === 'stopped' &&
-        this.ticks % 16 === 0
+        this.ticks % 32 === 0
       ) {
         this.sampler1.start()
       }
@@ -415,7 +415,7 @@ export default {
         )
       }
 
-      const reverb = new Tone.Reverb(0.8).toDestination()
+      const reverb = new Tone.Reverb(0.9).toDestination()
       const file1 = audioLibrary.sampleSlot1.sample()
       const sampler1 = new Tone.Player(file1, () => {
         this.sampler1 = sampler1
