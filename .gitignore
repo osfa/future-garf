@@ -35,6 +35,11 @@ bower_components
 build/Release
 static/imgs/_out
 static/imgs/promo
+static/imgs/1k
+static/imgs/4k
+static/imgs/2k/jpeg-high
+static/imgs/2k/png8-64-noise-p
+static/imgs/2k/png8-128-noise-p
 static/imgs/_selected4k/
 static/imgs/_all-prune-test-512-x1024/
 static/imgs/seq-all/

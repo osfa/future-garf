@@ -31,6 +31,11 @@
       @next="next"
       @toggleAudio="toggleAudio"
     />
+    <select class="res-switch" v-if="debug" v-model="baseImagePath">
+      <option v-for="item in availableResolutions" :key="item" :value="item">
+        {{ item }}
+      </option>
+    </select>
   </div>
 </template>
 
@@ -42,7 +47,6 @@ import AudioModule from '../components/AudioModule.vue'
 import { the330, the156, the52 } from './data/panelLibrary.js'
 
 const source = the330.concat(the156).concat(the52).sort()
-
 export const random = (min, max) => {
   min = Math.ceil(min)
   max = Math.floor(max)
@@ -58,6 +62,16 @@ export default {
   name: 'swiper-test',
   components: { Tinder, Fog, SmallClock, 'audio-module': AudioModule },
   data: () => ({
+    availableResolutions: [
+      '/imgs/2k/png8-16-noise-p/',
+      '/imgs/2k/png8-64-noise-p/',
+      '/imgs/2k/png8-128-noise-p/',
+      '/imgs/2k/jpeg-high/',
+      '/imgs/4k/png8-16-noise-p/',
+      '/imgs/4k/png8-64-noise-p/',
+      '/imgs/4k/png8-128-noise-p/',
+      '/imgs/4k/jpeg-high/',
+    ],
     baseImagePath: '/imgs/2k/png8-16-noise-p/',
     debug: false,
     queue: [],
@@ -297,7 +311,11 @@ body {
 .btns img:nth-last-child(1) {
   margin-right: 0;
 }
-
+.res-switch {
+  position: absolute;
+  bottom: 0;
+  right: 50px;
+}
 /* .vue-tinder.right-end,
 .vue-tinder.left-end {
   transform: translateZ(20px);
