@@ -15,7 +15,7 @@
           <transition appear name="fade">
             <img
               v-show="scope.data.loaded"
-              :src="`/imgs/2k/png8-16-noise-p/${scope.data.id}`"
+              :src="`${baseImagePath}${scope.data.id}`"
               @load="scope.data.loaded = true"
             />
           </transition>
@@ -40,7 +40,8 @@ import Fog from '../components/Fog'
 import SmallClock from '../components/SmallClock'
 import AudioModule from '../components/AudioModule.vue'
 import { the330, the156, the52 } from './data/panelLibrary.js'
-export const source = the330.concat(the156).concat(the52).sort()
+
+const source = the330.concat(the156).concat(the52).sort()
 
 export const random = (min, max) => {
   min = Math.ceil(min)
@@ -57,6 +58,7 @@ export default {
   name: 'swiper-test',
   components: { Tinder, Fog, SmallClock, 'audio-module': AudioModule },
   data: () => ({
+    baseImagePath: '/imgs/2k/png8-16-noise-p/',
     debug: false,
     queue: [],
     offset: 0,
