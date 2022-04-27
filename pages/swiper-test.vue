@@ -62,6 +62,7 @@ export default {
   name: 'swiper-test',
   components: { Tinder, Fog, SmallClock, 'audio-module': AudioModule },
   data: () => ({
+    // 1k incomplete!!!
     availableResolutions: [
       '/imgs/2k/png8-16-noise-p/',
       '/imgs/2k/png8-64-noise-p/',
