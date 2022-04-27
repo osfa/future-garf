@@ -23,15 +23,17 @@
       </template>
     </Tinder>
     <Fog />
-    <SmallClock @dblclick.native="debug = !debug" />
     <audio-module
       ref="audioModule"
       :automatic-fade="false"
       :debug="debug"
+      :show-toggle="!kioskMode"
       @next="next"
       @toggleAudio="toggleAudio"
     />
-    <select class="res-switch" v-if="debug" v-model="baseImagePath">
+    <SmallClock @dblclick.native="debug = !debug" />
+
+    <select v-if="debug" v-model="baseImagePath" class="res-switch">
       <option v-for="item in availableResolutions" :key="item" :value="item">
         {{ item }}
       </option>
@@ -80,6 +82,7 @@ export default {
     history: [],
     tickInterval: 1000,
     isPaused: true,
+    kioskMode: false,
   }),
   created() {
     this.$gtag.pageview(this.$route)

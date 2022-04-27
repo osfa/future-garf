@@ -303,7 +303,7 @@ export const audioLibrary = {
     ['/audio/normalized/natural/cave.mp3'],
 
     [
-      { path: '/audio/normalized/natural/cicada.mp3', volume: -9 },
+      { path: '/audio/normalized/natural/cicada.mp3', volume: -12 },
       { path: '/audio/normalized/natural/cicada-anime.mp3', volume: 0 },
     ],
 

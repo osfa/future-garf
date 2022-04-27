@@ -110,7 +110,7 @@
     </transition>
     <transition mode="out-in" name="customFade">
       <div
-        v-show="isPlaying && hasInit"
+        v-show="isPlaying && hasInit && showToggle"
         class="w-4 h-4 xl:w-5 xl:h-5 v-controls active bg-white"
         @click="toggleAudio()"
       ></div>
@@ -133,6 +133,7 @@ export default {
     mainImageUrl: { type: String, default: '' },
     automaticFade: { type: Boolean, default: false },
     debug: { type: Boolean, default: false },
+    showToggle: { type: Boolean, default: true },
   },
   data() {
     return {
@@ -162,7 +163,7 @@ export default {
       sampler1Volume: 3,
 
       uiVolume: 14,
-      mainSamplerVolume: -6,
+      mainSamplerVolume: -3,
       popSamplerVolume: 12,
 
       sampler1: undefined,
@@ -233,6 +234,7 @@ export default {
           console.log('playsample 4', s)
           this.mainSampler.player(s).start()
           this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
+          // this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
         }
       }
 
@@ -261,6 +263,7 @@ export default {
       this.isActive = val || !this.isActive
     },
     toggleAudio() {
+      console.log('toggleaudio')
       this.isPlaying = !this.isPlaying
       this.audioDialog = false
       this.$emit('toggleAudio')
@@ -473,6 +476,18 @@ export default {
         )
       }
 
+      // const sampler = new Tone.Sampler({
+      //   urls: {
+      //     A1: 'pop1.mp3',
+      //   },
+      //   baseUrl: '/audio/ui/',
+      //   onload: () => {
+      //     sampler.volume.value = this.popSamplerVolume
+      //     this.sampler = sampler
+      //     // this.sampler.triggerAttackRelease(['C1', 'E1', 'G1', 'B1'], 0.5)
+      //   },
+      // }).toDestination()
+
       const sampler = new Tone.Sampler({
         urls: {
           A1: 'pop1.mp3',
@@ -531,6 +546,10 @@ export default {
 }
 </script>
 <style scoped>
+.audio-container {
+  z-index: 10001;
+  position: relative;
+}
 .button-play {
   position: relative;
 }

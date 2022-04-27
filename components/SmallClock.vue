@@ -40,7 +40,6 @@ export default {
   align-items: center;
   margin: auto;
   flex-direction: column;
-  z-index: 10000;
   font-family: 'Roboto';
   /* pointer-events: none; */
 
@@ -52,12 +51,17 @@ export default {
 
   width: 100vw;
   height: auto;
+  z-index: 10000;
 
   top: 1rem;
   left: 0;
 
   background-color: transparent;
+  /* kiosk */
   text-shadow: 0 0 9px rgb(255, 255, 255);
+
+  /* non-kiosk */
+  text-shadow: 0 0 5px rgb(255, 255, 255);
 }
 
 @media (orientation: landscape) {
