@@ -57,7 +57,7 @@
         @change="updateVolumes"
       />
 
-      <label>main: </label>
+      <label>fx: </label>
       <input
         v-model="fxSamplerVolume"
         class="w-20 text-xs"
@@ -65,6 +65,13 @@
         @change="updateVolumes"
       />
 
+      <label>hang: </label>
+      <input
+        v-model="hangDrumSamplerVolume"
+        class="w-20 text-xs"
+        type="number"
+        @change="updateVolumes"
+      />
       <label>voice: </label>
       <input
         v-model="sampler1Volume"
@@ -359,6 +366,7 @@ export default {
     updateVolumes() {
       this.uiSampler.volume.value = this.uiVolume
       this.fxSampler.volume.value = this.fxSamplerVolume
+      this.hangDrumSampler.volume.value = this.hangDrumSamplerVolume
       this.sampler1.volume.value = this.sampler1Volume
       this.asmrChannel1.volume.value = this.ambianceVolume
       this.asmrChannel2.volume.value = this.ambianceVolume
