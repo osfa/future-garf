@@ -124,7 +124,7 @@ export const audioLibrary = {
     [
       '/audio/normalized/synth/bowls-med4.mp3',
       '/audio/normalized/synth/bowls-med5.mp3',
-      '/audio/normalized/synth/bowls-med6.mp3',
+      // '/audio/normalized/synth/bowls-med6.mp3',
     ],
 
     ['/audio/normalized/synth/cafe.mp3'],
