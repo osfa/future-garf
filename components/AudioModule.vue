@@ -212,8 +212,6 @@ export default {
       // }
 
       if (this.uiSampler) {
-        // console.log('no')
-        this.uiSampler.load(audioLibrary.uiSamples.sample())
         this.uiSampler.start()
       }
       const fx = audioLibrary.trailerSounds.concat(audioLibrary.trailer25)
