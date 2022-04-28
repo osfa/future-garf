@@ -237,10 +237,11 @@ export default {
         this.toggleActive()
       }
 
+      const voiceThresh = this.kioskMode ? 32 : 64
       if (
         this.sampler1 &&
         this.sampler1.state === 'stopped' &&
-        this.ticks % 32 === 0
+        this.ticks % voiceThresh === 0
       ) {
         this.sampler1.start()
       }
