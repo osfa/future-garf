@@ -111,9 +111,11 @@
     <transition mode="out-in" name="customFade">
       <div
         v-show="isPlaying && hasInit && !kioskMode"
-        class="w-4 h-4 xl:w-5 xl:h-5 v-controls active bg-white"
+        class="p-5 v-controls active"
         @click="toggleAudio()"
-      ></div>
+      >
+        <div class="w-4 h-4 xl:w-5 xl:h-5 bg-white"></div>
+      </div>
     </transition>
   </div>
 </template>
@@ -566,16 +568,17 @@ export default {
 }
 
 .v-controls {
-  top: 1rem;
-  right: 1rem;
+  top: 0;
+  right: 0;
   position: absolute;
   z-index: 1000;
   cursor: pointer;
 }
 
 .rec {
-  top: 1rem;
+  top: 1.2rem;
   left: 5%;
+  font-family: 'Roboto', 'Arial', sans-serif;
 
   z-index: 1000;
   background-color: rgb(108, 254, 108);
