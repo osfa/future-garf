@@ -181,6 +181,8 @@ body {
   left: 0;
   right: 0;
   top: 6%;
+
+  top: 3.5rem;
   margin: auto;
 
   width: calc(100% - 10%);
