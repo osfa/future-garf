@@ -27,7 +27,7 @@
       ref="audioModule"
       :automatic-fade="false"
       :debug="debug"
-      :show-toggle="!kioskMode"
+      :kiosk-mode="kioskMode"
       @next="next"
       @toggleAudio="toggleAudio"
     />

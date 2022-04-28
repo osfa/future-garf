@@ -110,7 +110,7 @@
     </transition>
     <transition mode="out-in" name="customFade">
       <div
-        v-show="isPlaying && hasInit && showToggle"
+        v-show="isPlaying && hasInit && !kioskMode"
         class="w-4 h-4 xl:w-5 xl:h-5 v-controls active bg-white"
         @click="toggleAudio()"
       ></div>
@@ -133,7 +133,7 @@ export default {
     mainImageUrl: { type: String, default: '' },
     automaticFade: { type: Boolean, default: false },
     debug: { type: Boolean, default: false },
-    showToggle: { type: Boolean, default: true },
+    kioskMode: { type: Boolean, default: false },
   },
   data() {
     return {
@@ -314,7 +314,7 @@ export default {
       this.audioCounter2 += 1
     },
     doCrossFade() {
-      const stepSize = 0.1
+      const stepSize = this.kioskMode ? 0.1 : 0.05
       if (
         this.crossFade.fade.value === 1.0 ||
         this.crossFade.fade.value <= 0.0

@@ -37,7 +37,7 @@ export default {
   align-items: center;
   margin: auto;
   flex-direction: column;
-  font-family: 'Roboto';
+  font-family: 'Roboto', 'Arial', sans-serif;
   /* pointer-events: none; */
 
   /* font-size: 1rem; */
