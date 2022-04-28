@@ -201,13 +201,13 @@ body {
 
 /* 4k standing */
 /* handle via zoom and rem instead? */
-@media (orientation: portrait) and (min-width: 2000px) {
+/* @media (orientation: portrait) and (min-width: 2000px) {
   #app .vue-tinder {
     top: 3%;
     height: calc(100% - 6% - 65px);
     max-width: 80vw;
   }
-}
+} */
 
 .tinder-card {
   border: 7px solid white;

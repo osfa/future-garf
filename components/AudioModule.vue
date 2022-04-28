@@ -59,7 +59,7 @@
 
       <label>main: </label>
       <input
-        v-model="mainSamplerVolume"
+        v-model="fxSamplerVolume"
         class="w-20 text-xs"
         type="number"
         @change="updateVolumes"
@@ -155,20 +155,21 @@ export default {
       noiseMax: -9,
       noiseRampTime: 15,
 
-      toneVolume: -24,
+      toneVolume: -18,
       toneRampTime: 20,
 
       ambianceVolume: -3,
 
       sampler1Volume: 3,
-
       uiVolume: 14,
-      mainSamplerVolume: -3,
-      popSamplerVolume: 12,
+      fxSamplerVolume: -6,
+      hangDrumSamplerVolume: -6,
 
       sampler1: undefined,
-      mainSampler: undefined,
       uiSampler: undefined,
+      fxSampler: undefined,
+      hangDrumSampler: undefined,
+
       asmrChannel1: undefined,
       asmrChannel2: undefined,
 
@@ -191,7 +192,6 @@ export default {
       audioDialog: true,
 
       ticks: 0,
-      sampler: undefined,
     }
   },
   methods: {
@@ -217,24 +217,21 @@ export default {
         this.uiSampler.start()
       }
       const fx = audioLibrary.trailerSounds.concat(audioLibrary.trailer25)
-      if (this.mainSampler) {
+      if (this.fxSampler) {
         if (this.ticks % 8 === 0) {
           this.toggleActive(false)
           const s = fx.sample()
           console.log('playsample 8', s)
-          this.mainSampler.player(s).start()
+          this.fxSampler.player(s).start()
 
           this.frequencyShift()
           this.noiseShift()
-
-          // this.mainSampler.player(audioLibrary.trailer25.sample()).start()
         } else if (this.ticks % 4 === 0) {
           this.toggleActive(false)
           const s = fx.sample()
           console.log('playsample 4', s)
-          this.mainSampler.player(s).start()
-          this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
-          // this.mainSampler.player(audioLibrary.hangDrum.sample()).start()
+          this.fxSampler.player(s).start()
+          this.hangDrumSampler.player(audioLibrary.hangDrum.sample()).start()
         }
       }
 
@@ -360,7 +357,7 @@ export default {
     },
     updateVolumes() {
       this.uiSampler.volume.value = this.uiVolume
-      this.mainSampler.volume.value = this.mainSamplerVolume
+      this.fxSampler.volume.value = this.fxSamplerVolume
       this.sampler1.volume.value = this.sampler1Volume
       this.asmrChannel1.volume.value = this.ambianceVolume
       this.asmrChannel2.volume.value = this.ambianceVolume
@@ -475,31 +472,6 @@ export default {
           (this.crossFadeDuration / 5) * 1000
         )
       }
-
-      // const sampler = new Tone.Sampler({
-      //   urls: {
-      //     A1: 'pop1.mp3',
-      //   },
-      //   baseUrl: '/audio/ui/',
-      //   onload: () => {
-      //     sampler.volume.value = this.popSamplerVolume
-      //     this.sampler = sampler
-      //     // this.sampler.triggerAttackRelease(['C1', 'E1', 'G1', 'B1'], 0.5)
-      //   },
-      // }).toDestination()
-
-      const sampler = new Tone.Sampler({
-        urls: {
-          A1: 'pop1.mp3',
-        },
-        baseUrl: '/audio/ui/',
-        onload: () => {
-          sampler.volume.value = this.popSamplerVolume
-          this.sampler = sampler
-          // this.sampler.triggerAttackRelease(['C1', 'E1', 'G1', 'B1'], 0.5)
-        },
-      }).toDestination()
-
       const reverb = new Tone.Reverb(0.9).toDestination()
       const file1 = audioLibrary.sampleSlot1.sample()
       const sampler1 = new Tone.Player(file1, () => {
@@ -520,22 +492,38 @@ export default {
       }).toDestination()
 
       /* eslint-disable */
-      const urls = audioLibrary.hangDrum
-        .concat(audioLibrary.trailerSounds)
+      const fxUrls = audioLibrary.trailerSounds
         .concat(audioLibrary.trailer25)
         .reduce((acc, curr) => ((acc[curr] = curr), acc), {})
+      const hangdrumUrls = audioLibrary.hangDrum.reduce(
+        (acc, curr) => ((acc[curr] = curr), acc),
+        {}
+      )
       /* eslint-enable */
 
-      console.log('loading: ', urls)
-      const mainSampler = new Tone.Players(urls, () => {
-        console.log('loaded mainSampler')
-        this.mainSampler = mainSampler
-        this.mainSampler.volume.value = this.mainSamplerVolume
+      const fxSampler = new Tone.Players(fxUrls, () => {
+        this.fxSampler = fxSampler
+        this.fxSampler.volume.value = this.fxSamplerVolume
+      }).toDestination()
+
+      // const hangDrumSampler = new Tone.Sampler({
+      //   urls: {
+      //     A1: 'pop1.mp3',
+      //   },
+      //   baseUrl: '/audio/ui/',
+      //   onload: () => {
+      //     this.hangDrumSampler = hangDrumSampler
+      //     this.hangDrumSampler.volume.value = this.hangDrumSamplerVolume
+      //     // this.sampler.triggerAttackRelease(['C1', 'E1', 'G1', 'B1'], 0.5)
+      //   },
+      // }).toDestination()
+      const hangDrumSampler = new Tone.Players(hangdrumUrls, () => {
+        this.hangDrumSampler = hangDrumSampler
+        this.hangDrumSampler.volume.value = this.hangDrumSamplerVolume
       }).toDestination()
 
       // this.setNoiseVolume()
       this.setVolume()
-
       this.setFrequencies()
 
       this.leftEar.start()
@@ -588,17 +576,21 @@ export default {
 
 .rec {
   top: 1rem;
-  left: 1rem;
+  left: 5%;
+
   z-index: 1000;
   background-color: rgb(108, 254, 108);
   box-shadow: 0 0 9px rgb(108, 254, 108);
   justify-content: center;
   align-items: center;
 }
-/* .rec span {
-  margin-left: 70px;
-  color: white;
-} */
+
+@media (orientation: landscape) {
+  .rec {
+    left: 1rem;
+  }
+}
+
 .rec.active {
   background-color: red;
   box-shadow: 0 0 9px rgb(254, 108, 108);
