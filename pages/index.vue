@@ -31,7 +31,7 @@
       @next="next"
       @toggleAudio="toggleAudio"
     />
-    <SmallClock @dblclick.native="debug = !debug" />
+    <SmallClock @dblclick.native="debug = false" />
 
     <select v-if="debug" v-model="baseImagePath" class="res-switch">
       <option v-for="item in availableResolutions" :key="item" :value="item">
