@@ -47,8 +47,9 @@ import Fog from '../components/Fog'
 import SmallClock from '../components/SmallClock'
 import AudioModule from '../components/AudioModule.vue'
 // import { the330, the156, the52, the84 } from './data/panelLibrary.js'
-import { the256Sel2022 } from './data/panelLibrary.js'
 // const source = the330.concat(the156).concat(the52).concat(the84).sort()
+
+import { the256Sel2022 } from './data/panelLibrary.js'
 const source = the256Sel2022.sort()
 
 export const random = (min, max) => {
