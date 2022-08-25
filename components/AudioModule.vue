@@ -108,22 +108,29 @@
     </div>
     <transition mode="out-in" appear name="customFade">
       <div
-        v-show="!isPlaying"
+        v-show="!isPlaying && !hasInit"
         class="main-play w-screen h-screen"
         @click="next()"
       >
-        <div class="button-play"></div>
+        <!-- <div class="button-play"></div> -->
+        <div class="button-init w-8 h-8">
+          <img src="imgs/volume-on.svg" />
+        </div>
       </div>
     </transition>
-    <transition mode="out-in" name="customFade">
-      <div
-        v-show="isPlaying && hasInit && !kioskMode"
-        class="p-5 v-controls active"
-        @click="toggleAudio()"
-      >
-        <div class="w-4 h-4 xl:w-5 xl:h-5 bg-white"></div>
+    <!-- <transition mode="out-in" name="customFade"> -->
+    <div
+      v-show="hasInit && !kioskMode"
+      class="p-5 pt-4 v-controls active"
+      @click="toggleAudio()"
+    >
+      <!-- <div class="w-4 h-4 xl:w-5 xl:h-5 bg-white"></div> -->
+      <div class="w-6 h-6 lg:w-8 xl:h-8">
+        <img v-if="isPlaying" src="imgs/volume-off.svg" />
+        <img v-else src="imgs/volume-on.svg" />
       </div>
-    </transition>
+    </div>
+    <!-- </transition> -->
   </div>
 </template>
 
@@ -271,6 +278,7 @@ export default {
     },
     toggleAudio() {
       console.log('toggleaudio')
+
       this.isPlaying = !this.isPlaying
       this.audioDialog = false
       this.$emit('toggleAudio')
@@ -549,6 +557,21 @@ export default {
   z-index: 10001;
   position: relative;
 }
+
+.button-init {
+  position: relative;
+  /* width: 35px;
+  height: 35px; */
+  padding: 5px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.button-toggle-audio {
+  /* width: 25px; */
+  /* padding: 5px; */
+  /* background: rgba(0, 0, 0, 0.25); */
+}
+
 .button-play {
   position: relative;
 }
@@ -564,7 +587,7 @@ export default {
   top: -7px;
 }
 
-.button-play:after {
+/* .button-play:after {
   display: block;
   position: absolute;
   content: '';
@@ -575,7 +598,7 @@ export default {
   border-width: 10px 0px 10px 18px;
   border-radius: 0;
   border-left-color: white;
-}
+} */
 
 .v-controls {
   top: 0;
