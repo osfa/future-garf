@@ -102,7 +102,7 @@
       class="rec w-4 h-4 lg:w-4 lg:h-4 absolute rounded-full flex"
       :class="{ active: isActive }"
     >
-      <span class="blink text-xs md:text-sm ml-14 md:ml-16 text-white">{{
+      <span class="hidden blink text-xs md:text-sm ml-14 md:ml-16 text-white">{{
         isActive ? 'REC' : 'GO'
       }}</span>
     </div>
@@ -238,7 +238,9 @@ export default {
           const s = fx.sample()
           console.log('playsample 4', s)
           this.fxSampler.player(s).start()
-          this.hangDrumSampler.player(audioLibrary.hangDrum.sample()).start()
+          if (this.hangDrumSampler) {
+            this.hangDrumSampler.player(audioLibrary.hangDrum.sample()).start()
+          }
         }
       }
 
