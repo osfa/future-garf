@@ -100,7 +100,10 @@ have square ones and diff dims in middle? like composiiotns?
 
 ## Build Setup
 
+
 ```bash
+nvm use 16
+
 # install dependencies
 $ yarn install
 
