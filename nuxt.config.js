@@ -40,7 +40,7 @@ export default {
       {
         hid: 'og:description',
         property: 'og:description',
-        content: 'over and over again.',
+        content: '1978-08-08',
       },
       {
         hid: 'twitter:image',
