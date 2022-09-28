@@ -176,7 +176,7 @@ export default {
 
       ambianceVolume: -3,
 
-      sampler1Volume: 3,
+      sampler1Volume: 0,
       uiVolume: 14,
       fxSamplerVolume: -6,
       hangDrumSamplerVolume: -6,

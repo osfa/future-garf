@@ -49,6 +49,8 @@ node_modules/
 jspm_packages/
 statics/imgs/
 
+*.asd
+
 # TypeScript v1 declaration files
 typings/
 

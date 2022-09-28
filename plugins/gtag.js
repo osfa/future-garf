@@ -11,9 +11,21 @@ import VueGtag from 'vue-gtag'
 //   ],
 // })
 
-Vue.use(VueGtag, {
-  config: {
-    id: 'G-HTJ35SW3G3',
-    // enable: process.env.NODE_ENV === 'production',
-  },
-})
+// Vue.use(VueGtag, {
+//   config: {
+//     id: 'G-HTJ35SW3G3',
+//     // enable: process.env.NODE_ENV === 'production',
+//   },
+// })
+
+export default ({ app }) => {
+  Vue.use(
+    VueGtag,
+    {
+      config: { id: 'G-HTJ35SW3G3' },
+      appName: 'mondays.cloud',
+      // enable: process.env.NODE_ENV === 'production',
+    },
+    app.router
+  )
+}
